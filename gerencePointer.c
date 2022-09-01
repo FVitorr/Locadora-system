@@ -30,6 +30,38 @@ void adFilme(filme *bd,int codigo)
     scanf("%s", &bd->lingua);
 }
 
+void inserirFilme(filme p) //Recebe o objeto e insere no array bd_*
+{
+    // Se a quantidade de filmes for igual ao tamanho alocado da lista -> espandir
+    if (qtdFilme == len_bd)
+    {
+        len_bd += 1;
+        bd = realloc(bd, len_bd * sizeof(filme));
+    }
+    // adc obj ao bd local
+    bd[qtdFilme] = p;
+    qtdFilme++; 
+}
+
+
+
+filme objFilme(int id) // Bloco para receber as entradas e "compartar" na struct
+{
+    filme p;
+    p.codigo = id;
+    printf("Nome: ");
+    scanf("%s", &p.nome);
+    printf("Descricao: ");
+    scanf("%s", &p.descricao);
+    printf("Quantidade de Exemplares: ");
+    scanf("%d", &p.qtd);
+    printf("Codigo Categoria: ");
+    scanf("%d", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
+    printf("Lingua: ");
+    scanf("%s", &p.lingua);
+    return p;
+}
+
 void remFilme(filme *bd, int codigo){ //ponteiro global do db
     for (int i = 0; i < qtdFilme; i++){
         if (bd[i].codigo == codigo){
@@ -53,60 +85,48 @@ void listFilme(filme *bd,int qtd){
         printf("\tLingua: \t%s\n", bd[c].lingua);
     }
 }
-
-void atChar_fil(filme *bd,int codigo, char *campo[30]){
-    switch (codigo)
+int alterFilme(filme f, filme *bd, int codigo){
+    for (int i = 0; i < qtdFilme; i++)
     {
-    case 0:
-        printf("%s",bd.nome);
-        break;
-    case 1:
-        /* code */
-        break;
-    case 4:
-        /* code */
-        break;
-    
-    default:
-        break;
-    }
-    printf("")
-}
-
-void AlterValFilme(filme *bd,int codigo){
-    int des;
-    char entry[30];
-    for (int i = 0; i < qtdFilme; i++){
-        if (bd[i].codigo == codigo){
-            printf("Paramentros: \n 0 - Nome \n 1 - Descricao \n 2 - Qtd \n 3 - Codigo Categoria \n 4 - Lingua ");
-            do {
-                scanf("%d",&des);
-            } while (des < 0 && des > 4);
-            printf("Novo Valor: ");
-            scanf("%s",entry);
-            //alter_(&bd[i],codigo,);
+        if(bd[i].codigo == codigo)
+        {
+            bd[i] = f;
             break;
-        } 
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
-}
+ }
+
 
 int main()
 {
     bd = malloc(len_bd * sizeof(filme));
-    adFilme(&bd[qtdFilme],qtdFilme);
-    qtdFilme++;
-    adFilme(&bd[qtdFilme],qtdFilme);
-    qtdFilme++;
+
+    filme p = objFilme(qtdFilme);
+    inserirFilme(p);
+
+    p = objFilme(qtdFilme);
+    inserirFilme(p);
     
+    listFilme(bd,qtdFilme);
     int codigo;
-    listFilme(bd,qtdFilme);
 
-    printf("Remover:");
-    scanf("%d", &codigo);
-    remFilme(bd,codigo);
+    // printf("Remover:");
+    // scanf("%d", &codigo);
+    // remFilme(bd,codigo);
 
-    listFilme(bd,qtdFilme);
+    // listFilme(bd,qtdFilme);
     //printf("cod: %s", bd[0].nome);
+    printf("Editar:");
+    scanf("%d", &codigo);
+
+    p = objFilme(qtdFilme);
+    alterFilme(p,bd,codigo);
+
+    listFilme(bd,qtdFilme);
 
     free(bd);
     return (0);
