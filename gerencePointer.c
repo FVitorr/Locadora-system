@@ -165,6 +165,52 @@ int alteraCat(fCategoria f, fCategoria *bd, int codigo){
     return proc;
  }
 
+void menuCategoria(){
+        int opc = 0, erro = 0;
+        printf("------------- Categorias -------------\n\n");
+        printf("\t 0 - Sair \n\t 1 - Cadastrar \n\t 2 - Cadastrar Multiplas \n");
+        printf("\t 3 - Visualizar \n\t 4 - Editar \n\t 5 - Remover\n");
+        printf("--------------------------------------\n");
+
+        do
+        {   
+            if (erro == 1){
+                printf(">> Parametro Invalido\n");
+            }
+            printf("Opc: ");
+            scanf ("%d",&opc);
+            erro = 1;
+        } while (opc < 0 || opc > 5);
+
+        if (opc == 0){
+            printf("Sair");
+        }else if (opc == 1){
+            //Cadastrar uma categoria
+            fCategoria new = objCategoria(qtdCat);
+            insCategoria(new);
+        }else if (opc == 2){
+            //Cadastrar multiplas categoria
+            int qtd_ = 1;
+            while (1)
+            {
+                fCategoria new = objCategoria(qtdCat);
+                insCategoria(new);
+                printf("[1 - Mais] \t [0 - Exit]: ");
+                scanf("%d",&qtd_);
+                if (qtd_ == 0){
+                    break;
+                }
+            }
+            
+        }else if (opc == 3){
+
+        }else if (opc == 4){
+
+        }else if (opc == 5){
+            
+        }
+}
+
 int main()
 {
     bd = malloc(len_bd * sizeof(filme));
@@ -209,7 +255,7 @@ int main()
     // listCategoria(bd_cat,qtdCat);
     // printf("%d",v);
 
-
+    menuCategoria();
     free(bd);
     free(bd_cat);
     return (0);
