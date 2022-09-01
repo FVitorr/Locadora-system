@@ -1,45 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct
-{
-    int codigo;
-    char nome[10];      // Substituir por str
-    char descricao[10]; // Substituir por str
-    int qtd;            // quantidade de mídias existentes na locadora
-    int c_categoria;
-    char lingua[10]; // Substituir por str
-
-} filme;
-
 typedef struct{
     int codigo;
     char descricao[30];
     float vAlocacao;
 } fCategoria;
 
-filme *bd; // dataBase local
-int qtdFilme = 0, len_bd = 1;
-
 fCategoria *bd_cat;
 int qtdCat = 0, len_cat = 1;
-
-filme objFilme(int id) // Bloco para receber as entradas e "compartar" na struct
-{
-    filme p;
-    p.codigo = id;
-    printf("Nome: ");
-    scanf("%s", &p.nome);
-    printf("Descricao: ");
-    scanf("%s", &p.descricao);
-    printf("Quantidade de Exemplares: ");
-    scanf("%d", &p.qtd);
-    printf("Codigo Categoria: ");
-    scanf("%d", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
-    printf("Lingua: ");
-    scanf("%s", &p.lingua);
-    return p;
-}
 
 fCategoria objCategoria (int id){
     fCategoria obj;
@@ -52,71 +21,6 @@ fCategoria objCategoria (int id){
     return obj;
 }
 
-// +++++++++++++++++++++++++++++++++++++++++ Subrotinas para controle dos filmes +++++++++++++++++
-// void adFilme(filme *bd,int codigo)
-// {
-//     bd->codigo = codigo;
-//     printf("Nome: ");
-//     scanf("%s", &bd->nome);
-//     printf("Descricao: ");
-//     scanf("%s", &bd->descricao);
-//     printf("Quantidade de Exemplares: ");
-//     scanf("%d", &bd->qtd);
-//     printf("Codigo Categoria: ");
-//     scanf("%d", &bd->c_categoria);
-//     printf("Lingua: ");
-//     scanf("%s", &bd->lingua);
-// }
-void inserirFilme(filme p) //Recebe o objeto e insere no array bd_*
-{
-    // Se a quantidade de filmes for igual ao tamanho alocado da lista -> espandir
-    if (qtdFilme == len_bd)
-    {
-        len_bd += 1;
-        bd = realloc(bd, len_bd * sizeof(filme));
-    }
-    // adc obj ao bd local
-    bd[qtdFilme] = p;
-    qtdFilme++; 
-}
-void remFilme(filme *bd, int codigo){ //ponteiro global do db
-    for (int i = 0; i < qtdFilme; i++){
-        if (bd[i].codigo == codigo){
-            while (i < qtdFilme - 1){
-                bd[i] = bd[i + 1];
-                i++;
-            } 
-            qtdFilme--;
-            break;
-        }
-    }
-}
-void listFilme(filme *bd,int qtd){
-    for (int c = 0; c < qtd; c++){
-        printf("------------------------------------\n");
-        printf("(%d)\n\tNome:\t %s\n", c,bd[c].nome);
-        printf("\tDescricao:\t %s\n", bd[c].descricao);
-        printf("\tQnt de Exemplares:\t %d\n", bd[c].qtd);
-        printf("\tCodigo Categoria:\t %d\n", bd[c].c_categoria);
-        printf("\tLingua: \t%s\n", bd[c].lingua);
-    }
-}
-int alterFilme(filme f, filme *bd, int codigo){
-    for (int i = 0; i < qtdFilme; i++)
-    {
-        if(bd[i].codigo == codigo)
-        {
-            bd[i] = f;
-            break;
-            return 1;
-        }
-        else {
-            return 0;
-        }
-    }
- }
-
-// ++++++++++++++++++++++++++++++ Subrotinas para controle das Categorias filmes +++++++++++++++++
 void insCategoria(fCategoria p)
 {
     // Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
@@ -142,12 +46,14 @@ void remCategoria(fCategoria *bd, int codigo){
     }
 }
 void listCategoria(fCategoria *bd,int qtd){
+    system("cls");
+    printf("\n ID \tDescrição Categoria \t Valor Locação\n");
     for (int c = 0; c < qtd; c++){
-        printf("--------------------------------------\n");
-        printf("(%d)\n\tDescrição Categoria:\t %s\n", bd[c].codigo,bd[c].descricao);
-        printf("\tValor Locação:\t %.2f\n", bd[c].vAlocacao);
-        printf("--------------------------------------\n");
+        printf("----------------------------------------------------\n");
+        printf("(%d)\t%15s\t\t %.2f\n",bd[c].codigo,bd[c].descricao);
     }
+    printf("\n");
+    system("pause");
 }
 int alteraCat(fCategoria f, fCategoria *bd, int codigo){
     int proc = 0;
@@ -168,6 +74,7 @@ int alteraCat(fCategoria f, fCategoria *bd, int codigo){
 
 int menuCategoria(){
         int opc = 0, erro = 0, exit = 0;
+        system("cls");
         printf("------------- Categorias -------------\n\n");
         printf("\t 0 - Sair \n\t 1 - Cadastrar \n\t 2 - Cadastrar Multiplas \n");
         printf("\t 3 - Visualizar \n\t 4 - Editar \n\t 5 - Remover\n");
@@ -184,8 +91,10 @@ int menuCategoria(){
         } while (opc < 0 || opc > 5);
 
         if (opc == 0){
-            printf("Sair");
+            system("cls");
+            printf(">> Exit");
             exit = 1;
+            system("pause");
         }else if (opc == 1){
             //Cadastrar uma categoria
             fCategoria new = objCategoria(qtdCat);
@@ -219,9 +128,9 @@ int menuCategoria(){
         return exit;
 }
 
+
 int main()
 {
-    bd = malloc(len_bd * sizeof(filme));
     bd_cat = malloc(len_cat * sizeof(fCategoria));
 
     // filme p = objFilme(qtdFilme);
@@ -270,7 +179,7 @@ int main()
             break;
         }
     }
-    free(bd);
+
     free(bd_cat);
     return (0);
 }
