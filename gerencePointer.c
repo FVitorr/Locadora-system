@@ -144,24 +144,25 @@ void remCategoria(fCategoria *bd, int codigo){
 void listCategoria(fCategoria *bd,int qtd){
     for (int c = 0; c < qtd; c++){
         printf("--------------------------------------\n");
-        printf("(%d)\n\tNome:\t\t\t %s\n", bd->codigo,bd->descricao);
-        printf("\tValor Locação:\t %.2f\n", bd->vAlocacao);
+        printf("(%d)\n\tDescrição Categoria:\t %s\n", bd[c].codigo,bd[c].descricao);
+        printf("\tValor Locação:\t %.2f\n", bd[c].vAlocacao);
         printf("--------------------------------------\n");
     }
 }
 int alteraCat(fCategoria f, fCategoria *bd, int codigo){
+    int proc = 0;
     for (int i = 0; i < qtdCat; i++)
     {
         if(bd[i].codigo == codigo)
         {   
             bd[i] = f;
-            return 1;
+            proc = 1;
             break;
-        }
-        else {
-            return 0;
+        }else{
+            proc = 0;
         }
     }
+    return proc;
  }
 
 int main()
@@ -191,9 +192,23 @@ int main()
     // alterFilme(p,bd,codigo);
     // listFilme(bd,qtdFilme);
 
-    fCategoria new = objCategoria(qtdCat);
-    insCategoria(new);
-    listCategoria(bd_cat,qtdCat);
+    // fCategoria new = objCategoria(qtdCat);
+    // insCategoria(new);
+    // new = objCategoria(qtdCat);
+    // insCategoria(new);
+    // listCategoria(bd_cat,qtdCat);
+
+    // int codigo;
+    // printf("%d\n",qtdCat);
+
+    // printf("Editar:");
+    // scanf("%d", &codigo);
+    // new = objCategoria(codigo);
+    // int v;
+    // v = alteraCat(new,bd_cat,codigo);
+    // listCategoria(bd_cat,qtdCat);
+    // printf("%d",v);
+
 
     free(bd);
     free(bd_cat);
