@@ -1,20 +1,23 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
+#include "categoriaf.h"
 
 typedef struct
 {
     int codigo;
     char nome[10];      // Substituir por str
     char descricao[10]; // Substituir por str
-    int qtd;            // quantidade de mÃ­dias existentes na locadora
+    int qtd;            // quantidade de mídias existentes na locadora
     int c_categoria;
     char lingua[10]; // Substituir por str
 
 } filme;
 
-filme *bd_filme; // dataBase local
+filme* bd_filme; // dataBase local
 int qtdFilme = 0, len_bd = 1;
 
+int categTry(int ID);
 // +++++++++++++++++++++++++++++++++++++++++ Subrotinas para controle dos filmes +++++++++++++++++
 
 filme objFilme(int id) // Bloco para receber as entradas e "compartar" na struct
@@ -29,6 +32,7 @@ filme objFilme(int id) // Bloco para receber as entradas e "compartar" na struct
     scanf("%d", &p.qtd);
     printf("Codigo Categoria: ");
     scanf("%d", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
+    categTry(p.c_categoria);
     printf("Lingua: ");
     scanf("%s", &p.lingua);
     return p;
@@ -46,7 +50,7 @@ void inserirFilme(filme p) // Recebe o objeto e insere no array bd_*
     bd_filme[qtdFilme] = p;
     qtdFilme++;
 }
-void removerFilme(filme *bd, int codigo)
+void removerFilme(filme* bd, int codigo)
 { // ponteiro global do db
     for (int i = 0; i < qtdFilme; i++)
     {
@@ -62,18 +66,18 @@ void removerFilme(filme *bd, int codigo)
         }
     }
 }
-void listFilme(filme *bd, int qtd)
+void listFilme(filme* bd, int qtd)
 {
-    printf("\nID \t Nome \t DescriÃ§Ã£o \t Quant. Exemplares \t ID categoria \t Lingua\n");
+    printf("\nID \t Nome \t Descrição \t Quant. Exemplares \t ID categoria \t Lingua\n");
     for (int c = 0; c < qtd; c++)
     {
         printf("---------------------------------------------------------------------------------\n");
-        printf("(%d)\t %s\t %s\t\t\t %d\t\t %d\t\t %s\n", c, 
-                                            bd[c].nome,
-                                            bd[c].descricao,
-                                            bd[c].qtd, 
-                                            bd[c].c_categoria, 
-                                            bd[c].lingua);
+        printf("(%d)\t %s\t %s\t\t\t %d\t\t %d\t\t %s\n", c,
+            bd[c].nome,
+            bd[c].descricao,
+            bd[c].qtd,
+            bd[c].c_categoria,
+            bd[c].lingua);
         // printf("\tDescricao:\t %s\n", bd[c].descricao);
         // printf("\tQnt de Exemplares:\t %d\n", bd[c].qtd);
         // printf("\tCodigo Categoria:\t %d\n", bd[c].c_categoria);
@@ -82,7 +86,7 @@ void listFilme(filme *bd, int qtd)
     printf("\n");
 
 }
-int alterFilme(filme f, filme *bd, int codigo)
+int alterFilme(filme f, filme* bd, int codigo)
 {
     for (int i = 0; i < qtdFilme; i++)
     {
@@ -97,6 +101,28 @@ int alterFilme(filme f, filme *bd, int codigo)
             return 0;
         }
     }
+}
+
+categTry(int ID) {
+    int tem = locID(bd_cat,ID),opc = 0;
+    //int tem = 0;cc
+    if (tem == 0) {
+        printf("\n\t>> Categoria não encontrada \n");
+        printf("\t>> Cadastrar [1 - Sim] [ 0 - Não]: ");
+        scanf("%d", &opc);
+        if (opc == 0) {
+            return 1;
+        }
+        else {
+            fCategoria new = objCategoria(ID);
+            int suc = insCategoria(new);
+            if (suc == 1) {
+                printf("\n>> Sucess");
+            }
+            printf("\n");
+        }
+    }
+    return 0;
 }
 
 int menuFilme()
@@ -128,7 +154,7 @@ int menuFilme()
     {
         // Cadastrar um Filme
         system("cls");
-        printf(">> Novo filme     ID: %d \n\n",qtdFilme);
+        printf(">> Novo filme     ID: %d \n\n", qtdFilme);
         filme new = objFilme(qtdFilme);
         inserirFilme(new);
     }
@@ -139,7 +165,7 @@ int menuFilme()
         int op = 1;
         while (1)
         {
-            printf(">> Multiplos filme     ID: %d \n\n",qtdFilme);
+            printf(">> Multiplos filme     ID: %d \n\n", qtdFilme);
             filme new = objFilme(qtdFilme);
             inserirFilme(new);
             printf("\n >> [1 - Mais] \t [0 - Exit]: ");
@@ -154,7 +180,7 @@ int menuFilme()
     {
         // Visualizar
         system("cls");
-        printf(">> Filmes Cadastrados  \t Total: %d\n\n",qtdFilme);
+        printf(">> Filmes Cadastrados  \t Total: %d\n\n", qtdFilme);
         listFilme(bd_filme, qtdFilme);
         system("pause");
     }
@@ -173,17 +199,3 @@ int menuFilme()
     return exit;
 }
 
-int main()
-{
-    bd_filme = malloc(len_bd * sizeof(filme));
-
-    while (1)
-    {
-        int i = menuFilme();
-        if (i == 1){
-            break;
-        }
-    }
-    free(bd_filme);
-    return (0);
-}
