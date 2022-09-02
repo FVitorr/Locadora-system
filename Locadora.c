@@ -25,19 +25,10 @@ typedef struct
     char telefoneResponsavel[10];
 } locadora;
 
-locadora criarLocadora();
-void imprimirLocadora(locadora obj);
-void imprimirLocadoraList(locadora obj[]);
+locadora *dados;
+int qtd = 0, tamanho = 1;
 
-int main(){
-
-    locadora locadoraCriada = criarLocadora();
-    imprimirLocadora(locadoraCriada);
-    return 0;
-
-}
-
-locadora criarLocadora(){
+locadora criarLocadora(int atualizar){
     locadora obj;
 
     obj.id = 1;
@@ -73,10 +64,20 @@ locadora criarLocadora(){
     scanf("%s", &obj.endereco.cidade);
     printf("Estado: ");
     scanf("%s", &obj.endereco.estado);
+
+    if (atualizar == 1) {
+        if (qtd == tamanho) {
+            tamanho += 1;
+            dados = realloc(dados, tamanho * sizeof(locadora));
+        }
+        dados[qtd] = obj;
+        qtd++;
+    }
     return obj;
 }
 
 void imprimirLocadora(locadora obj){
+    printf("\nIdentificador da Locadora: %d", obj.id);
     printf("\nNome Fantasia: %s", obj.nomeFantasia);
     printf("\nRazão Social: %s", obj.razaoSocial);
     printf("\nInscrição Estadual: %s", obj.inscricaoEstadual);
@@ -89,6 +90,29 @@ void imprimirLocadora(locadora obj){
            obj.endereco.rua, obj.endereco.numero, obj.endereco.bairro, obj.endereco.cidade, obj.endereco.estado);
 }
 
-void imprimirLocadoraList(locadora obj[]){
-    obj
+void imprimirLocadoraList(){
+    for (int i = 0; i < qtd; ++i) {
+        imprimirLocadora(dados[i]);
+    }
+}
+
+void removerLocadora(int id){
+    for (int i = 0; i < qtd; i++){
+        if (dados[i].id == id){
+            while (i < qtd - 1){
+                dados[i] = dados[i + 1];
+                i++;
+            }
+            qtd--;
+            break;
+        }
+    }
+}
+
+void atualizarLocadora(int id){
+    for (int i = 0; i < qtd; i++){
+        if (dados[i].id == id){
+            dados[i] = criarLocadora(1);
+        }
+    }
 }
