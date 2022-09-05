@@ -1,14 +1,14 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
-#include "categoriaf.h"
+#include "../cabecalhos/categoriaF.h"
 
 typedef struct
 {
     int codigo;
     char nome[10];      // Substituir por str
     char descricao[10]; // Substituir por str
-    int qtd;            // quantidade de mídias existentes na locadora
+    int qtd;            // quantidade de mï¿½dias existentes na locadora
     int c_categoria;
     char lingua[10]; // Substituir por str
 
@@ -25,16 +25,16 @@ filme objFilme(int id) // Bloco para receber as entradas e "compartar" na struct
     filme p;
     p.codigo = id;
     printf("Nome: ");
-    scanf("%s", &p.nome);
+    scanf("%s", p.nome);
     printf("Descricao: ");
-    scanf("%s", &p.descricao);
+    scanf("%s", p.descricao);
     printf("Quantidade de Exemplares: ");
     scanf("%d", &p.qtd);
     printf("Codigo Categoria: ");
     scanf("%d", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
     categTry(p.c_categoria);
     printf("Lingua: ");
-    scanf("%s", &p.lingua);
+    scanf("%s", p.lingua);
     return p;
 }
 
@@ -68,7 +68,7 @@ void removerFilme(filme* bd, int codigo)
 }
 void listFilme(filme* bd, int qtd)
 {
-    printf("\nID \t Nome \t Descrição \t Quant. Exemplares \t ID categoria \t Lingua\n");
+    printf("\nID \t Nome \t Descriï¿½ï¿½o \t Quant. Exemplares \t ID categoria \t Lingua\n");
     for (int c = 0; c < qtd; c++)
     {
         printf("---------------------------------------------------------------------------------\n");
@@ -107,8 +107,8 @@ categTry(int ID) {
     int tem = locID(bd_cat,ID),opc = 0;
     //int tem = 0;cc
     if (tem == 0) {
-        printf("\n\t>> Categoria não encontrada \n");
-        printf("\t>> Cadastrar [1 - Sim] [ 0 - Não]: ");
+        printf("\n\t>> Categoria nï¿½o encontrada \n");
+        printf("\t>> Cadastrar [1 - Sim] [ 0 - Nï¿½o]: ");
         scanf("%d", &opc);
         if (opc == 0) {
             return 1;

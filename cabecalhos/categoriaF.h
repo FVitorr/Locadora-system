@@ -12,9 +12,6 @@ typedef struct {
     float vAlocacao;
 } fCategoria;
 
-fCategoria* bd_cat;
-int qtdCat, len_cat;
-
 fCategoria objCategoria(int id);
 
 int insCategoria(fCategoria p);

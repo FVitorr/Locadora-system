@@ -3,6 +3,7 @@
 
 #ifndef FILMES_H
 #define FILMES_H
+#include "categoriaF.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,7 +13,7 @@ extern "C" {
         int codigo;
         char nome[10];      // Substituir por str
         char descricao[10]; // Substituir por str
-        int qtd;            // quantidade de mídias existentes na locadora
+        int qtd;            // quantidade de mï¿½dias existentes na locadora
         int c_categoria;
         char lingua[10]; // Substituir por str
 
@@ -21,9 +22,9 @@ extern "C" {
     filme* bd_filme; // dataBase local
     int qtdFilme, len_bd;
 
-    int categTry(int ID);
+    int categTry(fCategoria *bd, int ID);
 
-    filme objFilme(int id);
+    filme objFilme(fCategoria *bd, int id);
 
     void inserirFilme(filme p);
 

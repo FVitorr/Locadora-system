@@ -1,32 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-
-typedef struct
-{
-    char rua[10];
-    int numero;
-    char bairro[10];
-    char cidade[10];
-    char estado[2];
-
-} endereco;
-
-typedef struct
-{
-    int id;
-    char nomeFantasia[10];
-    char razaoSocial[10];
-    char inscricaoEstadual[10];
-    int cnpj;
-    endereco endereco;
-    char telefone[10];
-    char email[10];
-    char nomeResponsavel[10];
-    char telefoneResponsavel[10];
-} locadora;
+#include "../cabecalhos/locadora.h"
 
 locadora *dados;
-int qtd = 0, tamanho = 1;
+int qtdLocadora = 0, tamanhoLocadora = 1;
 
 locadora criarLocadora(int atualizar){
     locadora obj;
@@ -36,42 +13,42 @@ locadora criarLocadora(int atualizar){
     (atualizar == 1) ? printf("Atualizando locadora\n") : printf("Criando uma nova locadora\n");;
     printf("===============================================\n");
     printf("Nome Fantasia: ");
-    scanf("%s", &obj.nomeFantasia);
+    scanf("%s", obj.nomeFantasia);
     printf("Razão Social: ");
-    scanf("%s", &obj.razaoSocial);
+    scanf("%s", obj.razaoSocial);
     printf("Inscrição Estadual: ");
-    scanf("%s", &obj.inscricaoEstadual);
+    scanf("%s", obj.inscricaoEstadual);
     printf("CNPJ: ");
     scanf("%d", &obj.cnpj);
     printf("Telefone: ");
-    scanf("%s", &obj.telefone);
+    scanf("%s", obj.telefone);
     printf("E-mail: ");
-    scanf("%s", &obj.email);
+    scanf("%s", obj.email);
     printf("Nome do Responsável: ");
-    scanf("%s", &obj.nomeResponsavel);
+    scanf("%s", obj.nomeResponsavel);
     printf("Telefone do Responsável: ");
-    scanf("%s", &obj.telefoneResponsavel);
+    scanf("%s", obj.telefoneResponsavel);
     printf("===============================================");
     printf("Inserindo endereço da locadora\n");
     printf("===============================================\n");
     printf("Rua: ");
-    scanf("%s", &obj.endereco.rua);
+    scanf("%s", obj.endereco.rua);
     printf("Número: ");
     scanf("%d", &obj.endereco.numero);
     printf("Bairro: ");
-    scanf("%s", &obj.endereco.bairro);
+    scanf("%s", obj.endereco.bairro);
     printf("Cidade: ");
-    scanf("%s", &obj.endereco.cidade);
+    scanf("%s", obj.endereco.cidade);
     printf("Estado: ");
-    scanf("%s", &obj.endereco.estado);
+    scanf("%s", obj.endereco.estado);
 
     if (atualizar == 1) {
-        if (qtd == tamanho) {
-            tamanho += 1;
-            dados = realloc(dados, tamanho * sizeof(locadora));
+        if (qtdLocadora == tamanhoLocadora) {
+            tamanhoLocadora += 1;
+            dados = realloc(dados, tamanhoLocadora * sizeof(locadora));
         }
-        dados[qtd] = obj;
-        qtd++;
+        dados[qtdLocadora] = obj;
+        qtdLocadora++;
     }
     return obj;
 }
@@ -91,26 +68,26 @@ void imprimirLocadora(locadora obj){
 }
 
 void imprimirLocadoraList(){
-    for (int i = 0; i < qtd; ++i) {
+    for (int i = 0; i < qtdLocadora; ++i) {
         imprimirLocadora(dados[i]);
     }
 }
 
 void removerLocadora(int id){
-    for (int i = 0; i < qtd; i++){
+    for (int i = 0; i < qtdLocadora; i++){
         if (dados[i].id == id){
-            while (i < qtd - 1){
+            while (i < qtdLocadora - 1){
                 dados[i] = dados[i + 1];
                 i++;
             }
-            qtd--;
+            qtdLocadora--;
             break;
         }
     }
 }
 
 void atualizarLocadora(int id){
-    for (int i = 0; i < qtd; i++){
+    for (int i = 0; i < qtdLocadora; i++){
         if (dados[i].id == id){
             dados[i] = criarLocadora(1);
         }
