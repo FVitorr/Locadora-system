@@ -40,8 +40,7 @@ typedef struct
     int seg;
 }hora;
 
-typedef struct
-{
+typedef struct{
     int dia;
     int mes;
     int ano;
@@ -152,11 +151,11 @@ void line(int max, char *t){
     printf("\n");
 }
 
-int main(){
-    hora now;
-    data today;
-    obterData(&today);
-    obterHour(&now);
-    printf("%d:%d:%d",now.hora,now.min,now.seg);
-    printf("\t%d:%d:%d",today.dia,today.mes,today.ano);
-}
+// int main(){
+//     hora now;
+//     data today;
+//     obterData(&today);
+//     obterHour(&now);
+//     printf("%d:%d:%d",now.hora,now.min,now.seg);
+//     printf("\t%d:%d:%d",today.dia,today.mes,today.ano);
+// }
