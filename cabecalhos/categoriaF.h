@@ -1,35 +1,25 @@
-#pragma once
-
-#ifndef CATEGORIAF_H
-#define CATEGORIAF_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 typedef struct {
     int codigo;
-    char descricao[30];
+    char descricao[50];
     float vAlocacao;
+    int ativo;
 } fCategoria;
 
-fCategoria objCategoria(int id);
+/*
+ Cria um objeto de Categoria
+ param: (int id, int tab = Tabulação?
+ */
+fCategoria objCategoria (int id,int tab);
+/*
+ Insere a Categoria no array Dinamico
+ */
+int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *tamanhoCategoria);
+/*
+ Remove a Categoria no array Dinamico
+ */
 
-int insCategoria(fCategoria p);
+int remCategoria(fCategoria **dtbase, int id, int qtdCategoria);
+void listCategorias(fCategoria **dtbase, int qtd);
+void editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,int id);
 
-void remCategoria(fCategoria* bd, int codigo);
-
-void listCategoria(fCategoria* bd, int qtd);
-
-int alteraCat(fCategoria f, fCategoria* bd, int codigo);
-
-int menuCategoria();
-
-int locID(fCategoria* bd, int codigo);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* CATEGORIAF_H */
-
+int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria);

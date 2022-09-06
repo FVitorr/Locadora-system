@@ -1,19 +1,11 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include "fucGlobal.h"
 
 
 //Macro typeof(var) retorna o tipo do dado
-
-#define typeof(var) _Generic( (var),\
-char: "Char",\
-int: "Integer",\
-float: "Float",\
-char *: "String",\
-void *: "Pointer",\
-default: "Undefined")
 
 // ****************** Estruturas de Tempo *******************//
 
@@ -33,18 +25,7 @@ default: "Undefined")
 // int tm_isdst; //indica horário de verão se for diferente de zero
 // };
 
-typedef struct
-{
-    int hora;
-    int min;
-    int seg;
-}hora;
 
-typedef struct{
-    int dia;
-    int mes;
-    int ano;
-}data;
 
 void obterHour(hora *n){
     struct tm * DATAHORA_ATUAL;
@@ -70,17 +51,9 @@ void obterData(data *n){
 }
 
 /* +++++++++++++++++ Gerenciamento de Endereço +++++++++++++++++ */
-typedef struct
-{
-    char rua[10];
-    int numero;
-    char bairro[10];
-    char cidade[10];
-    char estado[2];
-
-} endereco;
 
 
+/*
 int replaceInt(int newValue, int *camp){
     int erro = 0;
     if (typeof(*camp) == "Integer"){
@@ -101,8 +74,8 @@ int replaceChar(char newValue[5], char *camp){
     }
     return erro;
 }
-
-void addT(char *str){
++*/
+void addTab(char *str){
     int i;
     char temp[35];
     //printf("%s",str);
@@ -114,7 +87,6 @@ void addT(char *str){
         }
     }
     temp[i+1] = '\0';
-    printf("%s",temp);
     strcpy(str,temp);
 }
 
