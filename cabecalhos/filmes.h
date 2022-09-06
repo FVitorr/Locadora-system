@@ -3,7 +3,6 @@
 
 #ifndef FILMES_H
 #define FILMES_H
-#include "categoriaF.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,22 +18,18 @@ extern "C" {
 
     } filme;
 
-    filme* bd_filme; // dataBase local
-    int qtdFilme, len_bd;
 
-    int categTry(fCategoria *bd, int ID);
+    filme objFilme(int id);
 
-    filme objFilme(fCategoria *bd, int id);
+    int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes);
 
-    void inserirFilme(filme p);
+    int removerFilme(filme **dtbase, int id, int *qtdFilme);
 
-    void removerFilme(filme* bd, int codigo);
+    void listFilme(filme **dtbase, int qtd);
 
-    void listFilme(filme* bd, int qtd);
+    void editaFilme(filme **dtbase,int *qtdFilme,int *tamanhoFilmes,int id);
 
-    int alterFilme(filme f, filme* bd, int codigo);
-
-    int menuFilme();
+    int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes);
 
 
 

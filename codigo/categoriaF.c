@@ -49,8 +49,8 @@ int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *
     return 1;
     
 }
-int remCategoria(fCategoria **dtbase, int id, int qtdCategoria){
-    for (int i = 0; i < qtdCategoria; i++){
+int remCategoria(fCategoria **dtbase, int id, int *qtdCategoria){
+    for (int i = 0; i < *qtdCategoria; i++){
 //        printf("\nCod: %d",id);
 //        printf("\tCod: %d",(*dtbase)[i].codigo);
         if ((*dtbase)[i].codigo == id){
@@ -143,7 +143,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria) 
         int cod;
         printf("Remover:");
         scanf("%d", &cod);
-        remCategoria(dtbase, cod, *qtdCategoria);
+        remCategoria(dtbase, cod, qtdCategoria);
     }
     return exit;
 }

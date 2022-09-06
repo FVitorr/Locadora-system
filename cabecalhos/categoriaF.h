@@ -18,7 +18,7 @@ int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *
  Remove a Categoria no array Dinamico
  */
 
-int remCategoria(fCategoria **dtbase, int id, int qtdCategoria);
+int remCategoria(fCategoria **dtbase, int id, int *qtdCategoria);
 void listCategorias(fCategoria **dtbase, int qtd);
 void editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,int id);
 
