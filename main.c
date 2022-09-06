@@ -1,13 +1,21 @@
-
 #include <stdio.h>
-#include "cabecalhos/locadora.h"
-#include "cabecalhos/cliente.h"
+#include  <stdlib.h>
 #include "cabecalhos/categoriaF.h"
 
-int main() {
-    printf("%d", len_cat);
-    //bd_cat = malloc(len_cat * sizeof(fCategoria));
+fCategoria *bd_cat;
+int qtdCategoria = 0,TamanhoCategoria = 1;
 
-    printf("%d", qtdCat);
+
+int main() {
+    //printf("\n%p\n",&bd_cat);
+    bd_cat = malloc(TamanhoCategoria * sizeof(fCategoria));
+
+    while (1){
+        int a = menuCategoria(&bd_cat,&qtdCategoria,&TamanhoCategoria);
+        if (a==1){
+            break;
+        }
+    }
+
     return 0;
 }

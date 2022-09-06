@@ -1,4 +1,4 @@
-#include "categoria.h"
+#include "categoriaF.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
