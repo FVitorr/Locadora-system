@@ -1,9 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../cabecalhos/filmes.h"
-#include "../cabecalhos/fucGlobal.h"
 //#include "../cabecalhos/categoriaF.h"
-
 
 //int categTry(int ID);
 // +++++++++++++++++++++++++++++++++++++++++ Subrotinas para controle dos filmes +++++++++++++++++

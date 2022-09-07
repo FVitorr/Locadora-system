@@ -1,9 +1,11 @@
-typedef struct {
-    int codigo;
-    char descricao[50];
-    float vAlocacao;
-    int ativo;
-} fCategoria;
+
+#include "../cabecalhos/fucGlobal.h"
+//typedef struct {
+//    int codigo;
+//    char descricao[50];
+//    float vAlocacao;
+//    int ativo;
+//} fCategoria;
 
 /*
  Cria um objeto de Categoria

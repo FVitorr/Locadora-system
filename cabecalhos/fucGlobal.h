@@ -30,3 +30,10 @@ int replaceChar(char newValue[5], char *camp);
 void addTab(char *str);
 int lenChar(char *n);
 void line(int max, char *t);
+
+typedef struct {
+    int codigo;
+    char descricao[50];
+    float vAlocacao;
+    int ativo;
+} fCategoria;

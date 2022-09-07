@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include  <stdlib.h>
 //#include "cabecalhos/categoriaF.h"
-#include "cabecalhos/filmes.h"
+#include "../cabecalhos/filmes.h"
 
 fCategoria *bd_cat;
 int qtdCategoria = 0,TamanhoCategoria = 1;

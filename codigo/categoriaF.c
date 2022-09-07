@@ -1,8 +1,8 @@
-#include "categoriaF.h"
+#include "../cabecalhos/categoriaF.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "fucGlobal.h"
+//#include "../cabecalhos/filmes.h"
 
 
 fCategoria objCategoria (int id,int tab){
