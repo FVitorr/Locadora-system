@@ -15,11 +15,12 @@ int main() {
     bd_filme = malloc(TamanhoFilme * sizeof (filme));
 
     while (1){
-        int a = menuFilme(&bd_filme,&qtdFilmes,&TamanhoFilme,&bd_cat,&qtdCategoria);
+        int a = menuFilme(&bd_filme,&qtdFilmes,&TamanhoFilme,&bd_cat,&qtdCategoria,&TamanhoCategoria);
         if (a==1){
             break;
         }
     }
+    menuCategoria(&bd_cat,&qtdCategoria,&TamanhoCategoria);
 
     return 0;
 }

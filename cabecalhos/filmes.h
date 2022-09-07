@@ -20,7 +20,7 @@ extern "C" {
     } filme;
 
 
-    filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria, int id);
+    filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria, int id);
 
     int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes,int id);
 
@@ -28,11 +28,11 @@ extern "C" {
 
     void listFilme(filme **dtbase, int qtd);
 
-    void editaFilme(filme **dtbase,int *qtdFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoFilmes,int id);
+    void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id);
 
-    int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria ,int id);
+    int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id);
 
-    int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria);
+    int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria);
 
 
 
