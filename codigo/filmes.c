@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include "../cabecalhos/filmes.h"
 #include "../cabecalhos/fucGlobal.h"
+//#include "../cabecalhos/categoriaF.h"
 
 
 //int categTry(int ID);
 // +++++++++++++++++++++++++++++++++++++++++ Subrotinas para controle dos filmes +++++++++++++++++
 
-filme objFilme(int id) // Bloco para receber as entradas e "compartar" na struct
+filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria, int id) // Bloco para receber as entradas e "compartar" na struct
 {
     filme p;
     p.codigo = id;
@@ -19,13 +20,13 @@ filme objFilme(int id) // Bloco para receber as entradas e "compartar" na struct
     scanf("%d", &p.qtd);
     printf("Codigo Categoria: ");
     scanf("%d", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
-    //categTry(p.c_categoria);
+    categTry(dtbaseCategoria,qtdCategoria , p.c_categoria);
     printf("Lingua: ");
     scanf("%s", p.lingua);
     return p;
 }
 
-int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes){
+int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes,int id){
     //Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
     if (*qtdFilmes == *tamanhoFilmes)
     {
@@ -39,7 +40,7 @@ int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes
         return 0;
     }
     // adc obj ao bd local
-    (*dtbase)[*qtdFilmes] = newEntry;
+    (*dtbase)[id] = newEntry;
     *qtdFilmes = *qtdFilmes + 1;
     return 1;
 }
@@ -75,39 +76,39 @@ void listFilme(filme **dtbase, int qtd){
 
 }
 
-void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,int id)
+void editaFilme(filme **dtbase,int *qtdFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoFilmes,int id)
 {
     for (int i = 0; i < *qtdFilmes; i++) {
         if ((*dtbase)[i].codigo == id) {
-            filme newEntrada = objFilme(id);
-            inserirFilme(dtbase,newEntrada,qtdFilmes,tamanhoFilmes);
+            filme newEntrada = objFilme(dtbaseCategoria,qtdCategoria,id);
+            inserirFilme(dtbase,newEntrada,qtdFilmes,tamanhoFilmes,id);
         }
     }
 }
 
-//int categTry(int ID) {
-//    int tem = locID(bd_cat,ID),opc = 0;
-//    //int tem = 0;cc
-//    if (tem == 0) {
-//        printf("\n\t>> Categoria n�o encontrada \n");
-//        printf("\t>> Cadastrar [1 - Sim] [ 0 - N�o]: ");
-//        scanf("%d", &opc);
-//        if (opc == 0) {
-//            return 1;
-//        }
-//        else {
-//            fCategoria new = objCategoria(ID);
-//            int suc = insCategoria(new);
+int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria ,int id) {
+    int tem = locID(dtbaseCategoria,qtdCategoria,id),opc = 0;
+    //int tem = 0;cc
+    if (tem == 0) {
+        printf("\n\t>> Categoria não encontrada \n");
+        printf("\t>> Cadastrar [1 - Sim] [ 0 - N�o]: ");
+        scanf("%d", &opc);
+        if (opc == 0) {
+            return 1;
+        }
+        else {
+            //fCategoria new = objCategoria(id);
+            //int suc = insCategoria(new);
 //            if (suc == 1) {
 //                printf("\n>> Sucess");
 //            }
-//            printf("\n");
-//        }
-//    }
-//    return 0;
-//}
+            printf("\n");
+        }
+    }
+    return 0;
+}
 
-int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes){
+int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria){
     int opc = 0, erro = 0, exit = 0;
     system("cls");
     line(20,"Filmes\0");
@@ -136,19 +137,19 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes){
         // Cadastrar um Filme
         system("cls");
         printf(">> Novo filme     ID: %d \n\n", *qtdFilmes);
-        filme new = objFilme(*qtdFilmes);
-        inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes);
+        filme new = objFilme(dtbaseCategoria,qtdCategoria,*qtdFilmes);
+        inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,*qtdFilmes);
     }
     else if (opc == 2)
     {
         // Cadastrar multiplas categoria
         system("cls");
         int op = 1;
+        printf(">> Multiplos filme     ID: %d \n\n", *qtdFilmes);
         while (1)
         {
-            printf(">> Multiplos filme     ID: %d \n\n", *qtdFilmes);
-            filme new = objFilme(*qtdFilmes);
-            inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes);
+            filme new = objFilme(dtbaseCategoria,qtdCategoria,*qtdFilmes);
+            inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,*qtdFilmes);
             printf("\n >> [1 - Mais] \t [0 - Exit]: ");
             scanf("%d", &op);
             if (op == 0)

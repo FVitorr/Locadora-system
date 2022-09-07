@@ -22,4 +22,6 @@ int remCategoria(fCategoria **dtbase, int id, int *qtdCategoria);
 void listCategorias(fCategoria **dtbase, int qtd);
 void editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,int id);
 
+int locID(fCategoria **dtbase,int *qtdCategoria, int ID);
+
 int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria);

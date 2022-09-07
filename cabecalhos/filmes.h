@@ -7,6 +7,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+    #include "../cabecalhos/categoriaF.h"
     typedef struct
     {
         int codigo;
@@ -19,17 +20,19 @@ extern "C" {
     } filme;
 
 
-    filme objFilme(int id);
+    filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria, int id);
 
-    int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes);
+    int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes,int id);
 
     int removerFilme(filme **dtbase, int id, int *qtdFilme);
 
     void listFilme(filme **dtbase, int qtd);
 
-    void editaFilme(filme **dtbase,int *qtdFilme,int *tamanhoFilmes,int id);
+    void editaFilme(filme **dtbase,int *qtdFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoFilmes,int id);
 
-    int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes);
+    int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria ,int id);
+
+    int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria);
 
 
 

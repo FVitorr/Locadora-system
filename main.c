@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include  <stdlib.h>
-#include "cabecalhos/categoriaF.h"
+//#include "cabecalhos/categoriaF.h"
 #include "cabecalhos/filmes.h"
 
 fCategoria *bd_cat;
@@ -15,7 +15,7 @@ int main() {
     bd_filme = malloc(TamanhoFilme * sizeof (filme));
 
     while (1){
-        int a = menuFilme(&bd_filme,&qtdFilmes,&TamanhoFilme);
+        int a = menuFilme(&bd_filme,&qtdFilmes,&TamanhoFilme,&bd_cat,&qtdCategoria);
         if (a==1){
             break;
         }

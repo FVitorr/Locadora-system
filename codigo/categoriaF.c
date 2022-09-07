@@ -83,6 +83,29 @@ void editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,
         }
     }
 }
+int locID(fCategoria **dtbase,int *qtdCategoria, int ID) {
+    int erro = 0;
+    for (int i = 0; i < *qtdCategoria; i++)
+    {
+        if ((*dtbase[i]).codigo == ID) {
+            erro = 1;
+            break;
+        }
+    }
+    return erro;
+}
+
+int *obterID(fCategoria **dtbase,int *qtdCategoria){
+    int *ids;
+    ids = malloc((*qtdCategoria) * sizeof (int));
+    for (int i = 0; i < *qtdCategoria; i++){
+        ids[i] = (*dtbase)[0].codigo;
+    }
+    return  ids;
+}
+
+
+
 
 int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria) {
     int opc = 0, erro = 0, exit = 0;
