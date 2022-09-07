@@ -8,16 +8,17 @@
 extern "C" {
 #endif
     #include "../cabecalhos/categoriaF.h"
-    typedef struct
-    {
-        int codigo;
-        char nome[10];      // Substituir por str
-        char descricao[10]; // Substituir por str
-        int qtd;            // quantidade de m�dias existentes na locadora
-        int c_categoria;
-        char lingua[10]; // Substituir por str
-
-    } filme;
+    #include "../cabecalhos/fucGlobal.h"
+//    typedef struct
+//    {
+//        int codigo;
+//        char nome[10];      // Substituir por str
+//        char descricao[10]; // Substituir por str
+//        int qtd;            // quantidade de m�dias existentes na locadora
+//        int c_categoria;
+//        char lingua[10]; // Substituir por str
+//
+//    } filme;
 
 
     filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria, int id);
@@ -32,7 +33,7 @@ extern "C" {
 
     int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id);
 
-    int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria);
+    int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id);
 
 
 

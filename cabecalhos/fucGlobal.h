@@ -31,9 +31,13 @@ void addTab(char *str);
 int lenChar(char *n);
 void line(int max, char *t);
 
-typedef struct {
+typedef struct
+{
     int codigo;
-    char descricao[50];
-    float vAlocacao;
-    int ativo;
-} fCategoria;
+    char nome[10];      // Substituir por str
+    char descricao[10]; // Substituir por str
+    int qtd;            // quantidade de m�dias existentes na locadora
+    int c_categoria;
+    char lingua[10]; // Substituir por str
+
+} filme;

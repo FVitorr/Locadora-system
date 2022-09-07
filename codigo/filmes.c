@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../cabecalhos/filmes.h"
-//#include "../cabecalhos/categoriaF.h"
+//#include "../cabecalhos/fucGlobal.h"
 
 //int categTry(int ID);
 // +++++++++++++++++++++++++++++++++++++++++ Subrotinas para controle dos filmes +++++++++++++++++
@@ -59,19 +59,22 @@ int removerFilme(filme **dtbase, int id, int *qtdFilmes){
 
 
 void listFilme(filme **dtbase, int qtd){
-    printf("\nID \t Nome \t Descrição \t Quant. Exemplares \t ID categoria \t Lingua\n");
-    for (int c = 0; c < qtd; c++)
-    {
-        printf("---------------------------------------------------------------------------------\n");
-        printf("(%d)\t %s\t %s\t\t\t %d\t\t %d\t\t %s\n", (*dtbase)[c].codigo,
-               (*dtbase)[c].nome,
-               (*dtbase)[c].descricao,
-               (*dtbase)[c].qtd,
-               (*dtbase)[c].c_categoria,
-               (*dtbase)[c].lingua);
+    if (qtd > 0) {
+        printf("\nID \t Nome \t Descrição \t Quant. Exemplares \t ID categoria \t Lingua\n");
+        for (int c = 0; c < qtd; c++) {
+            printf("---------------------------------------------------------------------------------\n");
+            printf("(%d)\t %s\t %s\t\t\t %d\t\t %d\t\t %s\n", (*dtbase)[c].codigo,
+                   (*dtbase)[c].nome,
+                   (*dtbase)[c].descricao,
+                   (*dtbase)[c].qtd,
+                   (*dtbase)[c].c_categoria,
+                   (*dtbase)[c].lingua);
+        }
+    }
+    else{
+        printf("\n\t>> Nada para mostrar aqui");
     }
     printf("\n");
-
 }
 
 void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id)
@@ -88,31 +91,36 @@ int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategori
     int tem = locID(dtbaseCategoria,qtdCategoria,id),opc = 0;
     //int tem = 0;cc
     if (tem == 0) {
-        printf("\n\t>> Categoria não encontrada \n");
-        printf("\t>> Cadastrar [1 - Sim] [ 0 - N�o]: ");
+        printf("\n\t>> Categoria nao encontrada\n ");
+        printf("\t>> Cadastrar [1 - Sim] [ 0 - Nao]: ");
         scanf("%d", &opc);
         if (opc == 0) {
             return 1;
         }
         else {
+            printf("\n");
             fCategoria new = objCategoria(id,1);
             int suc = insCategoria(dtbaseCategoria,new,qtdCategoria,tamanhoCategoria);
             if (suc == 1) {
-                printf("\n>> Sucess");
+                printf("\n\t>> Nova categoria adicionada");
             }
             printf("\n");
         }
     }
     return 0;
 }
+void locFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes){
 
-int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria){
+}
+
+
+int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id){
     int opc = 0, erro = 0, exit = 0;
     system("cls");
-    line(20,"Filmes\0");
+    line(30,"Filmes\0");
     printf("\t 0 - Sair \n\t 1 - Cadastrar \n\t 2 - Cadastrar Multiplas \n");
-    printf("\t 3 - Visualizar \n\t 4 - Editar \n\t 5 - Remover\n");
-    line(20,"-\0");
+    printf("\t 3 - Visualizar \n\t 4 - Editar \n\t 5 - Remover");
+    line(30,"-\0");
 
     do
     {
@@ -120,40 +128,43 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         {
             printf(">> Parametro Invalido\n");
         }
-        printf("Opc: ");
+        printf(">> Opc: ");
         scanf("%d", &opc);
         erro = 1;
     } while (opc < 0 || opc > 5);
 
     if (opc == 0)
     {
-        printf("Sair");
+        printf(">> Exit");
         exit = 1;
     }
     else if (opc == 1)
     {
         // Cadastrar um Filme
         system("cls");
-        printf(">> Novo filme     ID: %d \n\n", *qtdFilmes);
-        filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,*qtdFilmes);
+        printf(">> Novo filme     \tID: %d \n", *id);
+        filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,*id);
         inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,*qtdFilmes);
+        *id = *id + 1;
     }
     else if (opc == 2)
     {
         // Cadastrar multiplas categoria
         system("cls");
         int op = 1;
-        printf(">> Multiplos filme     ID: %d \n\n", *qtdFilmes);
+        printf(">> Multiplos filme     \tID: %d \n", *qtdFilmes);
         while (1)
         {
-            filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,*qtdFilmes);
+            filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,*id);
             inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,*qtdFilmes);
             printf("\n >> [1 - Mais] \t [0 - Exit]: ");
             scanf("%d", &op);
+            *id = *id + 1;
             if (op == 0)
             {
                 break;
             }
+
         }
     }
     else if (opc == 3)
@@ -167,12 +178,22 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
     else if (opc == 4)
     {
         // editar
+        system("cls");
+        printf(">> Filmes Cadastrados  \t Total: %d\n\n", *qtdFilmes);
+        listFilme(dtbase, *qtdFilmes);
+        int cod;
+        printf("Editar (ID):");
+        scanf("%d", &cod);
+        editaFilme(dtbase,qtdFilmes,tamanhoFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,cod);
+        *qtdFilmes = *qtdFilmes - 1;
     }
     else if (opc == 5)
     {
         // Remover
+        system("cls");
+        listFilme(dtbase, *qtdFilmes);
         int cod;
-        printf("Remover:");
+        printf("Remover (ID):");
         scanf("%d", &cod);
         removerFilme(dtbase,cod,qtdFilmes);
     }

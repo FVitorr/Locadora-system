@@ -1,17 +1,16 @@
 #include "../cabecalhos/categoriaF.h"
+#include "../cabecalhos/fucGlobal.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-//#include "../cabecalhos/filmes.h"
-
 
 fCategoria objCategoria (int id,int tab){
     fCategoria obj;
 
     char msg[2][35];
 
-    strcpy(msg[0],"Descrição Categoria: \0");
-    strcpy(msg[1],"Valor Locação: \0");
+    strcpy(msg[0],"Descricao Categoria: \0");
+    strcpy(msg[1],"Valor Locacao: \0");
 
      if (tab == 1){
          addTab(msg[0]);
@@ -30,13 +29,13 @@ fCategoria objCategoria (int id,int tab){
 
 int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *tamanhoCategoria)
 {
-    printf("%d",*tamanhoCategoria);
+    //printf("%d",*tamanhoCategoria);
     //Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
     if (*qtdCategoria == *tamanhoCategoria)
     {
         *tamanhoCategoria = *tamanhoCategoria + 1;
         *dtbase = (fCategoria *) realloc(*dtbase, *tamanhoCategoria * sizeof(fCategoria));
-    }            
+    }
     if (*dtbase == NULL)
         {
             printf("\n  Erro na alocação de memória!");
@@ -103,8 +102,6 @@ int *obterID(fCategoria **dtbase,int *qtdCategoria){
     }
     return  ids;
 }
-
-
 
 
 int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria) {

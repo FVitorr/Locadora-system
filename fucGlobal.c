@@ -102,7 +102,7 @@ int lenChar(char *n){
 void line(int max, char *t){
     int qtd_a = (max - lenChar(t)) / 2;
     int par = qtd_a % 2 == 0 ? 0 : 1;
-    char a = '-';
+    char a = 205;
     printf("\n");
 
     for (int i = 0; i < max;)
