@@ -123,6 +123,15 @@ void line(int max, char *t){
     printf("\n");
 }
 
+void abortOp(void){
+    printf("\n\t[ERRO404] Operação Abortada:\n");
+}
+
+void sucess(void){
+    printf("\n\t>> Sucess");
+    system("pause");
+}
+
 // int main(){
 //     hora now;
 //     data today;

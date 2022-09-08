@@ -10,17 +10,33 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
 {
     filme p;
     p.codigo = id;
+
+    setbuf(stdin,NULL);
+
     printf("Nome: ");
-    scanf("%s", p.nome);
+    scanf("%[^\n]s", p.nome);
+
+    setbuf(stdin,NULL);
+
     printf("Descricao: ");
-    scanf("%s", p.descricao);
+    scanf("%[^\n]s", p.descricao);
+
+    setbuf(stdin,NULL);
+
     printf("Quantidade de Exemplares: ");
-    scanf("%d", &p.qtd);
+    scanf("%d%*c", &p.qtd);
+
+    //https://homepages.dcc.ufmg.br/~rodolfo/aedsi-2-10/printf_scanf/printfscanf.html
+
     printf("Codigo Categoria: ");
-    scanf("%d", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
+    scanf("%d%*c", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
+
     categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria , p.c_categoria);
+
+    setbuf(stdin,NULL);
+
     printf("Lingua: ");
-    scanf("%s", p.lingua);
+    scanf("%[^\n]s", p.lingua);
     return p;
 }
 
@@ -83,8 +99,10 @@ void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dt
         if ((*dtbase)[i].codigo == id) {
             filme newEntrada = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id);
             inserirFilme(dtbase,newEntrada,qtdFilmes,tamanhoFilmes,id);
+            break;
         }
     }
+    *qtdFilmes = *qtdFilmes - 1;
 }
 
 int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id) {
@@ -100,7 +118,7 @@ int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategori
         else {
             printf("\n");
             fCategoria new = objCategoria(id,1);
-            int suc = insCategoria(dtbaseCategoria,new,qtdCategoria,tamanhoCategoria);
+            int suc = insCategoria(dtbaseCategoria,new,qtdCategoria,tamanhoCategoria,*qtdCategoria);
             if (suc == 1) {
                 printf("\n\t>> Nova categoria adicionada");
             }
@@ -185,7 +203,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         printf("Editar (ID):");
         scanf("%d", &cod);
         editaFilme(dtbase,qtdFilmes,tamanhoFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,cod);
-        *qtdFilmes = *qtdFilmes - 1;
+
     }
     else if (opc == 5)
     {

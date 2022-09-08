@@ -38,10 +38,20 @@ int menuprincipal(fCategoria **dtbaseCategoria, int *qtdCategoria,int *tamanhoCa
             printf("Menu-Clientes\n");
             break;
         case 3:
-            menuCategoria(dtbaseCategoria,qtdCategoria,tamanhoCategoria);
+            while (1){
+                int t = menuCategoria(dtbaseCategoria,qtdCategoria,tamanhoCategoria);
+                if (t == 1){
+                    break;
+                }
+            }
             return 0;
         case 4:
-            menuFilme(dtbaseFilme,qtdFilmes,tamanhoFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,id);
+            while (1){
+                int t = menuFilme(dtbaseFilme,qtdFilmes,tamanhoFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,id);
+                if (t == 1){
+                    break;
+                }
+            }
             return 0;
     }
 }

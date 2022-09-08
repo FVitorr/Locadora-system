@@ -34,10 +34,13 @@ void line(int max, char *t);
 typedef struct
 {
     int codigo;
-    char nome[10];      // Substituir por str
-    char descricao[10]; // Substituir por str
+    char nome[120];      // Substituir por str
+    char descricao[120]; // Substituir por str
     int qtd;            // quantidade de m�dias existentes na locadora
     int c_categoria;
-    char lingua[10]; // Substituir por str
+    char lingua[120]; // Substituir por str
 
 } filme;
+
+void abortOp(void);
+void sucess(void);

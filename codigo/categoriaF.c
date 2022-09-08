@@ -19,15 +19,19 @@ fCategoria objCategoria (int id,int tab){
 
     obj.codigo = id;
     printf("%s ",msg[0]);
-    scanf("%s", obj.descricao);
+
+    fflush(stdin);
+    scanf("%[^\n]s",obj.descricao);
+
     printf("%s ",msg[1]);
-    scanf("%f", &obj.vAlocacao);
+    scanf("%f%*c", &obj.vAlocacao);
+
     obj.ativo = 1;
     return obj;
 }
 
 
-int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *tamanhoCategoria)
+int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *tamanhoCategoria, int id)
 {
     //printf("%d",*tamanhoCategoria);
     //Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
@@ -40,10 +44,10 @@ int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *
         {
             printf("\n  Erro na alocação de memória!");
             system("pause");
-            return 0;
+            return 1;
         } 
     // adc obj ao bd local
-    (*dtbase)[*qtdCategoria] = newEntry;
+    (*dtbase)[id] = newEntry;
     *qtdCategoria = *qtdCategoria + 1;
     return 1;
     
@@ -71,16 +75,16 @@ void listCategorias(fCategoria **dtbase, int qtd){
     }
     printf("\n");
 }
-void editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,int id){
+int editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,int id){
     for (int i = 0; i < *qtdCategoria ; i++){
         if ((*dtbase)[i].codigo == id){
-            //line(100, msg);
-            printf("_____EDITA____\n");
             fCategoria new = objCategoria((*dtbase)[i].codigo,0);
-            insCategoria(dtbase,new,qtdCategoria,tamanhoCategoria);
-            break;
+            insCategoria(dtbase,new,qtdCategoria,tamanhoCategoria,id);
+            *qtdCategoria = *qtdCategoria - 1;
+            return 0;
         }
     }
+    return 1;
 }
 int locID(fCategoria **dtbase,int *qtdCategoria, int ID) {
     int erro = 0;
@@ -106,6 +110,8 @@ int *obterID(fCategoria **dtbase,int *qtdCategoria){
 
 int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria) {
     int opc = 0, erro = 0, exit = 0;
+    system("cls");
+
     line(30,"Categorias \0");
     printf("\t 0 - Sair \n\t 1 - Cadastrar \n\t 2 - Cadastrar Multiplas \n");
     printf("\t 3 - Visualizar \n\t 4 - Editar \n\t 5 - Remover\n");
@@ -129,7 +135,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria) 
         //Cadastrar uma categoria
         printf(">> Nova Categoria     ID: %d \n\n", *qtdCategoria);
         fCategoria newObjeto = objCategoria(*qtdCategoria,0);
-        insCategoria(dtbase,newObjeto,qtdCategoria,tamanhoCategoria);
+        insCategoria(dtbase,newObjeto,qtdCategoria,tamanhoCategoria,*qtdCategoria);
     }
     else if (opc == 2) {
         //Cadastrar multiplas categoria
@@ -139,7 +145,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria) 
         while (1)
         {
             fCategoria new = objCategoria(*qtdCategoria,0);
-            insCategoria(dtbase,new,qtdCategoria,tamanhoCategoria);
+            insCategoria(dtbase,new,qtdCategoria,tamanhoCategoria,*qtdCategoria);
             printf("[1 - Mais] \t [0 - Exit]: ");
             scanf("%d", &qtd_);
             if (qtd_ == 0) {
@@ -156,7 +162,21 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria) 
     }
     else if (opc == 4) {
         // editar
-        editaCategoria(dtbase,qtdCategoria,tamanhoCategoria,0);
+        int cod;
+
+        printf(">> Categorias Cadastradas  \t Total: %d\n\n", *qtdCategoria);
+        listCategorias(dtbase,*qtdCategoria);
+
+        printf(">>Editar:");
+        scanf("%d", &cod);
+
+        int t = editaCategoria(dtbase,qtdCategoria,tamanhoCategoria,cod);
+        if (t == 1){
+            printf("\n\t>> ID não encontrado");
+            abortOp();
+        }else{
+            sucess();
+        }
     }
     else if (opc == 5) {
         // Remover
