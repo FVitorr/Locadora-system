@@ -70,5 +70,9 @@ int main() {
             break;
         }
     }
+    free(bd_cat);
+    free(bd_filme);
+    bd_cat = NULL;
+    bd_filme = NULL;
     return 0;
 }

@@ -170,7 +170,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         // Cadastrar multiplas categoria
         system("cls");
         int op = 1;
-        printf(">> Multiplos filme     \tID: %d \n", *qtdFilmes);
+        printf(">> Multiplos filme     \tID: %d \n", *id);
         while (1)
         {
             filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,*id);
