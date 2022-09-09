@@ -1,9 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../cabecalhos/filmes.h"
-//#include "../cabecalhos/fucGlobal.h"
 
-//int categTry(int ID);
 // +++++++++++++++++++++++++++++++++++++++++ Subrotinas para controle dos filmes +++++++++++++++++
 
 filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria, int id) // Bloco para receber as entradas e "compartar" na struct
@@ -127,6 +125,7 @@ int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategori
     }
     return 0;
 }
+
 void locFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes){
 
 }
