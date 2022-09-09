@@ -9,24 +9,24 @@
 typedef struct
 {
     int id;
-    char nome[10];
+    char nome[50];
     endereco endereco;
     int cpf;
-    char telefone[10];
-    char email[10];
-    char sexo[1];
-    char estadoCivil[10];
-    char dataNascimento[10];
+    char telefone[15];
+    char email[50];
+    char sexo[15];
+    char estadoCivil[15];
+    char dataNascimento[12];
 } cliente;
 
-cliente criarCliente(cliente *dados, int atualizar);
+cliente criarCliente(int id);
 
-void imprimirCliente(cliente obj);
+int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *tamanhoCliente, int id);
 
-void imprimirClienteList(cliente *dados);
+int removerCliente(cliente **dtbase, int id, int *qtdCliente);
 
-void removerCliente(cliente *dados, int id);
+void listCliente(cliente **dtbase, int qtd);
 
-void atualizarCliente(cliente *dados, int id);
+void editaCliente(cliente **dtbase, int *qtdCliente, int *tamanhoCliente, int id);
 
 #endif //CLIENTE_H

@@ -18,25 +18,25 @@ typedef struct
 typedef struct
 {
     int id;
-    char nomeFantasia[10];
-    char razaoSocial[10];
-    char inscricaoEstadual[10];
+    char nomeFantasia[50];
+    char razaoSocial[50];
+    char inscricaoEstadual[30];
     int cnpj;
     endereco endereco;
-    char telefone[10];
-    char email[10];
-    char nomeResponsavel[10];
-    char telefoneResponsavel[10];
+    char telefone[15];
+    char email[50];
+    char nomeResponsavel[50];
+    char telefoneResponsavel[15];
 } locadora;
 
-locadora criarLocadora(int atualizar);
+locadora criarLocadora(int id);
 
-void imprimirLocadora(locadora obj);
+int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora, int id);
 
-void imprimirLocadoraList();
+int removerLocadora(locadora **dtbase, int id, int *qtdLocadora);
 
-void removerLocadora(int id);
+void listLocadora(locadora **dtbase, int qtd);
 
-void atualizarLocadora(int id);
+void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int id);
 
 #endif //LOCADORA_H
