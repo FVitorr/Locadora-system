@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <conio.h>
 #include "fucGlobal.h"
 
 
@@ -52,29 +53,6 @@ void obterData(data *n){
 
 /* +++++++++++++++++ Gerenciamento de Endereço +++++++++++++++++ */
 
-
-/*
-int replaceInt(int newValue, int *camp){
-    int erro = 0;
-    if (typeof(*camp) == "Integer"){
-        *camp = newValue;
-    }else{
-        erro = 1;
-    }
-    return erro;
-}
-
-int replaceChar(char newValue[5], char *camp){
-    int erro = 0;
-    //printf("new: %s ",newValue);
-    if (typeof(*camp) == "Char" || typeof(*camp) == "String"){
-        strcpy( camp, newValue );
-    }else{
-        erro = 1;
-    }
-    return erro;
-}
-+*/
 void addTab(char *str){
     int i;
     char temp[35];
@@ -100,7 +78,7 @@ int lenChar(char *n){
 }
 
 void line(int max, char *t){
-    int qtd_a = (max - lenChar(t)) / 2;
+    int qtd_a = (max - strlen(t)) / 2;
     int par = qtd_a % 2 == 0 ? 0 : 1;
     char a = 205;
     printf("\n");
@@ -130,6 +108,28 @@ void abortOp(void){
 void sucess(void){
     printf("\n\t>> Sucess");
     system("pause");
+}
+
+typedef struct
+{
+    char user[120];
+    char *password;
+
+}autentificacao;
+
+char  *obterPassword(int max){
+    char *senha = (char *)malloc(sizeof(char) * max + 1);
+    int i = 0;
+
+    char ch = getch();
+    while (ch != 13 && i < max) {
+        senha[i] = ch;
+        putchar(36);
+        ch = getch();
+        i++;
+    }
+    senha[i] = '\0';
+    return senha;
 }
 
 // int main(){

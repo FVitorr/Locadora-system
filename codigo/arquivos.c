@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-char *creatFile(char nameFile_[200]){
+int *creatFile(char nameFile_[200]){
     FILE *p;
     char *nameFile, *extesao;
     strcpy (nameFile,nameFile_);
@@ -15,10 +15,11 @@ char *creatFile(char nameFile_[200]){
     }
     if (p == NULL){
         printf(">> Erro ao criar Arquivo");
+        return 1;
     }
 
     fclose(p);
-    return nameFile;
+    return 0;
 }
 
 
