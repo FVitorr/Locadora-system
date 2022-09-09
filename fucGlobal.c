@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include <conio.h>
-#include "fucGlobal.h"
+// Comentei pq essa biblioteca não existe no linux
+//#include <conio.h>
+#include "cabecalhos/fucGlobal.h"
 
 
 //Macro typeof(var) retorna o tipo do dado
@@ -115,28 +116,20 @@ typedef struct
     char user[120];
     char *password;
 
-}autentificacao;
+} autentificacao;
 
-char  *obterPassword(int max){
-    char *senha = (char *)malloc(sizeof(char) * max + 1);
-    int i = 0;
-
-    char ch = getch();
-    while (ch != 13 && i < max) {
-        senha[i] = ch;
-        putchar(36);
-        ch = getch();
-        i++;
-    }
-    senha[i] = '\0';
-    return senha;
-}
-
-// int main(){
-//     hora now;
-//     data today;
-//     obterData(&today);
-//     obterHour(&now);
-//     printf("%d:%d:%d",now.hora,now.min,now.seg);
-//     printf("\t%d:%d:%d",today.dia,today.mes,today.ano);
-// }
+// Comentei pq essa biblioteca não existe no linux
+//char  *obterPassword(int max){
+//    char *senha = (char *)malloc(sizeof(char) * max + 1);
+//    int i = 0;
+//
+//    char ch = getch();
+//    while (ch != 13 && i < max) {
+//        senha[i] = ch;
+//        putchar(36);
+//        ch = getch();
+//        i++;
+//    }
+//    senha[i] = '\0';
+//    return senha;
+//}

@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include  <stdlib.h>
-//#include "cabecalhos/categoriaF.h"
-#include "../cabecalhos/filmes.h"
-//#include "../cabecalhos/fucGlobal.h"
+#include "cabecalhos/filmes.h"
 
 fCategoria *bd_cat;
 int qtdCategoria = 0,TamanhoCategoria = 1;
@@ -58,7 +56,6 @@ int menuprincipal(fCategoria **dtbaseCategoria, int *qtdCategoria,int *tamanhoCa
 }
 
 int main() {
-    //printf("\n%p\n",&bd_cat);
     bd_cat = malloc(TamanhoCategoria * sizeof(fCategoria));
     bd_filme = malloc(TamanhoFilme * sizeof (filme));
 
