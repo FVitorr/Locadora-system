@@ -191,20 +191,20 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria) 
 //
 //
 //fCategoria *bd_cat;
-//int qtdCategoria = 0,TamanhoCategoria = 1;
+//int qtdCategoria = 0,tamanhoCategoria = 1;
 //
 //int main() {
 //
-//    bd_cat = malloc(TamanhoCategoria * sizeof(fCategoria));
+//    bd_cat = malloc(tamanhoCategoria * sizeof(fCategoria));
 //    fCategoria new = objCategoria(qtdCategoria,0);
-//    insCategoria(&bd_cat,new,&qtdCategoria,&TamanhoCategoria);
+//    insCategoria(&bd_cat,new,&qtdCategoria,&tamanhoCategoria);
 //    // printf("QTD: %d\n",qtdCategoria);
 //    // printf("Cod: %d\n",bd_cat[0].codigo);
 //    // printf("Des: %s\n",bd_cat[0].descricao);
 //    // printf("FLAg: %d\n",bd_cat[0].ativo);
 //    listCategorias(&bd_cat,qtdCategoria);
 //    fCategoria new1 = objCategoria(qtdCategoria,0);
-//    insCategoria(&bd_cat,new1,&qtdCategoria,&TamanhoCategoria);
+//    insCategoria(&bd_cat,new1,&qtdCategoria,&tamanhoCategoria);
 //    listCategorias(&bd_cat,qtdCategoria);
 //    // printf("QTD: %d\n",qtdCategoria);
 //    // printf("Cod: %d\n",bd_cat[1].codigo);
@@ -218,7 +218,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria) 
 //    printf("Ativo: %d\n",bd_cat[0].ativo);
 //
 //    listCategorias(&bd_cat,qtdCategoria);
-//    editaCategoria(&bd_cat,&qtdCategoria,&TamanhoCategoria,0);
+//    editaCategoria(&bd_cat,&qtdCategoria,&tamanhoCategoria,0);
 //    listCategorias(&bd_cat,qtdCategoria);
 //    free(bd_cat);
 //    return 0;

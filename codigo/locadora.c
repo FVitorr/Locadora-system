@@ -39,7 +39,6 @@ locadora criarLocadora(int id) {
     printf("Telefone do Responsável: ");
     scanf("%[^\n]s", obj.telefoneResponsavel);
 
-
     setbuf(stdin,NULL);
     printf("Rua: ");
     scanf("%[^\n]s", obj.endereco.rua);

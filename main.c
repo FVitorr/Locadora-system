@@ -2,12 +2,19 @@
 #include  <stdlib.h>
 #include "cabecalhos/filmes.h"
 #include "cabecalhos/locadora.h"
+#include "cabecalhos/cliente.h"
 
 fCategoria *bd_cat;
-int qtdCategoria = 0,TamanhoCategoria = 1;
+int qtdCategoria = 0, tamanhoCategoria = 1;
 
 filme  *bd_filme;
-int qtdFilmes = 0,TamanhoFilme = 1, idControle = 0;
+int qtdFilmes = 0, tamanhoFilme = 1, idControle = 0;
+
+locadora *bd_locadora;
+int qtdLocadora = 0, tamanhoLocadora = 1, idControleLocadora = 0;
+
+cliente *bd_cliente;
+int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 0;
 
 int menuprincipal(fCategoria **dtbaseCategoria, int *qtdCategoria,int *tamanhoCategoria,
                    filme **dtbaseFilme, int *qtdFilmes,int *tamanhoFilmes, int *id){
@@ -57,13 +64,13 @@ int menuprincipal(fCategoria **dtbaseCategoria, int *qtdCategoria,int *tamanhoCa
 }
 
 int main() {
-    bd_cat = malloc(TamanhoCategoria * sizeof(fCategoria));
-    bd_filme = malloc(TamanhoFilme * sizeof (filme));
+    bd_cat = malloc(tamanhoCategoria * sizeof(fCategoria));
+    bd_filme = malloc(tamanhoFilme * sizeof (filme));
 
     while (1){
         int v;
-        v = menuprincipal(&bd_cat,&qtdCategoria,&TamanhoCategoria,
-                    &bd_filme,&qtdFilmes,&TamanhoFilme,&idControle);
+        v = menuprincipal(&bd_cat,&qtdCategoria,&tamanhoCategoria,
+                    &bd_filme,&qtdFilmes,&tamanhoFilme,&idControle);
         if (v == 1){
             break;
         }
