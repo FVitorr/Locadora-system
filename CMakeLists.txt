@@ -10,6 +10,7 @@ add_executable(Locadora_system
         cabecalhos/filmes.h
         cabecalhos/locadora.h
         cabecalhos/cliente.h
+        cabecalhos/funcionarios.h
         cabecalhos/fucGlobal.h
         codigo/categoriaF.c
         codigo/filmes.c

@@ -2,67 +2,65 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../cabecalhos/funcionarios.h"
+#include "../cabecalhos/fucGlobal.h"
+#include "../cabecalhos/locadora.h"
 
-typedef struct 
-{
-    char user[120];
-    char *password;
-}autentificacao;
-
-typedef struct 
-{
-    int codigo;
-    char nome[50];
-    char cargo[30];
-    //Endereço
-    char telefone[13];
-    char email[50];
-
-    autentificacao login;
-}funcionarios;
 
 int criarFuncionario(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFuncionarios,int atualizar,int id){
     funcionarios obj;
     int erro = 0;
 
     obj.codigo = id;
-    printf("===============================================\n");
-    (atualizar == 1) ? printf("Atualizando Funcionario\n") : printf("Adicionar novo Funcionario\n");;
-    printf("===============================================\n");
-    fflush (stdin);
+
+    (atualizar == 1) ? line(30,"Atualizando Funcionarios\0") : line(30,"Adicionar novo funcionario\0");;
+    setbuf(stdin,NULL);
 
     printf("Nome : ");
     scanf("%[^\n]s", obj.nome);
 
-    fflush (stdin);
+    setbuf(stdin,NULL);
 
     printf("Cargo: ");
     scanf("%s", obj.cargo);
 
-    // printf("===============================================");
-    // printf("Inserindo endereço da locadora\n");
-    // printf("===============================================\n");
-    // printf("Rua: ");
-    // scanf("%s", obj.endereco.rua);
-    // printf("Número: ");
-    // scanf("%d", &obj.endereco.numero);
-    // printf("Bairro: ");
-    // scanf("%s", obj.endereco.bairro);
-    // printf("Cidade: ");
-    // scanf("%s", obj.endereco.cidade);
-    // printf("Estado: ");
-    // scanf("%s", obj.endereco.estado);
-    fflush (stdin);
+    setbuf(stdin,NULL);
+
+    line(20,"Endereço Funcionario\n");
+    printf("Rua: ");
+    scanf("%s", obj.endereco.rua);
+
+    setbuf(stdin,NULL);
+
+    printf("Número: ");
+    scanf("%d", &obj.endereco.numero);
+
+    setbuf(stdin,NULL);
+
+    printf("Bairro: ");
+    scanf("%s", obj.endereco.bairro);
+
+    setbuf(stdin,NULL);
+
+    printf("Cidade: ");
+    scanf("%s", obj.endereco.cidade);
+
+    setbuf(stdin,NULL);
+
+    printf("Estado: ");
+    scanf("%s", obj.endereco.estado);
+
+    setbuf(stdin,NULL);
 
     printf("Telefone: ");
     scanf("%[^\n]s", obj.telefone);
 
-    fflush (stdin);
+    setbuf(stdin,NULL);
 
     printf("E-mail: ");
     scanf("%[^\n]s", obj.email);
 
-    fflush (stdin);
+    setbuf(stdin,NULL);
 
     printf("===============================================\n");
     printf("\tAcesso\n");
@@ -70,10 +68,10 @@ int criarFuncionario(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFun
     printf("Usuario: ");
     scanf("%[^\n]s", obj.login.user);
 
-    fflush (stdin);
+    setbuf(stdin,NULL);
 
     printf("Senha: ");
-    //scanf("%[^\n]s", obj.login.password);
+    obj.login.password = obterPassword(16);
     if (*qtdFuncionarios == *tamanhoFuncionarios) {
             *tamanhoFuncionarios = *tamanhoFuncionarios +  1;
             (*dtbase) = realloc((*dtbase), *tamanhoFuncionarios * sizeof(funcionarios));
@@ -231,20 +229,20 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFun
 }
 
 
-funcionarios  *bd_funcionarios;
-int qtdFuncionarios = 0,TamanhoFuncionarios = 1, idControle = 0;
-
-int main() {
-    //printf("\n%p\n",&bd_cat);
-    bd_funcionarios = malloc(TamanhoFuncionarios * sizeof(funcionarios));
-
-    while (1){
-        int v;
-        v = menuFuncionarios(&bd_funcionarios,&qtdFuncionarios,&TamanhoFuncionarios,&idControle);
-        if (v == 1){
-            break;
-        }
-    }
-    free(bd_funcionarios);
-    return 0;
-}
+//funcionarios  *bd_funcionarios;
+//int qtdFuncionarios = 0,TamanhoFuncionarios = 1, idControle = 0;
+//
+//int main() {
+//    //printf("\n%p\n",&bd_cat);
+//    bd_funcionarios = malloc(TamanhoFuncionarios * sizeof(funcionarios));
+//
+//    while (1){
+//        int v;
+//        v = menuFuncionarios(&bd_funcionarios,&qtdFuncionarios,&TamanhoFuncionarios,&idControle);
+//        if (v == 1){
+//            break;
+//        }
+//    }
+//    free(bd_funcionarios);
+//    return 0;
+//}

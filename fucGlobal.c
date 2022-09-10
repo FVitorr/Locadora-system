@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 // Comentei pq essa biblioteca não existe no linux
-//#include <conio.h>
+#include <conio.h>
 #include "cabecalhos/fucGlobal.h"
 
 
@@ -111,25 +111,20 @@ void sucess(void){
     system("pause");
 }
 
-typedef struct
-{
-    char user[120];
-    char *password;
-
-} autentificacao;
 
 // Comentei pq essa biblioteca não existe no linux
-//char  *obterPassword(int max){
-//    char *senha = (char *)malloc(sizeof(char) * max + 1);
-//    int i = 0;
-//
-//    char ch = getch();
-//    while (ch != 13 && i < max) {
-//        senha[i] = ch;
-//        putchar(36);
-//        ch = getch();
-//        i++;
-//    }
-//    senha[i] = '\0';
-//    return senha;
-//}
+char  *obterPassword(int max){
+    char *senha = (char *)malloc(sizeof(char) * max + 1);
+    int i = 0;
+
+    char ch = getch();
+    while (ch != 13 && i < max) {
+        senha[i] = ch;
+        putchar(36);
+        ch = getch();
+        i++;
+    }
+    senha[i] = '\0';
+    return senha;
+}
+

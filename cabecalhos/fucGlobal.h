@@ -22,6 +22,7 @@ typedef struct
 
 } filme;
 
+
 void obterHour(hora *n);
 
 void obterData(data *n);
@@ -39,3 +40,5 @@ void line(int max, char *t);
 void abortOp(void);
 
 void sucess(void);
+
+char  *obterPassword(int max);
