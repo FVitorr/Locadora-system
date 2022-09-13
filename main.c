@@ -5,6 +5,7 @@
 #include "cabecalhos/locadora.h"
 #include "cabecalhos/cliente.h"
 #include "cabecalhos/funcionarios.h"
+#include "cabecalhos/fornecedor.h"
 
 fCategoria *bd_cat;
 int qtdCategoria = 0, tamanhoCategoria = 1;
@@ -20,6 +21,9 @@ int qtdLocadora = 0, tamanhoLocadora = 1, idControleLocadora = 0;
 
 cliente *bd_cliente;
 int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 0;
+
+fornecedor *bd_fornecedor;
+int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
 
 int menuprincipal(fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
@@ -80,6 +84,7 @@ int main() {
     bd_cat = malloc(tamanhoCategoria * sizeof(fCategoria));
     bd_filme = malloc(tamanhoFilme * sizeof (filme));
     bd_funcionarios = malloc(tamanhoFuncionarios * sizeof (funcionarios));
+    bd_fornecedor = malloc(tamanhoFornecedor * sizeof (fornecedor));
 
     while (1){
         int v;

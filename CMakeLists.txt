@@ -11,10 +11,13 @@ add_executable(Locadora_system
         cabecalhos/locadora.h
         cabecalhos/cliente.h
         cabecalhos/funcionarios.h
+        cabecalhos/fornecedor.h
         cabecalhos/fucGlobal.h
         codigo/categoriaF.c
         codigo/filmes.c
         codigo/locadora.c
         codigo/cliente.c
+        codigo/funcionarios.c
+        codigo/fornecedor.c
         fucGlobal.c
         main.c)
