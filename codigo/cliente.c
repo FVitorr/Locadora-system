@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../cabecalhos/cliente.h"
+#include "../cabecalhos/fucGlobal.h"
 
 cliente criarCliente(int id){
     cliente obj;

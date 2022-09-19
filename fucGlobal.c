@@ -128,3 +128,64 @@ char  *obterPassword(int max){
     return senha;
 }
 
+/*
+   Função para converter char em Int
+   retorna o numero inteiro ou -1 se a operação falhar
+*/
+
+int ctoi ( char ch ) {
+    return (int) (ch > 47 && ch < 58) ? ch - 48 : -1;
+}
+
+/*
+https://dicasdeprogramacao.com.br/algoritmo-para-validar-cpf/#:~:text=Regra%20para%20validar%20CPF&text=O%20CPF%20%C3%A9%20formado%20por,do%20sinal%20%22%2D%22)
+
+Função para validar CPF
+
+Entrada: *cpf
+
+Saida: 0 - Cpf Valido
+       1 - Cpf Invalido
+*/
+
+int validaCPF(char *cpf){
+    int erro = 0;
+    int key_ = 10,result = 0,num;
+    if (strlen(cpf) == 11){ //Se não tiver 11 digitos CPF invalido
+        // Verificar se os digitos não são entradas sucessivas de mesmo digito e
+        //se podem ser convertido para int
+        int qtd = 0;
+        for (int i = 0; i < 11; i++){
+            if ((num = ctoi(cpf[i])) == -1) return 1;
+            for (int j = i + 1; j < 11; j++){
+                if (num == ctoi(cpf[j]) && ctoi(cpf[j]) != -1){
+                    qtd++;
+                }
+            }
+            if (qtd == 10){
+                return 1;
+            }
+        }
+        //Bloco para testar primerio digito
+        for (int i = 0; i < 9; i++){
+            result += ctoi(cpf[i]) * key_ ;
+            key_--;
+        }
+        //Verificar primeiro digito se valido entrar no if e verificar o proximo digito
+        if (ctoi(cpf[9]) == (result * 10) % 11){
+            // verificar o proximo digito
+            key_ = 11;
+            result = 0;
+            for (int i = 0; i < 10; i++){
+                result += ctoi(cpf[i]) * key_ ;
+                key_--;
+            }
+            if (ctoi(cpf[10]) == (result * 10) % 11){
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+

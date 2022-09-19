@@ -42,3 +42,23 @@ void abortOp(void);
 void sucess(void);
 
 char  *obterPassword(int max);
+
+/*
+   Função para converter char em Int
+   retorna o numero inteiro ou -1 se a operação falhar
+*/
+
+int ctoi ( char ch );
+
+/*
+https://dicasdeprogramacao.com.br/algoritmo-para-validar-cpf/#:~:text=Regra%20para%20validar%20CPF&text=O%20CPF%20%C3%A9%20formado%20por,do%20sinal%20%22%2D%22)
+
+Função para validar CPF
+
+Entrada: *cpf
+
+Saida: 0 - Cpf Valido
+       1 - Cpf Invalido
+*/
+
+int validaCPF(char *cpf);
