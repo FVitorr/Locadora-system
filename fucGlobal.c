@@ -188,4 +188,53 @@ int validaCPF(char *cpf){
     return 1;
 }
 
+/*Função parar validar CNPJ
+
+Entrada: *CNPJ
+Saida: 0 - CNPJ Valido
+       1 - CNPJ Invalido
+
+*/
+int validaCNPJ(char *CNPJ){
+    int soma,dig;
+    //Primeiro Digito Verificador
+    //Obter Soma
+    if (strlen(CNPJ) == 14){
+        soma =((ctoi(CNPJ[0])* 5) +
+               (ctoi(CNPJ[1])* 4) +
+               (ctoi(CNPJ[2]) * 3) +
+               (ctoi(CNPJ[3]) * 2) +
+               (ctoi(CNPJ[4]) * 9) +
+               (ctoi(CNPJ[5]) * 8) +
+               (ctoi(CNPJ[6]) * 7) +
+               (ctoi(CNPJ[7]) * 6) +
+               (ctoi(CNPJ[8]) * 5) +
+               (ctoi(CNPJ[9]) * 4) +
+               (ctoi(CNPJ[10]) * 3) +
+               (ctoi(CNPJ[11]) * 2));
+        //Verificar se o primeiro digito verificador é valido
+        if ((dig = 11 - (soma % 11)) == ctoi(CNPJ[12])){ //Subtrair base 11 do resto da divisão por 11
+            soma =((ctoi(CNPJ[0])* 6) +
+                   (ctoi(CNPJ[1])* 5 )+
+                   (ctoi(CNPJ[2]) * 4) +
+                   (ctoi(CNPJ[3]) * 3) +
+                   (ctoi(CNPJ[4]) * 2) +
+                   (ctoi(CNPJ[5]) * 9) +
+                   (ctoi(CNPJ[6]) * 8) +
+                   (ctoi(CNPJ[7]) * 7) +
+                   (ctoi(CNPJ[8]) * 6) +
+                   (ctoi(CNPJ[9]) * 5) +
+                   (ctoi(CNPJ[10]) * 4) +
+                   (ctoi(CNPJ[11]) * 3) +
+                   (ctoi(CNPJ[12]) * 2));
+            if ((dig = 11 - (soma % 11)) == ctoi(CNPJ[13])){
+                return 0;
+            }else{
+                return 1;
+            }
+        }
+    }
+    return 1;
+}
+
 

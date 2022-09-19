@@ -14,11 +14,11 @@ typedef struct{
 typedef struct
 {
     int codigo;
-    char nome[120];      // Substituir por str
-    char descricao[120]; // Substituir por str
+    char nome[120];
+    char descricao[120];
     int qtd;            // quantidade de mídias existentes na locadora
     int c_categoria;
-    char lingua[120]; // Substituir por str
+    char lingua[120];
 
 } filme;
 
@@ -62,3 +62,12 @@ Saida: 0 - Cpf Valido
 */
 
 int validaCPF(char *cpf);
+
+/*Função parar validar CNPJ
+http://www.fidelis.work/chega-de-gambeta-como-validar-cnpj-e-cpf-corretamente/
+Entrada: *CNPJ
+Saida: 0 - CNPJ Valido
+       1 - CNPJ Invalido
+
+*/
+int validaCNPJ(char *CNPJ);
