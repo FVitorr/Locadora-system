@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../cabecalhos/locadora.h"
+#include "../cabecalhos/fucGlobal.h"
 
 locadora criarLocadora(int id) {
 
@@ -20,6 +21,7 @@ locadora criarLocadora(int id) {
     printf("Inscrição Estadual: ");
     scanf("%[^\n]s", obj.inscricaoEstadual);
 
+    setbuf(stdin,NULL);
     printf("CNPJ: ");
     scanf("%d", &obj.cnpj);
 
@@ -43,6 +45,7 @@ locadora criarLocadora(int id) {
     printf("Rua: ");
     scanf("%[^\n]s", obj.endereco.rua);
 
+    setbuf(stdin,NULL);
     printf("Número: ");
     scanf("%d", &obj.endereco.numero);
 
@@ -132,3 +135,94 @@ void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, in
     }
     *qtdLocadora = *qtdLocadora - 1;
 }
+
+int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id){
+    int erro = 0, exit = 0, opc = 0;
+    char opc_;
+    system("cls");
+    line(30,"Locadora\0");
+    printf("\t 0 - Sair \t 1 - Cadastrar \n");
+    printf("\t 2 - Visualizar \t 3 - Editar \n\t 4 - Remover");
+    line(30,"-\0");
+
+    do
+    {
+        if (erro == 1)
+        {
+            printf(">> Parametro Invalido\n");
+            printf("dsa");
+        }
+        printf("\n>> Opc: ");
+        scanf("%d", &opc);
+        erro = 1;
+    } while (opc < 0 || opc > 5);
+
+    if (opc == 0)
+    {
+        printf(">> Exit");
+        exit = 1;
+    }
+    else if (opc == 1)
+    {
+        // Cadastrar um Filme
+        system("cls");
+        printf(">> Novo Funcionario     \tID: %d \n", *id);
+        locadora newLocadora = criarLocadora(*id);
+        inserirLocadora(dtbase,newLocadora,qtdLocadora,tamanhoLocadora,*id);
+        printf("dasd");
+        *id = *id + 1;
+    }
+    else if (opc == 2)
+    {
+        // Visualizar
+        system("cls");
+        printf(">> Funcionarios Cadastrados  \t Total: %d\n\n", *qtdLocadora);
+        listLocadora(dtbase, *qtdLocadora);
+        system("pause");
+    }
+    else if (opc == 3)
+    {
+        // editar
+        system("cls");
+        printf(">> Funcionarios Cadastrados  \t Total: %d\n\n", *qtdLocadora);
+        listLocadora(dtbase, *qtdLocadora);
+
+        int cod;
+        printf("Editar (ID):");
+        scanf("%d", &cod);
+
+        editaLocadora(dtbase,qtdLocadora,tamanhoLocadora,cod);
+    }
+    else if (opc == 4)
+    {
+        // Remover
+        system("cls");
+        listLocadora(dtbase, *qtdLocadora);
+
+        int cod;
+        printf("Remover (ID):");
+        scanf("%d", &cod);
+
+        removerLocadora(dtbase,cod,qtdLocadora);
+
+        printf("%d",*qtdLocadora);
+        system("pause");
+    }
+    return exit;
+}
+
+//locadora *bd_locadora;
+//int qtdLocadora = 0, tamanhoLocadora = 1, idControleLocadora = 0;
+//
+//int main(){
+//    bd_locadora = malloc(tamanhoLocadora * sizeof(locadora));
+//    while (1)
+//    {
+//        int t = menuLocadora(&bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora);
+//        if (t == 1){
+//            break;
+//        }
+//    }
+//    free(bd_locadora);
+//    return 0;
+//}

@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include  <stdlib.h>
-#include <stdint.h>
 
 #include "cabecalhos/filmes.h"
 #include "cabecalhos/locadora.h"
@@ -12,7 +11,7 @@ fCategoria *bd_cat;
 int qtdCategoria = 0, tamanhoCategoria = 1;
 
 filme  *bd_filme;
-int qtdFilmes = 0, tamanhoFilme = 1, idControleFilme = 0;
+int qtdFilmes = 0, tamanhoFilme = 1, idControle = 0;
 
 funcionarios *bd_funcionarios;
 int qtdFuncionarios = 0, tamanhoFuncionarios = 1, idControleFuncionarios = 0;
@@ -28,66 +27,92 @@ int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
 
 int menuprincipal(fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
-                  funcionarios **dtbasefuncionarios, int *qtd_Funcionarios, int *tamanho_Funcionarios, int *idFuncionarios,
-                  cliente **dataBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente) {
+                  funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
+                  locadora **bd_locadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora){
 
     system("cls");
-    int opc = 0, erro = 1;
-    printf("Olá, seja bem vindo!\n");
-    printf("Digite a opção referente a operação que deseja executar\n\n");
-    printf("1 - Locação \n2 - Clientes\n3 - Categoria \n4 - Filme \n0 - Sair\n");
-    scanf("%d", &opc);
-    while (opc != 0) {
-        system("cls");
-        switch (opc) {
-            case 0:
-                printf(">> Exit \n");
-                return 1;
-            case 1:
-                printf("Menu-Locação\n");
-                break;
-            case 2:
-                menuClientes(dataBaseCliente, qtd_Cliente, tamanho_Cliente, *idCliente);
-                break;
-            case 3:
-                while (1) {
-                    int t = menuCategoria(dtbaseCategoria, qtd_Categoria, tamanho_Categoria);
-                    if (t == 1) {
-                        break;
-                    }
-                }
-                return 0;
-            case 4:
-                while (1) {
-                    int t = menuFilme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, dtbaseCategoria, qtd_Categoria,
-                                      tamanho_Categoria, idFilme);
-                    if (t == 1) {
-                        break;
-                    }
-                }
-            case 5:
-                while (1) {
-                    int t = menuFuncionarios(dtbasefuncionarios, qtd_Funcionarios, tamanho_Funcionarios,
-                                             idFuncionarios);
-                    if (t == 1) {
-                        break;
-                    }
-                }
-                return 0;
-            default:
-
-                break;
+    int opc = 0, erro = 0;
+    line(60,"Menu principal \0");
+    printf("\t 1 - Locacao \t\t 2 - Clientes \n\t 3 - Categoria \t\t 4 - Filmes");
+    printf("\n\t 5 - Funcionarios \t 6 - Locadora \n\t 7 - Importar/Exportar \t 0 - Exit");
+    line(60,"s\0");
+    do {
+        if (erro == 1){
+            printf(">> Parametro Invalido:\n");
         }
+        printf(">> Opc: ");
+        scanf("%d", &opc);
+        erro = 0;
+    } while (opc < 0 || opc > 6);
+    system("cls");
+    switch (opc) {
+        case 0:
+            printf(">> Exit \n");
+            return 1;
+        case 1:
+            printf("Menu-Locação\n");
+            break;
+        case 2:
+            printf("Menu-Clientes\n");
+            break;
+        case 3:
+            while (1){
+                int t = menuCategoria(dtbaseCategoria,qtd_Categoria,tamanho_Categoria);
+                if (t == 1){
+                    break;
+                }
+            }
+            return 0;
+        case 4:
+            while (1){
+                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idFilme);
+                if (t == 1){
+                    break;
+                }
+            }
+        case 5:
+            while (1){
+                int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios);
+                if (t == 1){
+                    break;
+                }
+            }
+
+        case 6:
+            while (1){
+                int t = menuLocadora(bd_locadora,qtd_Locadora,tamanho_Locadora,idLocadora);
+                if (t == 1){
+                    break;
+                }
+            }
+            return 0;
     }
 }
 
 int main() {
     bd_cat = malloc(tamanhoCategoria * sizeof(fCategoria));
-    bd_filme = malloc(tamanhoFilme * sizeof(filme));
-    bd_funcionarios = malloc(tamanhoFuncionarios * sizeof(funcionarios));
-    bd_cliente = malloc(tamanhoCliente * sizeof(cliente));
+    bd_filme = malloc(tamanhoFilme * sizeof (filme));
+    bd_funcionarios = malloc(tamanhoFuncionarios * sizeof (funcionarios));
+    bd_fornecedor = malloc(tamanhoFornecedor * sizeof (fornecedor));
+    bd_locadora = malloc(tamanhoLocadora * sizeof(locadora));
 
-    menuprincipal(&bd_cat, &qtdCategoria, &tamanhoCategoria, &bd_filme, &qtdFilmes, &tamanhoFilme, &idControleFilme,
-                  &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios, &bd_cliente,
-                  &qtdCliente, &tamanhoCliente, &idControleCliente);
+    while (1){
+        int v;
+        v = menuprincipal(&bd_cat,&qtdCategoria,&tamanhoCategoria,
+                          &bd_filme,&qtdFilmes,&tamanhoFilme,&idControle,
+                          &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,
+                          &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleFornecedor);
+        if (v == 1){
+            break;
+        }
+    }
+    free(bd_cat);
+    free(bd_filme);
+    free(bd_funcionarios);
+    free(bd_locadora);
+    bd_cat = NULL;
+    bd_filme = NULL;
+    bd_funcionarios = NULL;
+    bd_locadora = NULL;
+    return 0;
 }

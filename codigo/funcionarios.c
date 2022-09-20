@@ -4,7 +4,6 @@
 
 #include "../cabecalhos/funcionarios.h"
 #include "../cabecalhos/fucGlobal.h"
-#include "../cabecalhos/locadora.h"
 
 
 int criarFuncionario(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFuncionarios,int atualizar,int id){
@@ -139,12 +138,13 @@ int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id){
 }
 
 int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFuncionarios,int *id){
-    int opc = 0, erro = 0, exit = 0;
+    int erro = 0, exit = 0, opc = 0;
+    char opc_;
     system("cls");
-    //line(30,"Funcionarios\0");
+    line(30,"Funcionarios\0");
     printf("\t 0 - Sair \n\t 1 - Cadastrar \n\t 2 - Cadastrar Multiplas \n");
     printf("\t 3 - Visualizar \n\t 4 - Editar \n\t 5 - Remover");
-    //line(30,"-\0");
+    line(30,"-\0");
 
     do
     {
@@ -153,7 +153,8 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFun
             printf(">> Parametro Invalido\n");
         }
         printf("\n>> Opc: ");
-        scanf("%d", &opc);
+        scanf("%c", &opc_);
+        opc = ctoi(opc_);
         erro = 1;
     } while (opc < 0 || opc > 5);
 
@@ -227,6 +228,7 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFun
     }
     return exit;
 }
+
 
 
 //funcionarios  *bd_funcionarios;
