@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 #include "../cabecalhos/cliente.h"
 #include "../cabecalhos/fucGlobal.h"
 
@@ -127,4 +128,69 @@ void editaCliente(cliente **dtbase, int *qtdCliente, int *tamanhoCliente, int id
         }
     }
     *qtdCliente = *qtdCliente - 1;
+}
+
+int sairOuContinuar() {
+    int escolhaSair = INT32_MAX;
+    printf("Para realizar outra ação digite 1, para sair digite 0.\n");
+    scanf("%d", &escolhaSair);
+    if (escolhaSair != 1) {
+        escolhaSair = 5;
+    }
+    return escolhaSair;
+}
+
+int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int idControleCliente){
+    int escolha = INT32_MAX;
+
+    while (escolha != 0 && escolha != 5) {
+        printf("Digite a opção referente a operação que deseja executar\n\n");
+        printf("1 - Cadastrar Clientes \n2 - Listar Clientes \n3 - Atualizar Clientes \n4 - Excluir Clientes \n5 - Voltar ao Menu Anterior \n0 - Sair\n");
+        scanf("%d", &escolha);
+
+        switch (escolha) {
+            case 1: {
+                cliente newCliente = criarCliente((idControleCliente));
+                inserirCliente(bd_cliente, newCliente, qtdCliente, tamanhoCliente, idControleCliente);
+                idControleCliente += 1;
+                break;
+            }
+            case 2: {
+                listCliente(bd_cliente, *qtdCliente);
+                break;
+            }
+            case 3: {
+                int id = 0;
+                listCliente(bd_cliente, *qtdCliente);
+                printf("Digite o ID do Cliente que deseja editar.\n");
+                scanf("%d", &id);
+                editaCliente(bd_cliente, qtdCliente, tamanhoCliente, id);
+                break;
+            }
+            case 4: {
+                int id = 0;
+                listCliente(bd_cliente, *qtdCliente);
+                printf("Digite o ID do Cliente que deseja excluir.\n");
+                scanf("%d", &id);
+                removerCliente(bd_cliente, id, qtdCliente);
+                break;
+            }
+            case 5: {
+                printf("Voltando...\n");
+                break;
+            }
+            case 0: {
+                printf("Saindo...\n");
+                break;
+            }
+            default: {
+                printf("Esta não é uma opção válida, favor selecionar novamente.\n");
+                break;
+            }
+        }
+        if (escolha != 0 && escolha != 5) {
+            escolha = sairOuContinuar();
+        }
+    }
+    return escolha;
 }

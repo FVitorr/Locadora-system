@@ -29,4 +29,6 @@ void listCliente(cliente **dtbase, int qtd);
 
 void editaCliente(cliente **dtbase, int *qtdCliente, int *tamanhoCliente, int id);
 
+int menuClientes(cliente **bd_cliente, int *qtdCliente,int *tamanhoCliente,int idControleCliente);
+
 #endif //CLIENTE_H
