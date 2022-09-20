@@ -149,7 +149,6 @@ Saida: 0 - Cpf Valido
 */
 
 int validaCPF(char *cpf){
-    int erro = 0;
     int key_ = 10,result = 0,num;
     if (strlen(cpf) == 11){ //Se não tiver 11 digitos CPF invalido
         // Verificar se os digitos não são entradas sucessivas de mesmo digito e

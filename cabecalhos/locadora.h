@@ -39,4 +39,6 @@ void listLocadora(locadora **dtbase, int qtd);
 
 void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int id);
 
+int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id);
+
 #endif //LOCADORA_H

@@ -27,22 +27,23 @@ int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
 
 int menuprincipal(fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
-                  funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios){
+                  funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
+                  locadora **bd_locadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora){
 
     system("cls");
-    int opc = 0, erro = 1;
+    int opc = 0, erro = 0;
     line(60,"Menu principal \0");
     printf("\t 1 - Locacao \t\t 2 - Clientes \n\t 3 - Categoria \t\t 4 - Filmes");
-    printf("\n\t 5 - Funcionarios \t 6 - Importar/Exportar \n\t 7 - Configuraçoes \t 0 - Exit");
+    printf("\n\t 5 - Funcionarios \t 6 - Locadora \n\t 7 - Importar/Exportar \t 0 - Exit");
     line(60,"s\0");
     do {
-        if (erro != 1){
+        if (erro == 1){
             printf(">> Parametro Invalido:\n");
         }
         printf(">> Opc: ");
         scanf("%d", &opc);
         erro = 0;
-    } while (opc < 0 || opc > 4);
+    } while (opc < 0 || opc > 6);
     system("cls");
     switch (opc) {
         case 0:
@@ -76,6 +77,14 @@ int menuprincipal(fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_
                     break;
                 }
             }
+
+        case 6:
+            while (1){
+                int t = menuLocadora(bd_locadora,qtd_Locadora,tamanho_Locadora,idLocadora);
+                if (t == 1){
+                    break;
+                }
+            }
             return 0;
     }
 }
@@ -85,12 +94,14 @@ int main() {
     bd_filme = malloc(tamanhoFilme * sizeof (filme));
     bd_funcionarios = malloc(tamanhoFuncionarios * sizeof (funcionarios));
     bd_fornecedor = malloc(tamanhoFornecedor * sizeof (fornecedor));
+    bd_locadora = malloc(tamanhoLocadora * sizeof(locadora));
 
     while (1){
         int v;
         v = menuprincipal(&bd_cat,&qtdCategoria,&tamanhoCategoria,
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControle,
-                          &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios);
+                          &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,
+                          &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleFornecedor);
         if (v == 1){
             break;
         }
@@ -98,8 +109,10 @@ int main() {
     free(bd_cat);
     free(bd_filme);
     free(bd_funcionarios);
+    free(bd_locadora);
     bd_cat = NULL;
     bd_filme = NULL;
     bd_funcionarios = NULL;
+    bd_locadora = NULL;
     return 0;
 }
