@@ -217,3 +217,21 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
     return exit;
 }
 
+int saveFilme(filme objeto){
+    FILE *filme_;
+   
+    filme_ = fopen("test.txt", "a");
+   
+    if (filme_ == NULL){ // Se a abertura falhar
+        return -1;
+    }
+   
+    fprintf(filme_, "%d\n%s\n%s\n%d\n%d\n%s\n",
+                objeto.codigo,
+                objeto.nome,
+                objeto.descricao,
+                objeto.qtd,
+                objeto.c_categoria,
+                objeto.lingua);
+    fclose(filme_);
+}
