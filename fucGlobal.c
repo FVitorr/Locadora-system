@@ -236,4 +236,17 @@ int validaCNPJ(char *CNPJ){
     return 1;
 }
 
+/*
+    Substitui o caracter \n por \0 na string
+*/
+
+void limpa_final_string(char *c) {
+    int i;
+    for (i = 0; i < strlen(c); i++) {
+        if (c[i] == '\n') {
+            c[i] = '\0';
+            break;
+        }
+    }
+}
 
