@@ -242,7 +242,7 @@ int validaCNPJ(char *CNPJ){
 
 void limpa_final_string(char *c) {
     int i;
-    for (i = 0; i < strlen(c); i++) {
+    for (i = 0; i < strlen(c); i++){
         if (c[i] == '\n') {
             c[i] = '\0';
             break;
@@ -250,3 +250,35 @@ void limpa_final_string(char *c) {
     }
 }
 
+int creatFile(char nameFile[30], char extensao[4]){
+    char name_file[100];
+    char txt[5] = {'.','t','x','t','\0'};
+    char bin[5] = {'.','b','i','n','\0'};
+
+    // Formar nome do arquivo
+    strcpy(name_file, nameFile);
+    strcat(name_file,extensao);
+
+    FILE *p;
+
+    if ((strcmp(extensao,txt)) == 0){ // Se a extensao for TXT
+        p = fopen(name_file, "a");
+    }
+    else if (strcmp(extensao,bin) == 0){ // Se a extensao for Bin
+        p = fopen(name_file, "ab");
+    }
+    if (p == NULL){ // Se a criação do arquivo falhar
+        return 1;
+    }
+    fclose (p);
+    return 0;
+}
+
+int verifica_arquivos(int tipo_configuracao){
+    int t = 1;
+    char namesArquivosConst[1][15] = {{'c','p','y','B','d','F','i','l','m','e','s','.','t','x','t'}};
+    for (int i = 0 ; i < t; i++){
+        printf("%s",namesArquivosConst[i]);
+    }
+    return 0;
+}

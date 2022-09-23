@@ -220,7 +220,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
 int saveFilme(filme objeto){
     FILE *filme_;
    
-    filme_ = fopen("test.txt", "a");
+    filme_ = fopen("cpyBdFilme.txt", "r");
    
     if (filme_ == NULL){ // Se a abertura falhar
         return -1;
