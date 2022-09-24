@@ -262,10 +262,10 @@ int creatFile(char nameFile[30], char extensao[4]){
     FILE *p;
 
     if ((strcmp(extensao,txt)) == 0){ // Se a extensao for TXT
-        p = fopen(name_file, "a");
+        p = fopen(name_file, "w");
     }
     else if (strcmp(extensao,bin) == 0){ // Se a extensao for Bin
-        p = fopen(name_file, "ab");
+        p = fopen(name_file, "wb");
     }
     if (p == NULL){ // Se a criação do arquivo falhar
         return 1;
@@ -275,10 +275,17 @@ int creatFile(char nameFile[30], char extensao[4]){
 }
 
 int verifica_arquivos(int tipo_configuracao){
-    int t = 1;
-    char namesArquivosConst[1][15] = {{'c','p','y','B','d','F','i','l','m','e','s','.','t','x','t'}};
-    for (int i = 0 ; i < t; i++){
-        printf("%s",namesArquivosConst[i]);
+    int t_txt = 1;
+    FILE *p;
+
+    char namesArqConstTXT[1][15] = {{'c','p','y','B','d','F','i','l','m','e','s','.','t','x','t'}};
+
+    for (int i = 0 ; i < t_txt; i++){
+        printf("%s",namesArqConstTXT[i]);
+        p = fopen(namesArqConstTXT[i], "r");
+        if (p == NULL){ // Se a leitura do arquivo falhar criar
+            creatFile("cpyBdFilme",".txt");
+        }
     }
     return 0;
 }

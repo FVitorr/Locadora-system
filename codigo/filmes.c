@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <io.h>
 #include "../cabecalhos/filmes.h"
 
 // +++++++++++++++++++++++++++++++++++++++++ Subrotinas para controle dos filmes +++++++++++++++++
@@ -245,38 +246,40 @@ int verifica_ID(filme **dtbase,int qtd_filme,int id) {
     return 0;
 }
 
+
 void carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id) {
     FILE *p;
-    p = fopen("test.txt", "r");
-   
+    p = fopen("cpyBdFilme.txt", "r");
+
     filme new;
-   
+
     int t = 0;
-   
+
+
     while (!feof(p)){
-        if (feof(p)){
+        if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
             break;
         }
         fscanf(p, "%d\n", &new.codigo);
         //fgets(filmeCadastrado[n].descricao, 50, p);
         fgets(new.nome, 50, p);
         limpa_final_string(new.nome);
-       
+
         fgets(new.descricao, 100, p);
         limpa_final_string(new.descricao);
-       
+
         fscanf(p, "%d\n", &new.qtd);
-       
+
         fscanf(p, "%d\n", &new.c_categoria);
-       
+
         fgets(new.lingua, 100, p);
         limpa_final_string(new.lingua);
-       
+
         if (verifica_ID(dtBase,*qtdFilme,new.codigo) == 0){
-            //t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme);
+            t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,*id);
             *id = new.codigo + 1;
         }
-       
+
         if (t == 0){
             printf("\nAcao Interrompida");
             break;
