@@ -71,10 +71,11 @@ int removerFilme(filme **dtbase, int *id, int *qtdFilmes, int *tamanhoFilmes){
                 i++;
             }
             *qtdFilmes = *qtdFilmes - 1;
+            *tamanhoFilmes = *tamanhoFilmes - 1;
             break;
         }
     }
-    refazDados_filme(dtbase,qtdFilmes,tamanhoFilmes,id ,1);
+    refazDados_filme(dtbase,qtdFilmes,tamanhoFilmes,1);
     return 0;
 }
 
@@ -98,7 +99,7 @@ void listFilme(filme **dtbase, int qtd){
     printf("\n");
 }
 
-void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id)
+void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id, int tipo_config)
 {
     for (int i = 0; i < *qtdFilmes; i++) {
         if ((*dtbase)[i].codigo == id) {
@@ -107,11 +108,11 @@ void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dt
             break;
         }
     }
-    refazDados_filme(dtbase,qtdFilmes,tamanhoFilmes,&id ,1);
+    refazDados_filme(dtbase,qtdFilmes,tamanhoFilmes, tipo_config);
 }
 
 int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id) {
-    int tem = locID(dtbaseCategoria,qtdCategoria,id),opc = 0;
+    int tem = locID(dtbaseCategoria,*qtdCategoria,id),opc = 0;
     //int tem = 0;cc
     if (tem == 0) {
         printf("\n\t>> Categoria nao encontrada\n ");
@@ -138,7 +139,7 @@ void locFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes){
 }
 
 
-int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id){
+int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id,int tipo_config){
     int opc = 0, erro = 0, exit = 0;
 
     //carregarDados_filme(dtbase,qtdFilmes,tamanhoFilmes,id);
@@ -171,7 +172,6 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         printf(">> Novo filme     \tID: %d \n", *id);
         filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id);
         inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes);
-        *id = *id + 1;
     }
     else if (opc == 2)
     {
@@ -185,7 +185,6 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
             inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes);
             printf("\n >> [1 - Mais] \t [0 - Exit]: ");
             scanf("%d", &op);
-            *id = *id + 1;
             if (op == 0)
             {
                 break;
@@ -210,7 +209,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         int cod;
         printf("Editar (ID):");
         scanf("%d", &cod);
-        editaFilme(dtbase,qtdFilmes,tamanhoFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,cod);
+        editaFilme(dtbase,qtdFilmes,tamanhoFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,cod,tipo_config);
 
     }
     else if (opc == 5)
@@ -253,7 +252,7 @@ int verifica_ID(filme **dtbase,int qtd_filme,int id) {
     }
     return 0;
 }
-int refazDados_filme(filme **dtbase, int *qtdFilme, int *tamanhoFilme, int *id, int tipo_configuracao){
+int refazDados_filme(filme **dtbase, int *qtdFilme, int *tamanhoFilme, int tipo_configuracao){
 
     FILE *p;
     if (tipo_configuracao == 1){
@@ -265,6 +264,8 @@ int refazDados_filme(filme **dtbase, int *qtdFilme, int *tamanhoFilme, int *id, 
             printf("Falha ao Escrever no Arquivo.");
             return 1;
         }
+        printf("TamanhoFIlme: %d",*tamanhoFilme);
+        system("pause");
         for (int i = 0; i < *tamanhoFilme; i++){
             fprintf(p, "%d\n%s\n%s\n%d\n%d\n%s\n",
                     (*dtbase)[i].codigo,
@@ -316,7 +317,7 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
 
         if (verifica_ID(dtBase,*qtdFilme,new.codigo) == 0){
             t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme);
-            if (*id < new.codigo) {
+            if (*id <= new.codigo) {
                 *id = new.codigo + 1;
             }
         }

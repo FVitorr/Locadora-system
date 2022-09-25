@@ -18,17 +18,17 @@ extern "C" {
 
     void listFilme(filme **dtbase, int qtd);
 
-    void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id);
+    void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id, int tipo_config);
 
     int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id);
 
-    int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id);
+    int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id,int tipo_config);
 
     int saveFilme(filme objeto);
 
     int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id);
 
-    int refazDados_filme(filme **dtbase, int *qtdFilme, int *tmnhoFilme, int *id, int tipo_configuracao);
+    int refazDados_filme(filme **dtbase, int *qtdFilme, int *tmnhoFilme, int tipo_configuracao);
 
 #ifdef __cplusplus
 }

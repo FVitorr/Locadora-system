@@ -28,7 +28,8 @@ int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
 int carregaTodosDados(int tipoConfig,
                       filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme);
 
-int menuprincipal(fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,
+int menuprincipal(int tipo_config,
+                  fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
                   locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora){
@@ -68,7 +69,7 @@ int menuprincipal(fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_
             return 0;
         case 4:
             while (1){
-                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idFilme);
+                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idFilme,tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -112,7 +113,8 @@ int main() {
 
     while (1){
         int v;
-        v = menuprincipal(&bd_cat,&qtdCategoria,&tamanhoCategoria,
+        v = menuprincipal(tipoConfig,
+                          &bd_cat,&qtdCategoria,&tamanhoCategoria,
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                           &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,
                           &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleFornecedor);

@@ -86,16 +86,15 @@ int editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,i
     }
     return 1;
 }
-int locID(fCategoria **dtbase,int *qtdCategoria, int ID) {
-    int erro = 0;
-    for (int i = 0; i < *qtdCategoria; i++)
+int locID(fCategoria **dtbase,int qtd_Categoria, int ID) {
+    for (int i = 0; i < qtd_Categoria; i++)
     {
         if ((*dtbase[i]).codigo == ID) {
-            erro = 1;
+            return 1;
             break;
         }
     }
-    return erro;
+    return 0;
 }
 
 int *obterID(fCategoria **dtbase,int *qtdCategoria){

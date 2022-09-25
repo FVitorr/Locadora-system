@@ -279,18 +279,20 @@ int verifica_arquivos(int tipo_config){
     FILE *p;
 
     char namesArqConstTXT[1][15] = {{'c','p','y','B','d','F','i','l','m','e','.','t','x','t'}};
-
+    line(100,"Verificando Arquivos\0");
     if (tipo_config == 1){
         for (int i = 0 ; i < t_txt; i++){
             p = fopen(namesArqConstTXT[i], "r");
             if (p == NULL){ // Se a leitura do arquivo falhar criar
                 creatFile("cpyBdFilme",tipo_config);
+                printf("\n>> %s Criado",namesArqConstTXT[i]);
             }else{
-                printf(">> %s Existe.\n",namesArqConstTXT[i]);
+                printf("\n>> %s Existe",namesArqConstTXT[i]);
             }
             fclose(p);
         }
     }
+    line(100,"=\0");
     system("Pause");
     return 0;
 }
