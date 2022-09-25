@@ -264,7 +264,7 @@ int creatFile(char nameFile[30], char extensao[4]){
     if ((strcmp(extensao,txt)) == 0){ // Se a extensao for TXT
         p = fopen(name_file, "w");
     }
-    else if (strcmp(extensao,bin) == 0){ // Se a extensao for Bin
+    else if ((strcmp(extensao,bin)) == 0){ // Se a extensao for Bin
         p = fopen(name_file, "wb");
     }
     if (p == NULL){ // Se a criação do arquivo falhar
@@ -278,14 +278,36 @@ int verifica_arquivos(int tipo_configuracao){
     int t_txt = 1;
     FILE *p;
 
-    char namesArqConstTXT[1][15] = {{'c','p','y','B','d','F','i','l','m','e','s','.','t','x','t'}};
+    char namesArqConstTXT[1][15] = {{'c','p','y','B','d','F','i','l','m','e','.','t','x','t'}};
 
-    for (int i = 0 ; i < t_txt; i++){
-        printf("%s",namesArqConstTXT[i]);
-        p = fopen(namesArqConstTXT[i], "r");
-        if (p == NULL){ // Se a leitura do arquivo falhar criar
-            creatFile("cpyBdFilme",".txt");
+    if (tipo_configuracao == 1){
+        for (int i = 0 ; i < t_txt; i++){
+            p = fopen(namesArqConstTXT[i], "r");
+            if (p == NULL){ // Se a leitura do arquivo falhar criar
+                creatFile("cpyBdFilme",".txt");
+            }else{
+                printf(">> %s Existe.\n",namesArqConstTXT[i]);
+            }
+            fclose(p);
         }
     }
+    system("Pause");
+    return 0;
+}
+
+int tipo_configuracao(int *tipo) {
+    char entry;
+    while (1){
+        line(100, "Configuracoes de Sistema\0");
+        printf(" >> Salvar dados em qual Extensao: \t0 - BIN \t1 - TXT ");
+        line(100, "=\0");
+        scanf("%c", &entry);
+        if ((ctoi(entry)) == 0 || (ctoi(entry)) == 1) {
+            break;
+        }
+        system("cls");
+        printf(">>Parametro Invalido");
+    }
+    *tipo = ctoi(entry);
     return 0;
 }

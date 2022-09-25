@@ -11,7 +11,7 @@ fCategoria *bd_cat;
 int qtdCategoria = 0, tamanhoCategoria = 1;
 
 filme  *bd_filme;
-int qtdFilmes = 0, tamanhoFilme = 1, idControle = 0;
+int qtdFilmes = 0, tamanhoFilme = 1, idControleFilmes = 0;
 
 funcionarios *bd_funcionarios;
 int qtdFuncionarios = 0, tamanhoFuncionarios = 1, idControleFuncionarios = 0;
@@ -25,10 +25,13 @@ int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 0;
 fornecedor *bd_fornecedor;
 int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
 
+int carregaTodosDados(int tipoConfig,
+                      filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme);
+
 int menuprincipal(fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
-                  locadora **bd_locadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora){
+                  locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora){
 
     system("cls");
     int opc = 0, erro = 0;
@@ -42,7 +45,7 @@ int menuprincipal(fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_
         }
         printf(">> Opc: ");
         scanf("%d", &opc);
-        erro = 0;
+        erro = 1;
     } while (opc < 0 || opc > 6);
     system("cls");
     switch (opc) {
@@ -51,15 +54,15 @@ int menuprincipal(fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_
             return 1;
         case 1:
             printf("Menu-Locação\n");
-            break;
+            return 0;
         case 2:
             printf("Menu-Clientes\n");
-            break;
+            return 0;
         case 3:
             while (1){
                 int t = menuCategoria(dtbaseCategoria,qtd_Categoria,tamanho_Categoria);
                 if (t == 1){
-                    break;
+                    return 0;
                 }
             }
             return 0;
@@ -67,39 +70,50 @@ int menuprincipal(fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_
             while (1){
                 int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idFilme);
                 if (t == 1){
-                    break;
+                    return 0;
                 }
             }
         case 5:
             while (1){
                 int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios);
                 if (t == 1){
-                    break;
+                    return 0;
                 }
             }
 
         case 6:
             while (1){
-                int t = menuLocadora(bd_locadora,qtd_Locadora,tamanho_Locadora,idLocadora);
+                int t = menuLocadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora);
                 if (t == 1){
-                    break;
+                    return 0;
                 }
             }
+        default:
             return 0;
     }
 }
 
 int main() {
+    int tipoConfig = 1; // 0- BIN 1 - TXT
+
     bd_cat = malloc(tamanhoCategoria * sizeof(fCategoria));
     bd_filme = malloc(tamanhoFilme * sizeof (filme));
     bd_funcionarios = malloc(tamanhoFuncionarios * sizeof (funcionarios));
     bd_fornecedor = malloc(tamanhoFornecedor * sizeof (fornecedor));
     bd_locadora = malloc(tamanhoLocadora * sizeof(locadora));
 
+
+    tipo_configuracao(&tipoConfig);
+    //Verifica se os arquivos existem caso contrario criar
+    verifica_arquivos(tipoConfig);
+    //Carrega os arquivos
+    carregaTodosDados(tipoConfig,
+                      &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes);
+
     while (1){
         int v;
         v = menuprincipal(&bd_cat,&qtdCategoria,&tamanhoCategoria,
-                          &bd_filme,&qtdFilmes,&tamanhoFilme,&idControle,
+                          &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                           &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,
                           &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleFornecedor);
         if (v == 1){
@@ -115,4 +129,10 @@ int main() {
     bd_funcionarios = NULL;
     bd_locadora = NULL;
     return 0;
+}
+
+int carregaTodosDados(int tipoConfig,
+                      filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme){
+
+    carregarDados_filme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme);
 }

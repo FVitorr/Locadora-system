@@ -45,6 +45,6 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
     Substitui o caracter \n por \0 na string
 */
 
-void limpa_final_string(char *c)
+void limpa_final_string(char *c);
 
 #endif //LOCADORA_H

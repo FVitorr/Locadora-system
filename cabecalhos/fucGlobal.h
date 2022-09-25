@@ -83,3 +83,13 @@ int creatFile(char nameFile[30], char extensao[4]);
 */
 
 void limpa_final_string(char *c);
+
+/*
+ * Verifica se os arquivos ja existem caso não cria;
+ * tipo_configuracao : 1 - TXT
+ *                     0 - BIN
+ */
+
+int verifica_arquivos(int tipo_configuracao);
+
+int tipo_configuracao(int *tipo);
