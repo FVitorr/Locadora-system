@@ -250,41 +250,41 @@ void limpa_final_string(char *c) {
     }
 }
 
-int creatFile(char nameFile[30], char extensao[4]){
+int creatFile(char nameFile[30],int tipo_config){
     char name_file[100];
     char txt[5] = {'.','t','x','t','\0'};
     char bin[5] = {'.','b','i','n','\0'};
 
+    FILE *newFile;
     // Formar nome do arquivo
     strcpy(name_file, nameFile);
-    strcat(name_file,extensao);
-
-    FILE *p;
-
-    if ((strcmp(extensao,txt)) == 0){ // Se a extensao for TXT
-        p = fopen(name_file, "w");
+    if (tipo_config == 1){ // Se a extensao for TXT
+        strcat(name_file,txt);
+        newFile = fopen(name_file, "w");
+    }else if (tipo_config == 0){// Se a extensao for BIN
+        strcat(name_file,bin);
+        newFile = fopen(name_file, "wb");
     }
-    else if ((strcmp(extensao,bin)) == 0){ // Se a extensao for Bin
-        p = fopen(name_file, "wb");
-    }
-    if (p == NULL){ // Se a criação do arquivo falhar
+
+
+    if (newFile == NULL){ // Se a criação do arquivo falhar
         return 1;
     }
-    fclose (p);
+    fclose (newFile);
     return 0;
 }
 
-int verifica_arquivos(int tipo_configuracao){
+int verifica_arquivos(int tipo_config){
     int t_txt = 1;
     FILE *p;
 
     char namesArqConstTXT[1][15] = {{'c','p','y','B','d','F','i','l','m','e','.','t','x','t'}};
 
-    if (tipo_configuracao == 1){
+    if (tipo_config == 1){
         for (int i = 0 ; i < t_txt; i++){
             p = fopen(namesArqConstTXT[i], "r");
             if (p == NULL){ // Se a leitura do arquivo falhar criar
-                creatFile("cpyBdFilme",".txt");
+                creatFile("cpyBdFilme",tipo_config);
             }else{
                 printf(">> %s Existe.\n",namesArqConstTXT[i]);
             }

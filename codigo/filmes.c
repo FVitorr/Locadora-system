@@ -316,7 +316,7 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
 
         if (verifica_ID(dtBase,*qtdFilme,new.codigo) == 0){
             t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme);
-            if (*id <= new.codigo) {
+            if (*id < new.codigo) {
                 *id = new.codigo + 1;
             }
         }
