@@ -134,11 +134,6 @@ int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategori
     return 0;
 }
 
-void locFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes){
-
-}
-
-
 int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id,int tipo_config){
     int opc = 0, erro = 0, exit = 0;
 

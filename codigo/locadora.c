@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "../cabecalhos/locadora.h"
 #include "../cabecalhos/fucGlobal.h"
 
@@ -60,6 +61,16 @@ locadora criarLocadora(int id) {
     setbuf(stdin,NULL);
     printf("Estado: ");
     scanf("%[^\n]s", obj.endereco.estado);
+
+    line(100,"Autentificacao de Administrador\0");
+    printf("Usuario: ");
+    scanf("%[^\n]s", obj.user);
+
+    setbuf(stdin,NULL);
+
+    printf("Senha: ");
+    obj.password = obterPassword(16);
+
     return obj;
 }
 
@@ -75,7 +86,7 @@ int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, 
         system("pause");
         return 0;
     }
-    (*dtbase)[id] = novaLocadora;
+    (*dtbase)[*tamanhoLocadora - 1] = novaLocadora;
     *qtdLocadora = *qtdLocadora + 1;
     return 1;
 }
@@ -209,6 +220,16 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         system("pause");
     }
     return exit;
+}
+
+int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int id){
+    locadora new = criarLocadora(id);
+    inserirLocadora(dtbase,new,qtdLocadora,tamanhoLocadora,id);
+
+    strcpy(user,new.user);
+    strcpy(password,new.password);
+
+    //SALVAR NO ARQUIVO DE LOCADORAS
 }
 
 //locadora *bd_locadora;

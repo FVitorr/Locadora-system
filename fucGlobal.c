@@ -313,3 +313,20 @@ int tipo_configuracao(int *tipo) {
     *tipo = ctoi(entry);
     return 0;
 }
+
+void set_tipoARQ_config(config *set, int *tipo_config){
+    tipo_configuracao(tipo_config);
+    (*set).tipo_configuracao = *tipo_config;
+}
+
+int verifica_log(config *set,int *tipo_config){
+    //Arquivo log.bin armazenas informaçoes do sistema
+    FILE *log;
+    log = fopen("log.bin",'r');
+    if (log == NULL){
+        creatFile("log",0);
+        set_tipoARQ_config(set, tipo_config);
+        return 0; // Este retorno usado para criar locadora de ID 0
+    }
+
+}

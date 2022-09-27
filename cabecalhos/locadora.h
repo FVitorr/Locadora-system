@@ -27,6 +27,9 @@ typedef struct
     char email[50];
     char nomeResponsavel[50];
     char telefoneResponsavel[15];
+
+    char user[120];
+    char *password;
 } locadora;
 
 locadora criarLocadora(int id);
@@ -41,10 +44,6 @@ void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, in
 
 int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id);
 
-/*
-    Substitui o caracter \n por \0 na string
-*/
-
-void limpa_final_string(char *c);
+int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int id);
 
 #endif //LOCADORA_H

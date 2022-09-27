@@ -25,8 +25,9 @@ int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 0;
 fornecedor *bd_fornecedor;
 int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
 
-int carregaTodosDados(int tipoConfig,
-                      filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme);
+int carregaTodosDados(int *tipoConfig,config *config_system,
+                      filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
+                      locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora);
 
 int menuprincipal(int tipo_config,
                   fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,
@@ -97,19 +98,20 @@ int menuprincipal(int tipo_config,
 int main() {
     int tipoConfig = 1; // 0- BIN 1 - TXT
 
+    config config_System;
+
     bd_cat = malloc(tamanhoCategoria * sizeof(fCategoria));
     bd_filme = malloc(tamanhoFilme * sizeof (filme));
     bd_funcionarios = malloc(tamanhoFuncionarios * sizeof (funcionarios));
     bd_fornecedor = malloc(tamanhoFornecedor * sizeof (fornecedor));
     bd_locadora = malloc(tamanhoLocadora * sizeof(locadora));
 
-
-    tipo_configuracao(&tipoConfig);
+    //Carrega os arquivos e Verifica se é primeira execursão
+    carregaTodosDados(&tipoConfig,&config_System,
+                      &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
+                      &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleFornecedor);
     //Verifica se os arquivos existem caso contrario criar
     verifica_arquivos(tipoConfig);
-    //Carrega os arquivos
-    carregaTodosDados(tipoConfig,
-                      &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes);
 
     while (1){
         int v;
@@ -133,8 +135,11 @@ int main() {
     return 0;
 }
 
-int carregaTodosDados(int tipoConfig,
-                      filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme){
+int carregaTodosDados(int *tipoConfig,config *config_system,
+                      filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
+                      locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora){
 
+    int newID = verifica_log(config_system,tipoConfig);
+    set_configuracao_Locadora(dtbaseLocadora,config_system->user,config_system->password,qtd_Locadora,tamanho_Locadora,newID);
     carregarDados_filme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme);
 }
