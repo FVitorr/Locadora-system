@@ -266,7 +266,6 @@ int creatFile(char nameFile[30],int tipo_config){
         newFile = fopen(name_file, "wb");
     }
 
-
     if (newFile == NULL){ // Se a criação do arquivo falhar
         return 1;
     }
@@ -322,7 +321,7 @@ void set_tipoARQ_config(config *set, int *tipo_config){
 int verifica_log(config *set,int *tipo_config){
     //Arquivo log.bin armazenas informaçoes do sistema
     FILE *log;
-    log = fopen("log.bin",'r');
+    log = fopen("log.bin","rb");
     if (log == NULL){
         creatFile("log",0);
         set_tipoARQ_config(set, tipo_config);

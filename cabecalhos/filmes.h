@@ -12,9 +12,9 @@ extern "C" {
 
     filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria, int *id);
 
-    int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes);
+    int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes,int tipo_config);
 
-    int removerFilme(filme **dtbase, int *id, int *qtdFilmes, int *tamanhoFilmes);
+    int removerFilme(filme **dtbase, int id, int *qtdFilmes, int *tamanhoFilmes,int tipo_config);
 
     void listFilme(filme **dtbase, int qtd);
 
@@ -24,9 +24,9 @@ extern "C" {
 
     int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id,int tipo_config);
 
-    int saveFilme(filme objeto);
+    int saveFilme(filme objeto,int tipo_config);
 
-    int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id);
+    int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id,int tipo_config);
 
     int refazDados_filme(filme **dtbase, int *qtdFilme, int *tmnhoFilme, int tipo_configuracao);
 

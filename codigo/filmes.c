@@ -42,7 +42,7 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
 }
 
 
-int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes){
+int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes, int tipo_config){
     //Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
     if (*qtdFilmes == *tamanhoFilmes)
     {
@@ -58,13 +58,13 @@ int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes
     // adc obj ao bd local
     (*dtbase)[*tamanhoFilmes - 1] = newEntry;
     *qtdFilmes = *qtdFilmes + 1;
+    saveFilme(newEntry,tipo_config);
 
-    saveFilme(newEntry);
     return 1;
 }
-int removerFilme(filme **dtbase, int *id, int *qtdFilmes, int *tamanhoFilmes){
+int removerFilme(filme **dtbase, int id, int *qtdFilmes, int *tamanhoFilmes,int tipo_config){
     for (int i = 0; i < *qtdFilmes; i ++){
-        if((*dtbase)[i].codigo == *id){
+        if((*dtbase)[i].codigo == id){
             while (i < *qtdFilmes - 1)
             {
                 (*dtbase)[i] = (*dtbase)[i + 1];
@@ -75,7 +75,7 @@ int removerFilme(filme **dtbase, int *id, int *qtdFilmes, int *tamanhoFilmes){
             break;
         }
     }
-    refazDados_filme(dtbase,qtdFilmes,tamanhoFilmes,1);
+    refazDados_filme(dtbase,qtdFilmes,tamanhoFilmes,tipo_config);
     return 0;
 }
 
@@ -166,7 +166,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         system("cls");
         printf(">> Novo filme     \tID: %d \n", *id);
         filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id);
-        inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes);
+        inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,tipo_config);
     }
     else if (opc == 2)
     {
@@ -177,7 +177,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         while (1)
         {
             filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id);
-            inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes);
+            inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,tipo_config);
             printf("\n >> [1 - Mais] \t [0 - Exit]: ");
             scanf("%d", &op);
             if (op == 0)
@@ -215,29 +215,41 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         int cod;
         printf("Remover (ID):");
         scanf("%d", &cod);
-        removerFilme(dtbase,&cod,qtdFilmes,tamanhoFilmes);
+        removerFilme(dtbase,cod,qtdFilmes,tamanhoFilmes,tipo_config);
     }
     return exit;
 }
 
-int saveFilme(filme objeto){
+
+int saveFilme(filme objeto,int tipo_config){
     FILE *filme_;
-   
-    filme_ = fopen("cpyBdFilme.txt", "a");
-   
-    if (filme_ == NULL){ // Se a abertura falhar
-        return -1;
-    }
-   
-    fprintf(filme_, "%d\n%s\n%s\n%d\n%d\n%s\n",
+
+    if (tipo_config == 1){//Arquivo TXT
+        filme_ = fopen("cpyBdFilme.txt", "a");
+
+        if (filme_ == NULL){ // Se a abertura falhar
+            return 1;
+        }
+
+        fprintf(filme_, "%d\n%s\n%s\n%d\n%d\n%s\n",
                 objeto.codigo,
                 objeto.nome,
                 objeto.descricao,
                 objeto.qtd,
                 objeto.c_categoria,
                 objeto.lingua);
+
+    }else if (tipo_config == 0){ //Arquivo BINARIO
+        filme_ = fopen("cpyBdFilme.bin", "ab");
+        if (filme_ == NULL){ // Se a abertura falhar
+            return 1;
+        }
+        fwrite(&objeto, sizeof(filme), 1,filme_);
+    }
     fclose(filme_);
+    return 0;
 }
+
 
 int verifica_ID(filme **dtbase,int qtd_filme,int id) {
     for (int i = 0; i < qtd_filme; i++) {
@@ -277,49 +289,72 @@ int refazDados_filme(filme **dtbase, int *qtdFilme, int *tamanhoFilme, int tipo_
 }
 
 
-int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id) {
+int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id,int tipo_config) {
     FILE *p;
-    p = fopen("cpyBdFilme.txt", "r");
-
-    if (p == NULL){
-        printf("\nErro na Leitura 'cpyBdFilme.txt' \n");
-        system("Pause");
-        return 1;
-    }
     filme new;
-
     int t = 0;
+    if (tipo_config == 1){ //Arquivo TXT
+        p = fopen("cpyBdFilme.txt", "r");
 
-
-    while (!feof(p)){
-        if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
-            break;
+        if (p == NULL){
+            printf("\nErro na Leitura 'cpyBdFilme.txt' \n");
+            system("Pause");
+            return 1;
         }
-        fscanf(p, "%d\n", &new.codigo);
-        //fgets(filmeCadastrado[n].descricao, 50, p);
-        fgets(new.nome, 50, p);
-        limpa_final_string(new.nome);
 
-        fgets(new.descricao, 120, p);
-        limpa_final_string(new.descricao);
+        while (!feof(p)){
+            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fscanf(p, "%d\n", &new.codigo);
+            //fgets(filmeCadastrado[n].descricao, 50, p);
+            fgets(new.nome, 50, p);
+            limpa_final_string(new.nome);
 
-        fscanf(p, "%d\n", &new.qtd);
+            fgets(new.descricao, 120, p);
+            limpa_final_string(new.descricao);
 
-        fscanf(p, "%d\n", &new.c_categoria);
+            fscanf(p, "%d\n", &new.qtd);
 
-        fgets(new.lingua, 100, p);
-        limpa_final_string(new.lingua);
+            fscanf(p, "%d\n", &new.c_categoria);
 
-        if (verifica_ID(dtBase,*qtdFilme,new.codigo) == 0){
-            t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme);
-            if (*id <= new.codigo) {
-                *id = new.codigo + 1;
+            fgets(new.lingua, 100, p);
+            limpa_final_string(new.lingua);
+
+            if (verifica_ID(dtBase,*qtdFilme,new.codigo) == 0){
+                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
+                if (*id <= new.codigo) {
+                    *id = new.codigo + 1;
+                }
+            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
             }
         }
+    }
+    else  if (tipo_config == 0){ //Arquivo BIN
+        p = fopen("cpyBdFilme.bin", "rb");
+        while (!feof(p)){
+            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fread(&new,sizeof(filme),1,p);
+            printf("%s %s",new.nome,new.descricao);
+            if (verifica_ID(dtBase,*qtdFilme,new.codigo) == 0){
+                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
+                if (*id <= new.codigo) {
+                    *id = new.codigo + 1;
+                }
+            }
 
-        if (t == 0){
-            printf("\nAcao Interrompida");
-            break;
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
         }
     }
+    fclose(p);
+    return 0;
 }
