@@ -140,6 +140,6 @@ int carregaTodosDados(int *tipoConfig,config *config_system,
                       locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora){
 
     int newID = verifica_log(config_system,tipoConfig);
-    set_configuracao_Locadora(dtbaseLocadora,config_system->user,config_system->password,qtd_Locadora,tamanho_Locadora,newID);
-    carregarDados_filme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,tipoConfig);
+    //set_configuracao_Locadora(dtbaseLocadora,config_system->user,config_system->password,qtd_Locadora,tamanho_Locadora,newID);
+    carregarDados_filme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,*tipoConfig);
 }

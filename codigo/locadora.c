@@ -62,6 +62,7 @@ locadora criarLocadora(int id) {
     printf("Estado: ");
     scanf("%[^\n]s", obj.endereco.estado);
 
+    setbuf(stdin,NULL);
     line(100,"Autentificacao de Administrador\0");
     printf("Usuario: ");
     scanf("%[^\n]s", obj.user);
@@ -227,7 +228,7 @@ int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *q
     inserirLocadora(dtbase,new,qtdLocadora,tamanhoLocadora,id);
 
     strcpy(user,new.user);
-    strcpy(password,new.password);
+    new.password = password;
 
     //SALVAR NO ARQUIVO DE LOCADORAS
 }
