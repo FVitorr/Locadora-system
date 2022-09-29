@@ -96,7 +96,7 @@ int menuprincipal(int tipo_config,
 }
 
 int main() {
-    int tipoConfig = 1; // 0- BIN 1 - TXT
+    int tipoConfig = 0; // 0- BIN 1 - TXT
 
     config config_System;
 

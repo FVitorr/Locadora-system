@@ -284,6 +284,12 @@ int refazDados_filme(filme **dtbase, int *qtdFilme, int *tamanhoFilme, int tipo_
         }
         fclose(p);
         p = NULL;
+    }else if (tipo_configuracao == 0){
+        p = fopen("cpyBdFilme.bin", "wb");
+        for (int i = 0; i < *tamanhoFilme; i++){
+            saveFilme((*dtbase)[i],0);
+        }
+        fclose(p);
     }
     return 0;
 }
