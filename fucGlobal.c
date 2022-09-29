@@ -274,10 +274,11 @@ int creatFile(char nameFile[30],int tipo_config){
 }
 
 int verifica_arquivos(int tipo_config){
-    int t_txt = 1;
+    int t_txt = 2;
     FILE *p;
 
-    char namesArqConstTXT[1][15] = {{'c','p','y','B','d','F','i','l','m','e','.','t','x','t'}};
+    char namesArqConstTXT[2][20] = {{"cpyBdFilme.txt\0"},
+                                    {"cpyBdLocadora.txt\0"}};
     line(100,"Verificando Arquivos\0");
     if (tipo_config == 1){
         for (int i = 0 ; i < t_txt; i++){

@@ -223,6 +223,44 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
     return exit;
 }
 
+int saveLocadora(locadora objeto,int tipo_config){
+    FILE *locadora;
+
+    if (tipo_config == 1){//Arquivo TXT
+        locadora = fopen("cpyBdLocadora.txt", "a");
+
+        if (locadora == NULL){ // Se a abertura falhar
+            return 1;
+        }
+
+        fprintf("%d\n%s\n%\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
+                objeto.id,
+                objeto.nomeFantasia,
+                objeto.razaoSocial,
+                objeto.inscricaoEstadual,
+                objeto.cnpj,
+                objeto.telefone,
+                objeto.email,
+                objeto.nomeResponsavel,
+                objeto.telefoneResponsavel,
+                objeto.endereco.rua,
+                objeto.endereco.numero,
+                objeto.endereco.bairro,
+                objeto.endereco.cidade,
+                objeto.endereco.estado);
+
+    }else if (tipo_config == 0){ //Arquivo BINARIO
+        locadora = fopen("cpyBdLocadora.bin", "ab");
+        if (locadora == NULL){ // Se a abertura falhar
+            return 1;
+        }
+        fwrite(&objeto, sizeof(filme), 1,locadora);
+    }
+    fclose(locadora);
+    return 0;
+}
+
+
 int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int id){
     locadora new = criarLocadora(id);
     inserirLocadora(dtbase,new,qtdLocadora,tamanhoLocadora,id);

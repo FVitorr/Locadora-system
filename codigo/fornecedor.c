@@ -64,7 +64,7 @@ int inserirFornecedor(fornecedor **dtbase, fornecedor novoFornecedor, int *qtdFo
         system("pause");
         return 0;
     }
-    (*dtbase)[id] = novoFornecedor;
+    (*dtbase)[*tamanhoFornecedor - 1] = novoFornecedor;
     *qtdFornecedor = *qtdFornecedor + 1;
     return 1;
 }
