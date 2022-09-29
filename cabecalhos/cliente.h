@@ -28,7 +28,11 @@ int removerCliente(cliente **dtbase, int id, int *qtdCliente);
 void listCliente(cliente **dtbase, int qtd);
 
 void editaCliente(cliente **dtbase, int *qtdCliente, int *tamanhoCliente, int id);
-
+/*
+ Cria menu Filme
+ Parametros: 
+    bd_client,qtdCliente, tamanhoCliente ,idControleCliente.
+*/
 int menuClientes(cliente **bd_cliente, int *qtdCliente,int *tamanhoCliente,int idControleCliente);
 
 #endif //CLIENTE_H
