@@ -21,7 +21,7 @@ typedef struct
     char nomeFantasia[50];
     char razaoSocial[50];
     char inscricaoEstadual[30];
-    int cnpj;
+    char cnpj[15];
     endereco endereco;
     char telefone[15];
     char email[50];
@@ -32,7 +32,7 @@ typedef struct
     char *password;
 } locadora;
 
-locadora criarLocadora(int id);
+locadora criarLocadora(int *id);
 
 int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora, int id);
 
@@ -44,6 +44,6 @@ void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, in
 
 int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id);
 
-int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int id);
+int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int *id);
 
 #endif //LOCADORA_H

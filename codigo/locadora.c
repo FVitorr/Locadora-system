@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <io.h>
 #include "../cabecalhos/locadora.h"
 #include "../cabecalhos/fucGlobal.h"
 
-locadora criarLocadora(int id) {
+locadora criarLocadora(int *id) {
 
     locadora obj;
-    obj.id = id;
+    obj.id = *id;
 
     setbuf(stdin,NULL);
     printf("Nome Fantasia: ");
@@ -233,7 +234,7 @@ int saveLocadora(locadora objeto,int tipo_config){
             return 1;
         }
 
-        fprintf("%d\n%s\n%\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
+        fprintf(locadora,"%d\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
                 objeto.id,
                 objeto.nomeFantasia,
                 objeto.razaoSocial,
@@ -260,8 +261,86 @@ int saveLocadora(locadora objeto,int tipo_config){
     return 0;
 }
 
+;int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLocadora, int *id,int tipo_config) {
+    FILE *p;
+    locadora new;
+    int t = 0;
+    if (tipo_config == 1){ //Arquivo TXT
+        p = fopen("cpyBdLocadora.txt", "r");
 
-int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int id){
+        if (p == NULL){
+            printf("\nErro na Leitura 'cpyBdLocadora.txt' \n");
+            system("Pause");
+            return 1;
+        }
+
+        while (!feof(p)){
+            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fscanf(p, "%d\n", &new.id);
+            //fgets(filmeCadastrado[n].descricao, 50, p);
+            fgets(new.nomeFantasia, sizeof(new.nomeFantasia), p);
+            limpa_final_string(new.nomeFantasia);
+
+            fgets(new.razaoSocial, sizeof(new.razaoSocial), p);
+            limpa_final_string(new.razaoSocial);
+
+            fgets(new.inscricaoEstadual, sizeof(new.inscricaoEstadual), p);
+            limpa_final_string(new.razaoSocial);
+
+            fgets(new.cnpj, sizeof(new.cnpj), p);
+            limpa_final_string(new.cnpj);
+
+            fgets(new.endereco.rua, sizeof(new.endereco.rua), p);
+            limpa_final_string(new.endereco.rua);
+
+            fscanf(p, "%d\n", &new.endereco.numero);
+
+            fgets(new.endereco.bairro, sizeof(new.endereco.bairro), p);
+            limpa_final_string(new.endereco.bairro);
+
+            fgets(new.endereco.cidade, sizeof(new.endereco.cidade), p);
+            limpa_final_string(new.endereco.cidade);
+
+            fgets(new.endereco.estado, sizeof(new.endereco.estado), p);
+            limpa_final_string(new.endereco.estado);
+
+            t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora,tipo_config);
+            if (*id <= new.id) {
+                *id = new.id + 1;
+            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    else  if (tipo_config == 0){ //Arquivo BIN
+        p = fopen("cpyBdFilme.bin", "rb");
+        while (!feof(p)){
+            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fread(&new,sizeof(locadora),1,p);
+            t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora,tipo_config);
+            if (*id <= new.id) {
+                    *id = new.id + 1;
+            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    fclose(p);
+    return 0;
+}
+
+
+int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int *id){
     locadora new = criarLocadora(id);
     inserirLocadora(dtbase,new,qtdLocadora,tamanhoLocadora,id);
 
