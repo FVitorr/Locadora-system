@@ -55,8 +55,12 @@ int menuprincipal(int tipo_config,
             printf(">> Exit \n");
             return 1;
         case 1:
-            printf("Menu-Locação\n");
-            return 0;
+            while (1) {
+                int t = menuLocadora(dtbaseLocadora, qtd_Locadora, tamanho_Locadora, idLocadora);
+                if (t == 1) {
+                    return 0;
+                }
+            }
         case 2:
             printf("Menu-Clientes\n");
             return 0;

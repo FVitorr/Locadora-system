@@ -177,12 +177,11 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
     }
     else if (opc == 1)
     {
-        // Cadastrar um Filme
+        // Cadastrar uma Locadora
         system("cls");
-        printf(">> Novo Funcionario     \tID: %d \n", *id);
-        locadora newLocadora = criarLocadora(*id);
+        printf(">> Nova Locadora     \tID: %d \n", *id);
+        locadora newLocadora = criarLocadora(id);
         inserirLocadora(dtbase,newLocadora,qtdLocadora,tamanhoLocadora,*id);
-        printf("dasd");
         *id = *id + 1;
     }
     else if (opc == 2)
