@@ -250,6 +250,17 @@ void limpa_final_string(char *c) {
     }
 }
 
+
+void limpa_extensao(char *c) {
+    int i;
+    for (i = 0; i < strlen(c); i++){
+        if (c[i] == '.') {
+            c[i] = '\0';
+            break;
+        }
+    }
+}
+
 int creatFile(char nameFile[30],int tipo_config){
     char name_file[100];
     char txt[5] = {'.','t','x','t','\0'};
@@ -277,14 +288,16 @@ int verifica_arquivos(int tipo_config){
     int t_txt = 2;
     FILE *p;
 
-    char namesArqConstTXT[2][20] = {{"cpyBdFilme.txt\0"},
-                                    {"cpyBdLocadora.txt\0"}};
+    char namesArqConstTXT[2][20] = {{"cpyBdFilme\0"},
+                                    {"cpyBdLocadora\0"}};
     line(100,"Verificando Arquivos\0");
     if (tipo_config == 1){
         for (int i = 0 ; i < t_txt; i++){
+            strcat(namesArqConstTXT[i],".txt");
             p = fopen(namesArqConstTXT[i], "r");
             if (p == NULL){ // Se a leitura do arquivo falhar criar
-                creatFile("cpyBdFilme",tipo_config);
+                limpa_extensao(namesArqConstTXT[i]);
+                creatFile(namesArqConstTXT[i],tipo_config);
                 printf("\n>> %s Criado",namesArqConstTXT[i]);
             }else{
                 printf("\n>> %s Existe",namesArqConstTXT[i]);
