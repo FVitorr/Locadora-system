@@ -117,7 +117,7 @@ void listLocadora(locadora **dtbase, int qtd){
     //           "Nome do Responsável \t Telefone do Responsável \t Rua \t Número \t Bairro \t Cidade \t Estado\n");
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
-            printf("ID: (%d)\nNome Fantasia: %s\nRazão Social: %s \nInscrição Estadual: %s\n CNPJ: %s\n Telefone: %s\n E-mail: %s\n Nome do Responsável: %s\n Telefone do Responsável: %s\n Rua: %s\nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s \n",
+            printf("ID: (%d)\nNome Fantasia: %s\nRazão Social: %s \nInscrição Estadual: %s\nCNPJ: %s\nTelefone: %s\nE-mail: %s\nNome do Responsável: %s\nTelefone do Responsável: %s\nRua: %s\nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s \n",
                    (*dtbase)[c].id,
                    (*dtbase)[c].nomeFantasia,
                    (*dtbase)[c].razaoSocial,
@@ -232,21 +232,24 @@ int saveLocadora(locadora objeto,int tipo_config){
             return 1;
         }
 
-        fprintf(locadora,"%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
+        fprintf(locadora,"%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
                 objeto.id,
                 objeto.nomeFantasia,
                 objeto.razaoSocial,
                 objeto.inscricaoEstadual,
                 objeto.cnpj,
-                objeto.telefone,
-                objeto.email,
-                objeto.nomeResponsavel,
-                objeto.telefoneResponsavel,
                 objeto.endereco.rua,
                 objeto.endereco.numero,
                 objeto.endereco.bairro,
                 objeto.endereco.cidade,
-                objeto.endereco.estado);
+                objeto.endereco.estado,
+                objeto.telefone,
+                objeto.email,
+                objeto.nomeResponsavel,
+                objeto.telefoneResponsavel,
+                objeto.user,
+                objeto.password
+);
 
     }
     if (tipo_config == 0){ //Arquivo BINARIO
@@ -296,7 +299,7 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
             limpa_final_string(new.razaoSocial);
 
             fgets(new.inscricaoEstadual,30, arquivo);
-            limpa_final_string(new.razaoSocial);
+            limpa_final_string(new.inscricaoEstadual);
 
             fgets(new.cnpj, 15, arquivo);
             limpa_final_string(new.cnpj);
@@ -314,6 +317,24 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
 
             fgets(new.endereco.estado, 3, arquivo);
             limpa_final_string(new.endereco.estado);
+
+            fgets(new.telefone, 15, arquivo);
+            limpa_final_string(new.telefone);
+
+            fgets(new.email, 15, arquivo);
+            limpa_final_string(new.email);
+
+            fgets(new.nomeResponsavel, 50, arquivo);
+            limpa_final_string(new.nomeResponsavel);
+
+            fgets(new.telefoneResponsavel, 15, arquivo);
+            limpa_final_string(new.telefoneResponsavel);
+
+            fgets(new.user, 30, arquivo);
+            limpa_final_string(new.user);
+
+            fgets(new.password, 16, arquivo);
+            limpa_final_string(new.password);
 
             if (verifica_IDLocadora(dtBase,*qtdLocadora,new.id) == 0){
                 t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora,tipo_config);

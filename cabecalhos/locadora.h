@@ -28,7 +28,7 @@ typedef struct
     char nomeResponsavel[50];
     char telefoneResponsavel[15];
 
-    char user[120];
+    char user[30];
     char *password;
 } locadora;
 
