@@ -56,7 +56,7 @@ int menuprincipal(int tipo_config,
             return 1;
         case 1:
             while (1) {
-                int t = menuLocadora(dtbaseLocadora, qtd_Locadora, tamanho_Locadora, idLocadora);
+                int t = menuLocadora(dtbaseLocadora, qtd_Locadora, tamanho_Locadora, idLocadora,tipo_config);
                 if (t == 1) {
                     return 0;
                 }
@@ -89,7 +89,7 @@ int menuprincipal(int tipo_config,
 
         case 6:
             while (1){
-                int t = menuLocadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora);
+                int t = menuLocadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -146,4 +146,5 @@ int carregaTodosDados(int *tipoConfig,config *config_system,
     int newID = verifica_log(config_system,tipoConfig);
     //set_configuracao_Locadora(dtbaseLocadora,config_system->user,config_system->password,qtd_Locadora,tamanho_Locadora,newID);
     carregarDados_filme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,*tipoConfig);
+    carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
 }

@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,6 +9,8 @@ locadora criarLocadora(int *id) {
 
     locadora obj;
     obj.id = *id;
+
+    *id = *id + 1;
 
     setbuf(stdin,NULL);
     printf("Nome Fantasia: ");
@@ -25,7 +26,7 @@ locadora criarLocadora(int *id) {
 
     setbuf(stdin,NULL);
     printf("CNPJ: ");
-    scanf("%d", &obj.cnpj);
+    scanf("%s", obj.cnpj);
 
     setbuf(stdin,NULL);
     printf("Telefone: ");
@@ -76,7 +77,7 @@ locadora criarLocadora(int *id) {
     return obj;
 }
 
-int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora, int id) {
+int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora, int tipo_config) {
     if (*qtdLocadora == *tamanhoLocadora)
     {
         *tamanhoLocadora = *tamanhoLocadora + 1;
@@ -90,10 +91,11 @@ int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, 
     }
     (*dtbase)[*tamanhoLocadora - 1] = novaLocadora;
     *qtdLocadora = *qtdLocadora + 1;
+    //saveLocadora(novaLocadora,tipo_config);
     return 1;
 }
 
-int removerLocadora(locadora **dtbase, int id, int *qtdLocadora){
+int removerLocadora(locadora **dtbase, int id, int *qtdLocadora, int *tamanhoLocadora, int tipo_config){
     for (int i = 0; i < *qtdLocadora; i ++){
         if((*dtbase)[i].id == id){
             while (i < *qtdLocadora - 1)
@@ -105,6 +107,7 @@ int removerLocadora(locadora **dtbase, int id, int *qtdLocadora){
             break;
         }
     }
+    refazDados_Locadora(dtbase,qtdLocadora,tamanhoLocadora,tipo_config);
     return 0;
 }
 
@@ -114,7 +117,7 @@ void listLocadora(locadora **dtbase, int qtd){
                "Nome do Responsável \t Telefone do Responsável \t Rua \t Número \t Bairro \t Cidade \t Estado\n");
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
-            printf("(%d)\t %s\t %s\t %s\t %d\t %s\t %s\t %s\t %s\t %s\t %d\t %s\t %s\t %s \n",
+            printf("(%d)\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %d\t %s\t %s\t %s \n",
                    (*dtbase)[c].id,
                    (*dtbase)[c].nomeFantasia,
                    (*dtbase)[c].razaoSocial,
@@ -141,17 +144,16 @@ void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, in
 {
     for (int i = 0; i < *qtdLocadora; i++) {
         if ((*dtbase)[i].id == id) {
-            locadora newEntrada = criarLocadora(id);
-            inserirLocadora(dtbase, newEntrada, qtdLocadora, tamanhoLocadora, id);
+            locadora newEntrada = criarLocadora(&id);
+            (*dtbase)[i] = newEntrada;
             break;
         }
     }
     *qtdLocadora = *qtdLocadora - 1;
 }
 
-int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id){
+int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id, int tipo_config){
     int erro = 0, exit = 0, opc = 0;
-    char opc_;
     system("cls");
     line(30,"Locadora\0");
     printf("\t 0 - Sair \t 1 - Cadastrar \n");
@@ -181,14 +183,14 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         system("cls");
         printf(">> Nova Locadora     \tID: %d \n", *id);
         locadora newLocadora = criarLocadora(id);
-        inserirLocadora(dtbase,newLocadora,qtdLocadora,tamanhoLocadora,*id);
-        *id = *id + 1;
+        inserirLocadora(dtbase,newLocadora,qtdLocadora,tamanhoLocadora, tipo_config);
+        saveLocadora(newLocadora,tipo_config);
     }
     else if (opc == 2)
     {
         // Visualizar
         system("cls");
-        printf(">> Funcionarios Cadastrados  \t Total: %d\n\n", *qtdLocadora);
+        printf(">> Locadora Cadastrada  \t Total: %d\n\n", *qtdLocadora);
         listLocadora(dtbase, *qtdLocadora);
         system("pause");
     }
@@ -196,7 +198,7 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
     {
         // editar
         system("cls");
-        printf(">> Funcionarios Cadastrados  \t Total: %d\n\n", *qtdLocadora);
+        printf(">> Locadora Cadastrada  \t Total: %d\n\n", *qtdLocadora);
         listLocadora(dtbase, *qtdLocadora);
 
         int cod;
@@ -215,10 +217,7 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         printf("Remover (ID):");
         scanf("%d", &cod);
 
-        removerLocadora(dtbase,cod,qtdLocadora);
-
-        printf("%d",*qtdLocadora);
-        system("pause");
+        removerLocadora(dtbase,cod,qtdLocadora,tamanhoLocadora,tipo_config);
     }
     return exit;
 }
@@ -233,7 +232,7 @@ int saveLocadora(locadora objeto,int tipo_config){
             return 1;
         }
 
-        fprintf(locadora,"%d\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
+        fprintf(locadora,"%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
                 objeto.id,
                 objeto.nomeFantasia,
                 objeto.razaoSocial,
@@ -249,7 +248,8 @@ int saveLocadora(locadora objeto,int tipo_config){
                 objeto.endereco.cidade,
                 objeto.endereco.estado);
 
-    }else if (tipo_config == 0){ //Arquivo BINARIO
+    }
+    if (tipo_config == 0){ //Arquivo BINARIO
         locadora = fopen("cpyBdLocadora.bin", "ab");
         if (locadora == NULL){ // Se a abertura falhar
             return 1;
@@ -260,7 +260,8 @@ int saveLocadora(locadora objeto,int tipo_config){
     return 0;
 }
 
-;int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLocadora, int *id,int tipo_config) {
+int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLocadora, int *id,int tipo_config) {
+    printf(">> Carregando Dados de Locadora ...\n");
     FILE *p;
     locadora new;
     int t = 0;
@@ -274,35 +275,37 @@ int saveLocadora(locadora objeto,int tipo_config){
         }
 
         while (!feof(p)){
-            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
-                break;
-            }
+//            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+//                break;
+//            }
+
+
             fscanf(p, "%d\n", &new.id);
-            //fgets(filmeCadastrado[n].descricao, 50, p);
-            fgets(new.nomeFantasia, sizeof(new.nomeFantasia), p);
+
+            fgets(new.nomeFantasia, 50, p);
             limpa_final_string(new.nomeFantasia);
 
-            fgets(new.razaoSocial, sizeof(new.razaoSocial), p);
+            fgets(new.razaoSocial, 50, p);
             limpa_final_string(new.razaoSocial);
 
-            fgets(new.inscricaoEstadual, sizeof(new.inscricaoEstadual), p);
+            fgets(new.inscricaoEstadual,30, p);
             limpa_final_string(new.razaoSocial);
 
-            fgets(new.cnpj, sizeof(new.cnpj), p);
+            fgets(new.cnpj, 15, p);
             limpa_final_string(new.cnpj);
 
-            fgets(new.endereco.rua, sizeof(new.endereco.rua), p);
+            fgets(new.endereco.rua, 50, p);
             limpa_final_string(new.endereco.rua);
 
             fscanf(p, "%d\n", &new.endereco.numero);
 
-            fgets(new.endereco.bairro, sizeof(new.endereco.bairro), p);
+            fgets(new.endereco.bairro, 10, p);
             limpa_final_string(new.endereco.bairro);
 
-            fgets(new.endereco.cidade, sizeof(new.endereco.cidade), p);
+            fgets(new.endereco.cidade, 10, p);
             limpa_final_string(new.endereco.cidade);
 
-            fgets(new.endereco.estado, sizeof(new.endereco.estado), p);
+            fgets(new.endereco.estado, 3, p);
             limpa_final_string(new.endereco.estado);
 
             t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora,tipo_config);
@@ -312,8 +315,11 @@ int saveLocadora(locadora objeto,int tipo_config){
 
             if (t == 0){
                 printf("\nAcao Interrompida");
+                fclose(p);
                 break;
             }
+        fclose(p);
+        printf("Okay");
         }
     }
     else  if (tipo_config == 0){ //Arquivo BIN
@@ -333,15 +339,33 @@ int saveLocadora(locadora objeto,int tipo_config){
                 break;
             }
         }
+        fclose(p);
     }
-    fclose(p);
+    return 0;
+}
+int refazDados_Locadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int tipo_configuracao){
+
+    FILE *p;
+    if (tipo_configuracao == 1){
+        p = fopen("cpyBdFilme.txt", "w");
+        fclose(p);
+        p = NULL;
+        for (int i = 0; i < *tamanhoLocadora; i++){
+            saveLocadora((*dtbase)[i],1);
+        }
+    }else if (tipo_configuracao == 0){
+        p = fopen("cpyBdFilme.bin", "wb");
+        fclose(p);
+        for (int i = 0; i < *tamanhoLocadora; i++){
+            saveLocadora((*dtbase)[i],0);
+        }
+    }
     return 0;
 }
 
-
 int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int *id){
     locadora new = criarLocadora(id);
-    inserirLocadora(dtbase,new,qtdLocadora,tamanhoLocadora,id);
+    inserirLocadora(dtbase,new,qtdLocadora,tamanhoLocadora,*id);
 
     strcpy(user,new.user);
     new.password = password;

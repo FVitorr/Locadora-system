@@ -11,7 +11,7 @@ typedef struct
     int numero;
     char bairro[10];
     char cidade[10];
-    char estado[2];
+    char estado[3];
 
 } endereco;
 
@@ -34,15 +34,21 @@ typedef struct
 
 locadora criarLocadora(int *id);
 
-int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora, int id);
+int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora, int tipo_config);
 
-int removerLocadora(locadora **dtbase, int id, int *qtdLocadora);
+int removerLocadora(locadora **dtbase, int id, int *qtdLocadora, int *tamanhoLocadora, int tipo_config);
 
 void listLocadora(locadora **dtbase, int qtd);
 
 void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int id);
 
-int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id);
+int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id, int tipo_config);
+
+int saveLocadora(locadora objeto,int tipo_config);
+
+int refazDados_Locadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int tipo_configuracao);
+
+int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLocadora, int *id,int tipo_config);
 
 int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int *id);
 
