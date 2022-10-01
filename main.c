@@ -113,7 +113,7 @@ int main() {
     //Carrega os arquivos e Verifica se é primeira execursão
     carregaTodosDados(&tipoConfig,&config_System,
                       &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
-                      &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleFornecedor);
+                      &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora);
     //Verifica se os arquivos existem caso contrario criar
     verifica_arquivos(tipoConfig);
 

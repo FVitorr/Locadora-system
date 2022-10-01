@@ -113,11 +113,11 @@ int removerLocadora(locadora **dtbase, int id, int *qtdLocadora, int *tamanhoLoc
 
 void listLocadora(locadora **dtbase, int qtd){
     if (qtd > 0) {
-        printf("\nID \t Nome Fantasia \t Razão Social \t Inscrição Estadual \t CNPJ \t Telefone \t E-mail \t "
-               "Nome do Responsável \t Telefone do Responsável \t Rua \t Número \t Bairro \t Cidade \t Estado\n");
+    //printf("\nID  Nome Fantasia  Razão Social  Inscrição Estadual  CNPJ \t Telefone \t E-mail \t "
+    //           "Nome do Responsável \t Telefone do Responsável \t Rua \t Número \t Bairro \t Cidade \t Estado\n");
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
-            printf("(%d)\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %d\t %s\t %s\t %s \n",
+            printf("ID: (%d)\nNome Fantasia: %s\nRazão Social: %s \nInscrição Estadual: %s\n CNPJ: %s\n Telefone: %s\n E-mail: %s\n Nome do Responsável: %s\n Telefone do Responsável: %s\n Rua: %s\nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s \n",
                    (*dtbase)[c].id,
                    (*dtbase)[c].nomeFantasia,
                    (*dtbase)[c].razaoSocial,
@@ -259,70 +259,78 @@ int saveLocadora(locadora objeto,int tipo_config){
     fclose(locadora);
     return 0;
 }
+int verifica_IDLocadora(locadora **dtbase,int qtd_Locadora,int id) {
+    for (int i = 0; i < qtd_Locadora; i++) {
+        if ((*dtbase)[i].id == id) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLocadora, int *id,int tipo_config) {
     printf(">> Carregando Dados de Locadora ...\n");
-    FILE *p;
     locadora new;
     int t = 0;
     if (tipo_config == 1){ //Arquivo TXT
-        p = fopen("cpyBdLocadora.txt", "r");
+        FILE *arquivo;
+        arquivo = fopen("cpyBdLocadora.txt", "r");
 
-        if (p == NULL){
+        if (arquivo == NULL){
             printf("\nErro na Leitura 'cpyBdLocadora.txt' \n");
             system("Pause");
             return 1;
         }
 
-        while (!feof(p)){
-//            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
-//                break;
-//            }
+        for (int i = 0; !feof(arquivo); i++){
+            if (!filelength(fileno(arquivo))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
 
+            fscanf(arquivo, "%d\n", &new.id);
 
-            fscanf(p, "%d\n", &new.id);
-
-            fgets(new.nomeFantasia, 50, p);
+            fgets(new.nomeFantasia, 50, arquivo);
             limpa_final_string(new.nomeFantasia);
 
-            fgets(new.razaoSocial, 50, p);
+            fgets(new.razaoSocial, 50, arquivo);
             limpa_final_string(new.razaoSocial);
 
-            fgets(new.inscricaoEstadual,30, p);
+            fgets(new.inscricaoEstadual,30, arquivo);
             limpa_final_string(new.razaoSocial);
 
-            fgets(new.cnpj, 15, p);
+            fgets(new.cnpj, 15, arquivo);
             limpa_final_string(new.cnpj);
 
-            fgets(new.endereco.rua, 50, p);
+            fgets(new.endereco.rua, 50, arquivo);
             limpa_final_string(new.endereco.rua);
 
-            fscanf(p, "%d\n", &new.endereco.numero);
+            fscanf(arquivo, "%d\n", &new.endereco.numero);
 
-            fgets(new.endereco.bairro, 10, p);
+            fgets(new.endereco.bairro, 10, arquivo);
             limpa_final_string(new.endereco.bairro);
 
-            fgets(new.endereco.cidade, 10, p);
+            fgets(new.endereco.cidade, 10, arquivo);
             limpa_final_string(new.endereco.cidade);
 
-            fgets(new.endereco.estado, 3, p);
+            fgets(new.endereco.estado, 3, arquivo);
             limpa_final_string(new.endereco.estado);
 
-            t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora,tipo_config);
-            if (*id <= new.id) {
-                *id = new.id + 1;
+            if (verifica_IDLocadora(dtBase,*qtdLocadora,new.id) == 0){
+                t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora,tipo_config);
+                if (*id <= new.id) {
+                    *id = new.id + 1;
+                }
             }
 
             if (t == 0){
                 printf("\nAcao Interrompida");
-                fclose(p);
                 break;
             }
-        fclose(p);
-        printf("Okay");
         }
+        fclose(arquivo);
     }
     else  if (tipo_config == 0){ //Arquivo BIN
+        FILE *p;
         p = fopen("cpyBdFilme.bin", "rb");
         while (!feof(p)){
             if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */

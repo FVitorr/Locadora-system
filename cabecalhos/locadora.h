@@ -50,6 +50,8 @@ int refazDados_Locadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocador
 
 int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLocadora, int *id,int tipo_config);
 
+int verifica_IDLocadora(locadora **dtbase,int qtd_Locadora,int id);
+
 int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int *id);
 
 #endif //LOCADORA_H
