@@ -1,13 +1,14 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include "../cabecalhos/cliente.h"
 #include "../cabecalhos/fucGlobal.h"
 
-cliente criarCliente(int id){
+cliente criarCliente(int *idCliente){
     cliente obj;
-    obj.id = id;
+    obj.id = *idCliente;
+
+    *idCliente = *idCliente + 1;
 
     setbuf(stdin,NULL);
     printf("Nome: ");
@@ -68,9 +69,9 @@ int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *
     {
         printf("\n  Erro na alocação de memória!");
         system("pause");
-        return 0;
+        exit(1);
     }
-    (*dtbase)[id] = novoCliente;
+    (*dtbase)[*tamanhoCliente - 1] = novoCliente;
     *qtdCliente = *qtdCliente + 1;
     return 1;
 }
@@ -140,7 +141,7 @@ int sairOuContinuar() {
     return escolhaSair;
 }
 
-int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int idControleCliente){
+int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int *idControleCliente){
     int escolha = INT32_MAX;
 
     while (escolha != 0 && escolha != 5) {
@@ -181,7 +182,7 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
             }
             case 0: {
                 printf("Saindo...\n");
-                break;
+                return 1;
             }
             default: {
                 printf("Esta não é uma opção válida, favor selecionar novamente.\n");

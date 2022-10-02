@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "../cabecalhos/funcionarios.h"
 #include "../cabecalhos/fucGlobal.h"
@@ -12,7 +11,7 @@ int criarFuncionario(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFun
 
     obj.codigo = id;
 
-    (atualizar == 1) ? line(30,"Atualizando Funcionarios\0") : line(30,"Adicionar novo funcionario\0");;
+    (atualizar == 1) ? line(30,"Atualizando Funcionarios\0") : line(30,"Adicionar novo funcionario\0");
     setbuf(stdin,NULL);
 
     printf("Nome : ");
@@ -139,7 +138,6 @@ int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id){
 
 int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFuncionarios,int *id){
     int erro = 0, exit = 0, opc = 0;
-    char opc_;
     system("cls");
     line(30,"Funcionarios\0");
     printf("\t 0 - Sair \n\t 1 - Cadastrar \n\t 2 - Cadastrar Multiplas \n");
@@ -153,8 +151,7 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFun
             printf(">> Parametro Invalido\n");
         }
         printf("\n>> Opc: ");
-        scanf("%c", &opc_);
-        opc = ctoi(opc_);
+        scanf("%d", &opc);
         erro = 1;
     } while (opc < 0 || opc > 5);
 

@@ -19,7 +19,7 @@ typedef struct
     char dataNascimento[12];
 } cliente;
 
-cliente criarCliente(int id);
+cliente criarCliente(int *id);
 
 int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *tamanhoCliente, int id);
 
@@ -33,6 +33,6 @@ void editaCliente(cliente **dtbase, int *qtdCliente, int *tamanhoCliente, int id
  Parametros: 
     bd_client,qtdCliente, tamanhoCliente ,idControleCliente.
 */
-int menuClientes(cliente **bd_cliente, int *qtdCliente,int *tamanhoCliente,int idControleCliente);
+int menuClientes(cliente **bd_cliente, int *qtdCliente,int *tamanhoCliente,int *idControleCliente);
 
 #endif //CLIENTE_H

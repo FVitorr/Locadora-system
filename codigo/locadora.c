@@ -140,7 +140,7 @@ void listLocadora(locadora **dtbase, int qtd){
     printf("\n");
 }
 
-void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int id)
+void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int id, int tipo_config)
 {
     for (int i = 0; i < *qtdLocadora; i++) {
         if ((*dtbase)[i].id == id) {
@@ -149,16 +149,16 @@ void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, in
             break;
         }
     }
-    *qtdLocadora = *qtdLocadora - 1;
+    refazDados_Locadora(dtbase,qtdLocadora,tamanhoLocadora,tipo_config);
 }
 
 int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id, int tipo_config){
     int erro = 0, exit = 0, opc = 0;
     system("cls");
-    line(30,"Locadora\0");
-    printf("\t 0 - Sair \t 1 - Cadastrar \n");
+    line(60,"Locadora\0");
+    printf("\t 0 - Sair \t\t 1 - Cadastrar \n");
     printf("\t 2 - Visualizar \t 3 - Editar \n\t 4 - Remover");
-    line(30,"-\0");
+    line(60,"-\0");
 
     do
     {
@@ -199,19 +199,19 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         // editar
         system("cls");
         printf(">> Locadora Cadastrada  \t Total: %d\n\n", *qtdLocadora);
-        listLocadora(dtbase, *qtdLocadora);
+        listLocadora(dtbase, *tamanhoLocadora);
 
         int cod;
         printf("Editar (ID):");
         scanf("%d", &cod);
 
-        editaLocadora(dtbase,qtdLocadora,tamanhoLocadora,cod);
+        editaLocadora(dtbase,qtdLocadora,tamanhoLocadora,cod,tipo_config);
     }
     else if (opc == 4)
     {
         // Remover
         system("cls");
-        listLocadora(dtbase, *qtdLocadora);
+        listLocadora(dtbase, *tamanhoLocadora);
 
         int cod;
         printf("Remover (ID):");
@@ -352,7 +352,7 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
     }
     else  if (tipo_config == 0){ //Arquivo BIN
         FILE *p;
-        p = fopen("cpyBdFilme.bin", "rb");
+        p = fopen("cpyBdLocadora.bin", "rb");
         while (!feof(p)){
             if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
@@ -376,16 +376,15 @@ int refazDados_Locadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocador
 
     FILE *p;
     if (tipo_configuracao == 1){
-        p = fopen("cpyBdFilme.txt", "w");
+        p = fopen("cpyBdLocadora.txt", "w");
         fclose(p);
-        p = NULL;
-        for (int i = 0; i < *tamanhoLocadora; i++){
+        for (int i = 0; i < *qtdLocadora; i++){
             saveLocadora((*dtbase)[i],1);
         }
     }else if (tipo_configuracao == 0){
-        p = fopen("cpyBdFilme.bin", "wb");
+        p = fopen("cpyBdLocadora.bin", "wb");
         fclose(p);
-        for (int i = 0; i < *tamanhoLocadora; i++){
+        for (int i = 0; i < *qtdLocadora; i++){
             saveLocadora((*dtbase)[i],0);
         }
     }

@@ -33,13 +33,14 @@ int menuprincipal(int tipo_config,
                   fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
-                  locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora){
+                  locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
+                  cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente){
 
     system("cls");
     int opc = 0, erro = 0;
     line(60,"Menu principal \0");
     printf("\t 1 - Locacao \t\t 2 - Clientes \n\t 3 - Categoria \t\t 4 - Filmes");
-    printf("\n\t 5 - Funcionarios \t 6 - Locadora \n\t 7 - Importar/Exportar \t 0 - Exit");
+    printf("\n\t 5 - Funcionarios \t 6 - Fornecedor \n\t 7 - Locadora \t\t 8 - Exportar/Importar \n\t 0 - Exit");
     line(60,"s\0");
     do {
         if (erro == 1){
@@ -48,21 +49,21 @@ int menuprincipal(int tipo_config,
         printf(">> Opc: ");
         scanf("%d", &opc);
         erro = 1;
-    } while (opc < 0 || opc > 6);
+    } while (opc < 0 || opc > 8);
     system("cls");
     switch (opc) {
         case 0:
             printf(">> Exit \n");
             return 1;
         case 1:
-            while (1) {
-                int t = menuLocadora(dtbaseLocadora, qtd_Locadora, tamanho_Locadora, idLocadora,tipo_config);
-                if (t == 1) {
+            return 0;
+        case 2:
+            while (1){
+                int t = menuClientes(dtbaseCliente,qtd_Cliente,tamanho_Cliente,idCliente);
+                if (t == 1){
                     return 0;
                 }
             }
-        case 2:
-            printf("Menu-Clientes\n");
             return 0;
         case 3:
             while (1){
@@ -88,6 +89,8 @@ int menuprincipal(int tipo_config,
             }
 
         case 6:
+            break;
+        case 7:
             while (1){
                 int t = menuLocadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,tipo_config);
                 if (t == 1){
@@ -107,15 +110,15 @@ int main() {
     bd_cat = malloc(tamanhoCategoria * sizeof(fCategoria));
     bd_filme = malloc(tamanhoFilme * sizeof (filme));
     bd_funcionarios = malloc(tamanhoFuncionarios * sizeof (funcionarios));
-    bd_fornecedor = malloc(tamanhoFornecedor * sizeof (fornecedor));
+    bd_cliente = malloc(tamanhoCliente * sizeof (cliente));
     bd_locadora = malloc(tamanhoLocadora * sizeof(locadora));
 
+    //Verifica se os arquivos existem caso contrario criar
+    verifica_arquivos(tipoConfig);
     //Carrega os arquivos e Verifica se é primeira execursão
     carregaTodosDados(&tipoConfig,&config_System,
                       &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                       &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora);
-    //Verifica se os arquivos existem caso contrario criar
-    verifica_arquivos(tipoConfig);
 
     while (1){
         int v;
@@ -123,7 +126,8 @@ int main() {
                           &bd_cat,&qtdCategoria,&tamanhoCategoria,
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                           &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,
-                          &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleFornecedor);
+                          &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
+                          &bd_cliente,&qtdCliente,&tamanhoCliente,&idControleCliente);
         if (v == 1){
             break;
         }
@@ -131,11 +135,13 @@ int main() {
     free(bd_cat);
     free(bd_filme);
     free(bd_funcionarios);
+    free(bd_cliente);
     free(bd_locadora);
     bd_cat = NULL;
     bd_filme = NULL;
     bd_funcionarios = NULL;
     bd_locadora = NULL;
+    bd_cliente = NULL;
     return 0;
 }
 

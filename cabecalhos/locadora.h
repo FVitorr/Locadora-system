@@ -40,7 +40,7 @@ int removerLocadora(locadora **dtbase, int id, int *qtdLocadora, int *tamanhoLoc
 
 void listLocadora(locadora **dtbase, int qtd);
 
-void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int id);
+void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int id, int tipo_config);
 
 int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id, int tipo_config);
 
