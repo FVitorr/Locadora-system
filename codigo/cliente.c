@@ -14,9 +14,17 @@ cliente criarCliente(int *idCliente){
     printf("Nome: ");
     scanf("%[^\n]s", obj.nome);
 
-    setbuf(stdin,NULL);
-    printf("CPF: ");
-    scanf("%d", &obj.cpf);
+    int CpfIsTrue = 0;
+    do {
+        if(CpfIsTrue == 1){
+            printf(" \n>> Cpf Invalido. Tente Novamente.\n");
+        }
+        setbuf(stdin,NULL);
+        printf("CPF: ");
+        scanf("%[^\n]s", obj.cpf);
+        CpfIsTrue = 1;
+    }
+    while (validaCPF(obj.cpf) == 1);
 
     setbuf(stdin,NULL);
     printf("Telefone: ");
@@ -97,7 +105,7 @@ void listCliente(cliente **dtbase, int qtd) {
                "Data de Nascimento \t Rua \t Número \t Bairro \t Cidade \t Estado\n");
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
-            printf("(%d)\t %s\t %d\t %s\t %s\t %s\t %s\t %s\t %s\t %d\t %s\t %s\t %s \n",
+            printf("(%d)\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %d\t %s\t %s\t %s \n",
                    (*dtbase)[c].id,
                    (*dtbase)[c].nome,
                    (*dtbase)[c].cpf,
@@ -119,16 +127,15 @@ void listCliente(cliente **dtbase, int qtd) {
     printf("\n");
 }
 
-void editaCliente(cliente **dtbase, int *qtdCliente, int *tamanhoCliente, int id)
+void editaCliente(cliente **dtbase, int qtd_Cliente, int *tamanhoCliente, int id)
 {
-    for (int i = 0; i < *qtdCliente; i++) {
+    for (int i = 0; i < qtd_Cliente; i++) {
         if ((*dtbase)[i].id == id) {
-            cliente newEntrada = criarCliente(id);
-            inserirCliente(dtbase, newEntrada, qtdCliente, tamanhoCliente, id);
+            cliente newEntrada = criarCliente(&id);
+            (*dtbase)[i] = newEntrada;
             break;
         }
     }
-    *qtdCliente = *qtdCliente - 1;
 }
 
 int sairOuContinuar() {
@@ -152,7 +159,7 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
         switch (escolha) {
             case 1: {
                 cliente newCliente = criarCliente((idControleCliente));
-                inserirCliente(bd_cliente, newCliente, qtdCliente, tamanhoCliente, idControleCliente);
+                inserirCliente(bd_cliente, newCliente, qtdCliente, tamanhoCliente, *idControleCliente);
                 idControleCliente += 1;
                 break;
             }
@@ -165,7 +172,7 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
                 listCliente(bd_cliente, *qtdCliente);
                 printf("Digite o ID do Cliente que deseja editar.\n");
                 scanf("%d", &id);
-                editaCliente(bd_cliente, qtdCliente, tamanhoCliente, id);
+                editaCliente(bd_cliente, *qtdCliente, tamanhoCliente, id);
                 break;
             }
             case 4: {
@@ -178,7 +185,7 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
             }
             case 5: {
                 printf("Voltando...\n");
-                break;
+                return 1;
             }
             case 0: {
                 printf("Saindo...\n");

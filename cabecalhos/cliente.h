@@ -11,7 +11,7 @@ typedef struct
     int id;
     char nome[50];
     endereco endereco;
-    int cpf;
+    char cpf[11];
     char telefone[15];
     char email[50];
     char sexo[15];
@@ -27,7 +27,7 @@ int removerCliente(cliente **dtbase, int id, int *qtdCliente);
 
 void listCliente(cliente **dtbase, int qtd);
 
-void editaCliente(cliente **dtbase, int *qtdCliente, int *tamanhoCliente, int id);
+void editaCliente(cliente **dtbase, int qtdCliente, int *tamanhoCliente, int id);
 /*
  Cria menu Filme
  Parametros: 
