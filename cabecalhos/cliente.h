@@ -21,7 +21,7 @@ typedef struct
 
 cliente criarCliente(int *id);
 
-int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *tamanhoCliente, int id);
+int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *tamanhoCliente, int tipo_config);
 
 int removerCliente(cliente **dtbase, int id, int *qtdCliente);
 

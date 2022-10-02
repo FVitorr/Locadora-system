@@ -49,7 +49,7 @@ int menuprincipal(int tipo_config,
         printf(">> Opc: ");
         scanf("%d", &opc);
         erro = 1;
-    } while (opc < 0 || opc > 8);
+    } while (opc < 0 || opc > 9);
     system("cls");
     switch (opc) {
         case 0:
@@ -97,9 +97,12 @@ int menuprincipal(int tipo_config,
                     return 0;
                 }
             }
-        default:
-            return 0;
+        default: {
+            printf("Esta não é uma opção válida, favor selecionar novamente.\n");
+            break;
+        }
     }
+    return 0;
 }
 
 int main() {

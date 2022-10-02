@@ -67,7 +67,7 @@ cliente criarCliente(int *idCliente){
     return obj;
 }
 
-int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *tamanhoCliente, int id) {
+int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *tamanhoCliente, int tipo_config) {
     if (*qtdCliente == *tamanhoCliente)
     {
         *tamanhoCliente = *tamanhoCliente + 1;
