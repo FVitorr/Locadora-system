@@ -127,6 +127,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
                 printf(">> Categorias Cadastradas  \t Total: %d\n\n", *qtdCategoria);
                 listCategorias(dtbase,*qtdCategoria);
                 system("pause");
+                break;
             }
             case 3: {
                 int cod;
@@ -141,12 +142,14 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
                 }else{
                     sucess();
                 }
+                break;
             }
             case 4: {
                 int cod;
                 printf("Remover:");
                 scanf("%d", &cod);
                 remCategoria(dtbase, cod, qtdCategoria,tamanhoCategoria, tipo_config);
+                break;
             }
             case 0: {
                 printf("Saindo...\n");
