@@ -25,7 +25,7 @@ int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 0;
 fornecedor *bd_fornecedor;
 int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
 
-int carregaTodosDados(int *tipoConfig,config *config_system,
+int carregaTodosDados(int *tipoConfig, config *config_system,
                       filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                       locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora);
 
@@ -34,7 +34,8 @@ int menuprincipal(int tipo_config,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
                   locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
-                  cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente){
+                  cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente,
+                  cliente **dtbaseFornecedor, int *qtd_Fornecedor,int *tamanho_Fornecedor,int *idFornecedor){
 
     system("cls");
     int opc = 0, erro = 0;
@@ -43,7 +44,7 @@ int menuprincipal(int tipo_config,
     printf("\n\t 5 - Funcionarios \t 6 - Fornecedor \n\t 7 - Locadora \t\t 8 - Exportar/Importar \n\t 0 - Exit");
     line(60,"s\0");
     do {
-        if (erro == 1){
+        if (erro == 1) {
             printf(">> Parametro Invalido:\n");
         }
         printf(">> Opc: ");
@@ -73,7 +74,7 @@ int menuprincipal(int tipo_config,
             }
         case 4:
             while (1){
-                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idFilme,tipo_config);
+                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idFilme, tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -87,10 +88,15 @@ int menuprincipal(int tipo_config,
             }
 
         case 6:
-            break;
+            while (1){
+                int t = menuFornecedor((fornecedor **) dtbaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor);
+                if (t == 1){
+                    return 0;
+                }
+            }
         case 7:
             while (1){
-                int t = menuLocadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,tipo_config);
+                int t = menuLocadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora, tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -113,6 +119,7 @@ int main() {
     bd_funcionarios = malloc(tamanhoFuncionarios * sizeof (funcionarios));
     bd_cliente = malloc(tamanhoCliente * sizeof (cliente));
     bd_locadora = malloc(tamanhoLocadora * sizeof(locadora));
+    bd_fornecedor = malloc(tamanhoFornecedor * sizeof(fornecedor));
 
     //Verifica se os arquivos existem caso contrario criar
     verifica_arquivos(tipoConfig);
@@ -128,7 +135,8 @@ int main() {
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                           &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,
                           &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
-                          &bd_cliente,&qtdCliente,&tamanhoCliente,&idControleCliente);
+                          &bd_cliente,&qtdCliente,&tamanhoCliente,&idControleCliente,
+                          &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor);
         if (v == 1){
             break;
         }
