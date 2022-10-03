@@ -58,7 +58,6 @@ int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes
     // adc obj ao bd local
     (*dtbase)[*tamanhoFilmes - 1] = newEntry;
     *qtdFilmes = *qtdFilmes + 1;
-    //saveFilme(newEntry,tipo_config);
 
     return 1;
 }
@@ -167,7 +166,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         printf(">> Novo filme     \tID: %d \n", *id);
         filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id);
         inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,tipo_config);
-        saveFilme(new,tipo_config);
+        saveFilme(new, tipo_config);
     }
     else if (opc == 2)
     {
@@ -223,7 +222,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
 }
 
 
-int saveFilme(filme objeto,int tipo_config){
+int saveFilme(filme objeto, int tipo_config){
     FILE *filme_;
 
     if (tipo_config == 1){//Arquivo TXT
@@ -280,7 +279,7 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
             }
             fscanf(p, "%d\n", &new.codigo);
             //fgets(filmeCadastrado[n].descricao, 50, p);
-            fgets(new.nome, 50, p);
+            fgets(new.nome, 120, p);
             limpa_final_string(new.nome);
 
             fgets(new.descricao, 120, p);
@@ -290,7 +289,7 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
 
             fscanf(p, "%d\n", &new.c_categoria);
 
-            fgets(new.lingua, 100, p);
+            fgets(new.lingua, 120, p);
             limpa_final_string(new.lingua);
 
             if (verifica_ID(dtBase,*qtdFilme,new.codigo) == 0){
