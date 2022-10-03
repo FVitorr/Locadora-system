@@ -48,13 +48,12 @@ int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *
         {
             printf("\n  Erro na alocação de memória!");
             system("pause");
-            return 1;
+            return 0;
         } 
     // adc obj ao bd local
     (*dtbase)[*tamanhoCategoria - 1] = newEntry;
     *qtdCategoria = *qtdCategoria + 1;
-    saveCategoria(newEntry,tipo_config);
-    return 0;
+    return 1;
 }
 int remCategoria(fCategoria **dtbase, int id, int *qtdCategoria,int *tamanhoCategoria,int tipo_config){
     for (int i = 0; i < *qtdCategoria; i++){
@@ -121,12 +120,14 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
             case 1: {
                 fCategoria newObjeto = objCategoria(idCategoria,0);
                 insCategoria(dtbase,newObjeto,qtdCategoria,tamanhoCategoria,tipo_config);
+                saveCategoria(newObjeto,tipo_config);
                 break;
             }
             case 2: {
                 printf(">> Categorias Cadastradas  \t Total: %d\n\n", *qtdCategoria);
                 listCategorias(dtbase,*qtdCategoria);
                 system("pause");
+                break;
             }
             case 3: {
                 int cod;
@@ -141,12 +142,14 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
                 }else{
                     sucess();
                 }
+                break;
             }
             case 4: {
                 int cod;
                 printf("Remover:");
                 scanf("%d", &cod);
                 remCategoria(dtbase, cod, qtdCategoria,tamanhoCategoria, tipo_config);
+                break;
             }
             case 0: {
                 printf("Saindo...\n");
@@ -213,19 +216,21 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
 
             fscanf(p,"%f\n" ,&new.vAlocacao);
 
-
             fscanf(p, "%d\n", &new.ativo);
 
             t = insCategoria(dtBase,new,qtdCategoria,tamanhoCategoria,tipo_config);
             if (*id <= new.codigo) {
                 *id = new.codigo + 1;
+                printf("ID: %d",*id);
             }
 
             if (t == 0){
-                printf("\nAcao Interrompida");
+                printf("\nAcao Interrompida \n");
                 break;
             }
         }
+        printf("Quantidade Categoria: %d",*qtdCategoria);
+        system("pause");
     }
     else  if (tipo_config == 0){ //Arquivo BIN
         p = fopen("cpyBdCategoria.bin", "rb");
@@ -248,6 +253,7 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
         }
     }
     fclose(p);
+    printf("\n>>Categoria Carregada.");
     return 0;
 }
 

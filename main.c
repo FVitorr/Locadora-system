@@ -160,11 +160,13 @@ int main() {
 int carregaTodosDados(int *tipoConfig,config *config_system,
                       filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                       locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
-                      fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *id){
+                      fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *idCategoria){
 
     int newID = verifica_log(config_system,tipoConfig);
     //set_configuracao_Locadora(dtbaseLocadora,config_system->user,config_system->password,qtd_Locadora,tamanho_Locadora,newID);
     carregarDados_filme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,*tipoConfig);
     carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
-    carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,id,*tipoConfig);
+    carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
+
+    return 0;
 }
