@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include "../cabecalhos/fornecedor.h"
 
@@ -121,5 +122,57 @@ void editarFornecedor(fornecedor **dtbase, int *qtdFornecedor, int *tamanghoForn
         }
     }
     *qtdFornecedor = *qtdFornecedor - 1;
+}
+
+int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFornecedor,int *idControleFornecedor) {
+    int escolha = INT32_MAX;
+
+    while (escolha != 0 && escolha != 5) {
+        printf("Digite a opção referente a operação que deseja executar\n\n");
+        printf("0 - Sair \n1 - Cadastrar \n2 - Visualizar \n3 - Editar \n4 - Remover\n");
+        scanf("%d", &escolha);
+
+        switch (escolha) {
+            case 1: {
+                fornecedor newFornecedor = criarFornecedor(*idControleFornecedor);
+                inserirFornecedor(bd_fornecedor, newFornecedor, qtdFornecedor, tamanhoFornecedor, *idControleFornecedor);
+                idControleFornecedor += 1;
+                break;
+            }
+            case 2: {
+                listFornecedor(bd_fornecedor, *qtdFornecedor);
+                break;
+            }
+            case 3: {
+                int id = 0;
+                listFornecedor(bd_fornecedor, *qtdFornecedor);
+                printf("Digite o ID do Fornecedor que deseja editar.\n");
+                scanf("%d", &id);
+                editarFornecedor(bd_fornecedor, (int *) *qtdFornecedor, tamanhoFornecedor, id);
+                break;
+            }
+            case 4: {
+                int id = 0;
+                listFornecedor(bd_fornecedor, *qtdFornecedor);
+                printf("Digite o ID do Cliente que deseja excluir.\n");
+                scanf("%d", &id);
+                removerFornecedor(bd_fornecedor, id, qtdFornecedor);
+                break;
+            }
+            case 5: {
+                printf("Voltando...\n");
+                return 1;
+            }
+            case 0: {
+                printf("Saindo...\n");
+                return 1;
+            }
+            default: {
+                printf("Esta não é uma opção válida, favor selecionar novamente.\n");
+                break;
+            }
+        }
+    }
+    return escolha;
 }
 

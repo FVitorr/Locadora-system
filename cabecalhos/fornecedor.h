@@ -27,4 +27,6 @@ void listFornecedor(fornecedor **dtbase, int qtd);
 
 void editarFornecedor(fornecedor **dtbase, int *qtdFornecedor, int *tamanghoFornecedor, int id);
 
+int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFornecedor,int *idControleFornecedor);
+
 #endif //LOCADORA_SYSTEM_FORNECEDOR_H
