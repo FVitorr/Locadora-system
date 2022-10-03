@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdint.h>
 
 fCategoria objCategoria (int id,int tab){
     fCategoria obj;
@@ -108,117 +109,53 @@ int *obterID(fCategoria **dtbase,int *qtdCategoria){
 
 
 int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria) {
-    int opc = 0, erro = 0, exit = 0;
-    system("cls");
+    int escolha = INT32_MAX;
 
-    line(30,"Categorias \0");
-    printf("\t 0 - Sair \n\t 1 - Cadastrar \n\t 2 - Cadastrar Multiplas \n");
-    printf("\t 3 - Visualizar \n\t 4 - Editar \n\t 5 - Remover\n");
-    line(30,"-\0");
+    while (escolha != 0 && escolha != 5) {
+        printf("Digite a opção referente a operação que deseja executar\n\n");
+        printf("0 - Sair \n1 - Cadastrar \n2 - Visualizar \n3 - Editar \n4 - Remover\n");
+        scanf("%d", &escolha);
 
-    do
-    {
-        if (erro == 1) {
-            printf(">> Parametro Invalido\n");
-        }
-        printf("Opc: ");
-        scanf("%d", &opc);
-        erro = 1;
-    } while (opc < 0 || opc > 5);
-
-    if (opc == 0) {
-        printf(">> Exit\n");
-        exit = 1;
-    }
-    else if (opc == 1) {
-        //Cadastrar uma categoria
-        printf(">> Nova Categoria     ID: %d \n\n", *qtdCategoria);
-        fCategoria newObjeto = objCategoria(*qtdCategoria,0);
-        insCategoria(dtbase,newObjeto,qtdCategoria,tamanhoCategoria,*qtdCategoria);
-    }
-    else if (opc == 2) {
-        //Cadastrar multiplas categoria
-        system("cls");
-        printf(">> Cadastro Multiplo Categoria     ID: %d \n\n", *qtdCategoria);
-        int qtd_ = 1;
-        while (1)
-        {
-            fCategoria new = objCategoria(*qtdCategoria,0);
-            insCategoria(dtbase,new,qtdCategoria,tamanhoCategoria,*qtdCategoria);
-            printf("[1 - Mais] \t [0 - Exit]: ");
-            scanf("%d", &qtd_);
-            if (qtd_ == 0) {
+        switch (escolha) {
+            case 1: {
+                fCategoria newObjeto = objCategoria(*qtdCategoria,0);
+                insCategoria(dtbase,newObjeto,qtdCategoria,tamanhoCategoria,*qtdCategoria);
+                break;
+            }
+            case 2: {
+                printf(">> Categorias Cadastradas  \t Total: %d\n\n", *qtdCategoria);
+                listCategorias(dtbase,*qtdCategoria);
+                system("pause");
+            }
+            case 3: {
+                int cod;
+                printf(">> Categorias Cadastradas  \t Total: %d\n\n", *qtdCategoria);
+                listCategorias(dtbase,*qtdCategoria);
+                printf(">>Editar:");
+                scanf("%d", &cod);
+                int t = editaCategoria(dtbase,qtdCategoria,tamanhoCategoria,cod);
+                if (t == 1){
+                    printf("\n\t>> ID não encontrado");
+                    abortOp();
+                }else{
+                    sucess();
+                }
+            }
+            case 4: {
+                int cod;
+                printf("Remover:");
+                scanf("%d", &cod);
+                remCategoria(dtbase, cod, qtdCategoria);
+            }
+            case 0: {
+                printf("Saindo...\n");
+                return 1;
+            }
+            default: {
+                printf("Esta não é uma opção válida, favor selecionar novamente.\n");
                 break;
             }
         }
-
     }
-    else if (opc == 3) {
-        //Visualizar
-        printf(">> Categorias Cadastradas  \t Total: %d\n\n", *qtdCategoria);
-        listCategorias(dtbase,*qtdCategoria);
-        system("pause");
-    }
-    else if (opc == 4) {
-        // editar
-        int cod;
-
-        printf(">> Categorias Cadastradas  \t Total: %d\n\n", *qtdCategoria);
-        listCategorias(dtbase,*qtdCategoria);
-
-        printf(">>Editar:");
-        scanf("%d", &cod);
-
-        int t = editaCategoria(dtbase,qtdCategoria,tamanhoCategoria,cod);
-        if (t == 1){
-            printf("\n\t>> ID não encontrado");
-            abortOp();
-        }else{
-            sucess();
-        }
-    }
-    else if (opc == 5) {
-        // Remover
-        int cod;
-        printf("Remover:");
-        scanf("%d", &cod);
-        remCategoria(dtbase, cod, qtdCategoria);
-    }
-    return exit;
+    return escolha;
 }
-
-//
-//
-//fCategoria *bd_cat;
-//int qtdCategoria = 0,tamanhoCategoria = 1;
-//
-//int main() {
-//
-//    bd_cat = malloc(tamanhoCategoria * sizeof(fCategoria));
-//    fCategoria new = objCategoria(qtdCategoria,0);
-//    insCategoria(&bd_cat,new,&qtdCategoria,&tamanhoCategoria);
-//    // printf("QTD: %d\n",qtdCategoria);
-//    // printf("Cod: %d\n",bd_cat[0].codigo);
-//    // printf("Des: %s\n",bd_cat[0].descricao);
-//    // printf("FLAg: %d\n",bd_cat[0].ativo);
-//    listCategorias(&bd_cat,qtdCategoria);
-//    fCategoria new1 = objCategoria(qtdCategoria,0);
-//    insCategoria(&bd_cat,new1,&qtdCategoria,&tamanhoCategoria);
-//    listCategorias(&bd_cat,qtdCategoria);
-//    // printf("QTD: %d\n",qtdCategoria);
-//    // printf("Cod: %d\n",bd_cat[1].codigo);
-//    // printf("Des: %s\n",bd_cat[1].descricao);
-//    // printf("Ativo: %d\n",bd_cat[1].ativo);
-//
-//    int id = 0;
-//    printf("\nRemove:\n");
-//    //scanf("%d",&id);
-//    remCategoria(&bd_cat, id, &qtdCategoria);
-//    printf("Ativo: %d\n",bd_cat[0].ativo);
-//
-//    listCategorias(&bd_cat,qtdCategoria);
-//    editaCategoria(&bd_cat,&qtdCategoria,&tamanhoCategoria,0);
-//    listCategorias(&bd_cat,qtdCategoria);
-//    free(bd_cat);
-//    return 0;
-//}
