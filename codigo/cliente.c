@@ -152,7 +152,7 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
     int escolha = INT32_MAX;
 
     while (escolha != 0) {
-        printf("Digite a opção referente a operação que deseja executar\n\n");
+        printf("Digite a opcao referente a operacao que deseja executar\n\n");
         printf("0 - Sair \n1 - Cadastrar \n2 - Visualizar \n3 - Editar \n4 - Remover\n");
         scanf("%d", &escolha);
 
