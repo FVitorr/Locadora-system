@@ -7,8 +7,10 @@
 #include "cabecalhos/funcionarios.h"
 #include "cabecalhos/fornecedor.h"
 
+/*Arrays Dinamicos*/
+
 fCategoria *bd_cat;
-int qtdCategoria = 0, tamanhoCategoria = 1;
+int qtdCategoria = 0, tamanhoCategoria = 1, idControleCategoria;
 
 filme  *bd_filme;
 int qtdFilmes = 0, tamanhoFilme = 1, idControleFilmes = 0;
@@ -27,10 +29,11 @@ int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
 
 int carregaTodosDados(int *tipoConfig, config *config_system,
                       filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
-                      locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora);
+                      locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
+                      fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *id);
 
 int menuprincipal(int tipo_config,
-                  fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,
+                  fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,int *idCategoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
                   locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
@@ -66,7 +69,7 @@ int menuprincipal(int tipo_config,
             }
         case 3:
             while (1){
-                int t = menuCategoria(dtbaseCategoria,qtd_Categoria,tamanho_Categoria);
+                int t = menuCategoria(dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -125,12 +128,13 @@ int main() {
     //Carrega os arquivos e Verifica se é primeira execursão
     carregaTodosDados(&tipoConfig,&config_System,
                       &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
-                      &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora);
+                      &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
+                      &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria);
 
     while (1){
         int v;
         v = menuprincipal(tipoConfig,
-                          &bd_cat,&qtdCategoria,&tamanhoCategoria,
+                          &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                           &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,
                           &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
@@ -155,10 +159,12 @@ int main() {
 
 int carregaTodosDados(int *tipoConfig,config *config_system,
                       filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
-                      locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora){
+                      locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
+                      fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *id){
 
     int newID = verifica_log(config_system,tipoConfig);
     //set_configuracao_Locadora(dtbaseLocadora,config_system->user,config_system->password,qtd_Locadora,tamanho_Locadora,newID);
     carregarDados_filme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,*tipoConfig);
     carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
+    carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,id,*tipoConfig);
 }

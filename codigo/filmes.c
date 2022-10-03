@@ -123,7 +123,7 @@ int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategori
         }
         else {
             printf("\n");
-            fCategoria new = objCategoria(id,1);
+            fCategoria new = objCategoria(&id,1);
             int suc = insCategoria(dtbaseCategoria,new,qtdCategoria,tamanhoCategoria,*qtdCategoria);
             if (suc == 1) {
                 printf("\n\t>> Nova categoria adicionada");

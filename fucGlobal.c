@@ -277,7 +277,7 @@ void limpa_extensao(char *c) {
     }
 }
 
-int creatFile(char nameFile[30],int tipo_config){
+int creatFile(char *nameFile,int tipo_config){
     char name_file[100];
     char txt[5] = {'.','t','x','t','\0'};
     char bin[5] = {'.','b','i','n','\0'};
@@ -301,11 +301,12 @@ int creatFile(char nameFile[30],int tipo_config){
 }
 
 int verifica_arquivos(int tipo_config){
-    int t_txt = 2;
+    int t_txt = 3;
     FILE *p;
 
-    char namesArqConstTXT[2][20] = {{"cpyBdFilme\0"},
-                                    {"cpyBdLocadora\0"}};
+    char namesArqConstTXT[3][20] = {{"cpyBdFilme\0"},
+                                    {"cpyBdLocadora\0"},
+                                    {"cpyBdCategoria\0"}};
     line(100,"Verificando Arquivos\0");
     if (tipo_config == 1){
         for (int i = 0 ; i < t_txt; i++){
@@ -351,9 +352,10 @@ void set_tipoARQ_config(config *set, int *tipo_config){
 int verifica_log(config *set,int *tipo_config){
     //Arquivo log.bin armazenas informaçoes do sistema
     FILE *log;
+    char *nameFile = "log";
     log = fopen("log.bin","rb");
     if (log == NULL){
-        creatFile("log",0);
+        creatFile(nameFile,0);
         set_tipoARQ_config(set, tipo_config);
         return 0; // Este retorno usado para criar locadora de ID 0
     }
