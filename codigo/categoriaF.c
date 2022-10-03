@@ -56,12 +56,13 @@ int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *
     saveCategoria(newEntry,tipo_config);
     return 0;
 }
-int remCategoria(fCategoria **dtbase, int id, int qtdCategoria,int tipo_config){
-    for (int i = 0; i < qtdCategoria; i++){
+int remCategoria(fCategoria **dtbase, int id, int *qtdCategoria,int *tamanhoCategoria,int tipo_config){
+    for (int i = 0; i < *qtdCategoria; i++){
         if ((*dtbase)[i].codigo == id){
             (*dtbase)[i].ativo = 0;
         }
     }
+    refazDados_Categoria(dtbase,qtdCategoria,tamanhoCategoria,tipo_config);
     return 0;
 }
 
@@ -145,7 +146,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
                 int cod;
                 printf("Remover:");
                 scanf("%d", &cod);
-                remCategoria(dtbase, cod, *qtdCategoria, tipo_config);
+                remCategoria(dtbase, cod, qtdCategoria,tamanhoCategoria, tipo_config);
             }
             case 0: {
                 printf("Saindo...\n");
@@ -227,7 +228,7 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
         }
     }
     else  if (tipo_config == 0){ //Arquivo BIN
-        p = fopen("cpyBdFilme.bin", "rb");
+        p = fopen("cpyBdCategoria.bin", "rb");
         while (!feof(p)){
             if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
@@ -251,5 +252,21 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
 }
 
 int refazDados_Categoria(fCategoria **dtbase, int *qtdCategoria, int *tamanhoCategoria, int tipo_config){
-
+    FILE *p;
+    if (tipo_config == 1){
+        p = fopen("cpyBdCategoria.txt", "w");
+        fclose(p);
+        p = NULL;
+        for (int i = 0; i < *tamanhoCategoria; i++){
+            saveCategoria((*dtbase)[i],1);
+        }
+    }else if (tipo_config == 0){
+        p = fopen("cpyBdCategoria.bin", "wb");
+        fclose(p);
+        p = NULL;
+        for (int i = 0; i < *tamanhoCategoria; i++){
+            saveCategoria((*dtbase)[i],0);
+        }
+    }
+    return 0;
 }

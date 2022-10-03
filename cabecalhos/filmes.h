@@ -28,7 +28,7 @@ extern "C" {
 
     int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id,int tipo_config);
 
-    int refazDados_filme(filme **dtbase, int *qtdFilme, int *tmnhoFilme, int tipo_configuracao);
+    int refazDados_filme(filme **dtbase, int *qtdFilme, int *tmnhoFilme, int tipo_config);
 
 #ifdef __cplusplus
 }

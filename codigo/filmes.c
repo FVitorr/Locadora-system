@@ -332,17 +332,17 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
 }
 
 
-int refazDados_filme(filme **dtbase, int *qtdFilme, int *tamanhoFilme, int tipo_configuracao){
+int refazDados_filme(filme **dtbase, int *qtdFilme, int *tamanhoFilme, int tipo_config){
 
     FILE *p;
-    if (tipo_configuracao == 1){
+    if (tipo_config== 1){
         p = fopen("cpyBdFilme.txt", "w");
         fclose(p);
         p = NULL;
         for (int i = 0; i < *tamanhoFilme; i++){
             saveFilme((*dtbase)[i],1);
         }
-    }else if (tipo_configuracao == 0){
+    }else if (tipo_config == 0){
         p = fopen("cpyBdFilme.bin", "wb");
         fclose(p);
         for (int i = 0; i < *tamanhoFilme; i++){
