@@ -106,8 +106,24 @@ void abortOp(void){
     printf("\n\t[ERRO404] Operação Abortada:\n");
 }
 
+void info_cancela(void){
+    printf("\n\t>>Operação Cancelada\n");
+    system("Pause");
+}
+
+int confirm_remover(int cod){
+    int op;
+    printf("Tem certeza que deseja remover (ID): %d \n 1- SIM \t 0-Não", cod);
+    scanf("%d", &op);
+    if (op == 1) {
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
 void sucess(void){
-    printf("\n\t>> Sucess");
+    printf("\n\t>> Sucess\n");
     system("pause");
 }
 
