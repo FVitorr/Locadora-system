@@ -148,7 +148,7 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
                 listFornecedor(bd_fornecedor, *qtdFornecedor);
                 printf("Digite o ID do Fornecedor que deseja editar.\n");
                 scanf("%d", &id);
-                editarFornecedor(bd_fornecedor, (int *) *qtdFornecedor, tamanhoFornecedor, id);
+                editarFornecedor(bd_fornecedor, qtdFornecedor, tamanhoFornecedor, id);
                 break;
             }
             case 4: {

@@ -100,3 +100,7 @@ int verifica_arquivos(int tipo_configuracao);
 int tipo_configuracao(int *tipo);
 
 int verifica_log(config *set,int *tipo_config);
+
+int confirm_remover(int cod);
+
+void info_cancela(void);

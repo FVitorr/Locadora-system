@@ -217,7 +217,12 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         printf("Remover (ID):");
         scanf("%d", &cod);
 
-        removerLocadora(dtbase,cod,qtdLocadora,tamanhoLocadora,tipo_config);
+        if (confirm_remover(cod) == 1) {
+            removerLocadora(dtbase,cod,qtdLocadora,tamanhoLocadora,tipo_config);
+            sucess();
+        }else{
+            info_cancela();
+        }
     }
     return exit;
 }

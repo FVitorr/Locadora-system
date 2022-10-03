@@ -35,7 +35,7 @@ int menuprincipal(int tipo_config,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
                   locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
                   cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente,
-                  cliente **dtbaseFornecedor, int *qtd_Fornecedor,int *tamanho_Fornecedor,int *idFornecedor){
+                  fornecedor **dtbaseFornecedor, int *qtd_Fornecedor,int *tamanho_Fornecedor,int *idFornecedor){
 
     system("cls");
     int opc = 0, erro = 0;
@@ -88,7 +88,7 @@ int menuprincipal(int tipo_config,
 
         case 6:
             while (1){
-                int t = menuFornecedor((fornecedor **) dtbaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor);
+                int t = menuFornecedor(dtbaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor);
                 if (t == 1){
                     return 0;
                 }

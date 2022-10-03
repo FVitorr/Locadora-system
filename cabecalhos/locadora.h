@@ -46,9 +46,9 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
 
 int saveLocadora(locadora objeto,int tipo_config);
 
-int refazDados_Locadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int tipo_configuracao);
-
 int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLocadora, int *id,int tipo_config);
+
+int refazDados_Locadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int tipo_configuracao);
 
 int verifica_IDLocadora(locadora **dtbase,int qtd_Locadora,int id);
 
