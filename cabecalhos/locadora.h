@@ -7,11 +7,11 @@
 
 typedef struct
 {
-    char rua[10];
+    char rua[50];
     int numero;
-    char bairro[10];
-    char cidade[10];
-    char estado[3];
+    char bairro[50];
+    char cidade[50];
+    char estado[2];
 
 } endereco;
 

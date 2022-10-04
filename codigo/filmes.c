@@ -136,7 +136,6 @@ int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategori
 int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id,int tipo_config){
     int opc = 0, erro = 0, exit = 0;
 
-    //carregarDados_filme(dtbase,qtdFilmes,tamanhoFilmes,id);
     system("cls");
     line(30,"Filmes\0");
     printf("\t 0 - Sair \n\t 1 - Cadastrar \n\t 2 - Cadastrar Multiplas \n");
@@ -260,6 +259,7 @@ int verifica_ID(filme **dtbase,int qtd_filme,int id) {
     }
     return 0;
 }
+
 int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id,int tipo_config) {
     FILE *p;
     filme new;

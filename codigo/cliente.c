@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <io.h>
 #include "../cabecalhos/cliente.h"
 #include "../cabecalhos/fucGlobal.h"
 
@@ -84,7 +85,7 @@ int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *
     return 1;
 }
 
-int removerCliente(cliente **dtbase, int id, int *qtdCliente) {
+int removerCliente(cliente **dtbase, int id, int *qtdCliente, int tipo_config) {
     for (int i = 0; i < *qtdCliente; i ++){
         if((*dtbase)[i].id == id){
             while (i < *qtdCliente - 1)
@@ -96,6 +97,7 @@ int removerCliente(cliente **dtbase, int id, int *qtdCliente) {
             break;
         }
     }
+    refazDadosCliente(dtbase, qtdCliente, tipo_config);
     return 0;
 }
 
@@ -127,28 +129,19 @@ void listCliente(cliente **dtbase, int qtd) {
     printf("\n");
 }
 
-void editaCliente(cliente **dtbase, int qtd_Cliente, int *tamanhoCliente, int id)
+void editaCliente(cliente **dtbase, int qtdCliente, int *tamanhoCliente, int id, int tipo_config)
 {
-    for (int i = 0; i < qtd_Cliente; i++) {
+    for (int i = 0; i < qtdCliente; i++) {
         if ((*dtbase)[i].id == id) {
             cliente newEntrada = criarCliente(&id);
             (*dtbase)[i] = newEntrada;
             break;
         }
     }
+    refazDadosCliente(dtbase, tamanhoCliente, tipo_config);
 }
 
-int sairOuContinuar() {
-    int escolhaSair = INT32_MAX;
-    printf("Para realizar outra ação digite 1, para sair digite 0.\n");
-    scanf("%d", &escolhaSair);
-    if (escolhaSair != 1) {
-        escolhaSair = 5;
-    }
-    return escolhaSair;
-}
-
-int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int *idControleCliente){
+int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int *idControleCliente, int tipo_config){
     int escolha = INT32_MAX;
 
     while (escolha != 0) {
@@ -160,7 +153,8 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
             case 1: {
                 cliente newCliente = criarCliente((idControleCliente));
                 inserirCliente(bd_cliente, newCliente, qtdCliente, tamanhoCliente, *idControleCliente);
-                idControleCliente += 1;
+                saveCliente(newCliente, tipo_config);
+//                idControleCliente += 1;
                 break;
             }
             case 2: {
@@ -172,7 +166,7 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
                 listCliente(bd_cliente, *qtdCliente);
                 printf("Digite o ID do Cliente que deseja editar.\n");
                 scanf("%d", &id);
-                editaCliente(bd_cliente, *qtdCliente, tamanhoCliente, id);
+                editaCliente(bd_cliente, *qtdCliente, tamanhoCliente, id, tipo_config);
                 break;
             }
             case 4: {
@@ -180,7 +174,7 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
                 listCliente(bd_cliente, *qtdCliente);
                 printf("Digite o ID do Cliente que deseja excluir.\n");
                 scanf("%d", &id);
-                removerCliente(bd_cliente, id, qtdCliente);
+                removerCliente(bd_cliente, id, qtdCliente, tipo_config);
                 break;
             }
             case 0: {
@@ -192,9 +186,167 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
                 break;
             }
         }
-        if (escolha != 0 && escolha != 5) {
-            escolha = sairOuContinuar();
-        }
     }
     return escolha;
+}
+
+int saveCliente(cliente objeto, int tipo_config){
+    FILE *clientes;
+
+    if (tipo_config == 1){//Arquivo TXT
+        clientes = fopen("cpyBdCliente.txt", "a");
+
+        if (clientes == NULL){ // Se a abertura falhar
+            return 1;
+        }
+
+        fprintf(clientes, "%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+                          "%s\n%d\n%s\n%s\n%s\n",
+                objeto.id,
+                objeto.nome,
+                objeto.cpf,
+                objeto.telefone,
+                objeto.email,
+                objeto.sexo,
+                objeto.estadoCivil,
+                objeto.dataNascimento,
+                objeto.endereco.rua,
+                objeto.endereco.numero,
+                objeto.endereco.bairro,
+                objeto.endereco.cidade,
+                objeto.endereco.estado
+                );
+
+    }else if (tipo_config == 0){ //Arquivo BINARIO
+        clientes = fopen("cpyBdCliente.bin", "ab");
+        if (clientes == NULL){ // Se a abertura falhar
+            return 1;
+        }
+        fwrite(&objeto, sizeof(cliente), 1,clientes);
+    }
+    fclose(clientes);
+    return 0;
+}
+
+int verificaId(cliente **dtbase, int qtdClientes, int id) {
+    for (int i = 0; i < qtdClientes; i++) {
+        if ((*dtbase)[i].id == id) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoCliente, int *id, int tipo_config) {
+    FILE *p;
+    cliente new;
+    int t = 0;
+    if (tipo_config == 1){ //Arquivo TXT
+        p = fopen("cpyBdCliente.txt", "r");
+
+        if (p == NULL){
+            printf("\nErro na Leitura 'cpyBdCliente.txt' \n");
+            system("Pause");
+            return 1;
+        }
+
+        while (!feof(p)){
+            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fscanf(p, "%d\n", &new.id);
+
+            fgets(new.nome, 120, p);
+            limpa_final_string(new.nome);
+
+            fgets(new.cpf, 11, p);
+            limpa_final_string(new.cpf);
+
+            fgets(new.telefone, 15, p);
+            limpa_final_string(new.telefone);
+
+            fgets(new.email, 50, p);
+            limpa_final_string(new.email);
+
+            fgets(new.sexo, 15, p);
+            limpa_final_string(new.sexo);
+
+            fgets(new.estadoCivil, 15, p);
+            limpa_final_string(new.estadoCivil);
+
+            fgets(new.dataNascimento, 12, p);
+            limpa_final_string(new.dataNascimento);
+
+            fgets(new.endereco.rua, 50, p);
+            limpa_final_string(new.endereco.rua);
+
+            fscanf(p, "%d\n", &new.endereco.numero);
+
+            fgets(new.endereco.bairro, 50, p);
+            limpa_final_string(new.endereco.bairro);
+
+            fgets(new.endereco.cidade, 50, p);
+            limpa_final_string(new.endereco.cidade);
+
+            fgets(new.endereco.estado, 3, p);
+            limpa_final_string(new.endereco.estado);
+
+            if (verificaId(dtBase, *qtdClientes, new.id) == 0){
+                t = inserirCliente(dtBase, new, qtdClientes, tamanhoCliente, tipo_config);
+                if (*id <= new.id) {
+                    *id = new.id + 1;
+                }
+            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    else  if (tipo_config == 0){ //Arquivo BIN
+        p = fopen("cpyBdCliente.bin", "rb");
+        while (!feof(p)){
+            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fread(&new,sizeof(cliente),1,p);
+            printf("%s %s %s %s %s %s %s %s %s %s %s", new.nome, new.cpf, new.telefone, new.email, new.sexo,
+                   new.estadoCivil, new.dataNascimento, new.endereco.rua, new.endereco.bairro, new.endereco.cidade, new.endereco.estado);
+            if (verificaId(dtBase, *qtdClientes, new.id) == 0){
+                t = inserirCliente(dtBase, new, qtdClientes, tamanhoCliente, tipo_config);
+                if (*id <= new.id) {
+                    *id = new.id + 1;
+                }
+            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    fclose(p);
+    return 0;
+}
+
+
+int refazDadosCliente(cliente **dtbase, int *tamanhoCliente, int tipo_config){
+
+    FILE *p;
+    if (tipo_config== 1){
+        p = fopen("cpyBdCliente.txt", "w");
+        fclose(p);
+        p = NULL;
+        for (int i = 0; i < *tamanhoCliente; i++){
+            saveCliente((*dtbase)[i],1);
+        }
+    }else if (tipo_config == 0){
+        p = fopen("cpyBdCliente.bin", "wb");
+        fclose(p);
+        for (int i = 0; i < *tamanhoCliente; i++){
+            saveCliente((*dtbase)[i],0);
+        }
+    }
+    return 0;
 }
