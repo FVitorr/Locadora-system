@@ -9,8 +9,8 @@ typedef struct
 typedef struct
 {
     int codigo;
-    char nome[50];
-    char cargo[30];
+    char nome[120];
+    char cargo[50];
     endereco endereco;
     char telefone[13];
     char email[50];
@@ -45,3 +45,11 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFun
  * Função que salva os funcionarios no arquivo
  */
 int saveFuncionario(funcionarios objeto, int tipo_config);
+/*
+ * Função que resgata os registros de funcionario do arquivo
+ */
+int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *tamanhoFuncionarios, int *id, int tipo_config);
+/*
+ * Função que refaz o arquivo de registros de funcionario
+ */
+int refazDadosFuncionario(funcionarios **dtbase, int *tamanhoFuncionario, int tipo_config);

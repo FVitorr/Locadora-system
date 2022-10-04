@@ -113,7 +113,8 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
                       locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
                       fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *idCategoria,
                       cliente **dtBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente,
-                      fornecedor **dtBaseFornecedor, int *qtd_Fornecedor, int *tamanho_Fornecedor, int *idFornecedor){
+                      fornecedor **dtBaseFornecedor, int *qtd_Fornecedor, int *tamanho_Fornecedor, int *idFornecedor,
+                      funcionarios **dtBaseFuncionario, int *qtd_Funcionario, int *tamanho_Funcionario, int *idFuncionario){
 
     int newID = verifica_log(config_system,tipoConfig);
     carregarDados_filme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, idFilme, *tipoConfig);
@@ -121,6 +122,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
     carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
     carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
     carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
+    carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
 
     return 0;
 }
@@ -145,7 +147,8 @@ int main() {
                       &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
                       &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                       &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente,
-                      &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor);
+                      &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor,
+                      &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios);
 
     while (1){
         int v;
@@ -165,6 +168,7 @@ int main() {
     free(bd_funcionarios);
     free(bd_cliente);
     free(bd_locadora);
+    free(bd_fornecedor);
     bd_cat = NULL;
     bd_filme = NULL;
     bd_funcionarios = NULL;
