@@ -200,7 +200,7 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         // editar
         system("cls");
         printf(">> Locadora Cadastrada  \t Total: %d\n\n", *qtdLocadora);
-        listLocadora(dtbase, *tamanhoLocadora);
+        listLocadora(dtbase, *qtdLocadora);
 
         int cod;
         printf("Editar (ID):");
@@ -212,7 +212,7 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
     {
         // Remover
         system("cls");
-        listLocadora(dtbase, *tamanhoLocadora);
+        listLocadora(dtbase, *qtdLocadora);
 
         int cod;
         printf("Remover (ID):");
@@ -298,7 +298,7 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
 
             fscanf(arquivo, "%d\n", &new.id);
 
-            fgets(new.nomeFantasia, 50, arquivo);
+            fgets(new.nomeFantasia, 120, arquivo);
             limpa_final_string(new.nomeFantasia);
 
             fgets(new.razaoSocial, 50, arquivo);
@@ -321,7 +321,7 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
             fgets(new.endereco.cidade, 50, arquivo);
             limpa_final_string(new.endereco.cidade);
 
-            fgets(new.endereco.estado, 2, arquivo);
+            fgets(new.endereco.estado, 50, arquivo);
             limpa_final_string(new.endereco.estado);
 
             fgets(new.telefone, 15, arquivo);

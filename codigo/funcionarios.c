@@ -346,3 +346,5 @@ int refazDadosFuncionario(funcionarios **dtbase, int *tamanhoFuncionario, int ti
     }
     return 0;
 }
+
+

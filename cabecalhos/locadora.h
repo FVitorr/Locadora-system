@@ -11,14 +11,14 @@ typedef struct
     int numero;
     char bairro[50];
     char cidade[50];
-    char estado[2];
+    char estado[50];
 
 } endereco;
 
 typedef struct
 {
     int id;
-    char nomeFantasia[50];
+    char nomeFantasia[120];
     char razaoSocial[50];
     char inscricaoEstadual[30];
     char cnpj[15];
