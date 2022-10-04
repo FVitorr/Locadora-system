@@ -271,17 +271,12 @@ int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *
 
             fgets(new.email, 50, p);
             limpa_final_string(new.email);
-            printf("\n\n 1 \n\n");
 
             fgets(new.login.user, 120, p);
             limpa_final_string(new.login.user);
 
-            printf("\n\n 2 \n\n");
-
-            fgets(new.login.password, 3, p);
+            fgets(new.login.password, 1, p);
             limpa_final_string(new.login.password);
-
-            printf("\n\n 3 \n\n");
 
             if (verificaIdFuncionario(dtBase, *qtdFuncionarios, new.codigo) == 0){
                 t = inserirFuncionario(dtBase, new, qtdFuncionarios, tamanhoFuncionarios);
