@@ -78,7 +78,7 @@ int menuprincipal(int tipo_config,
             }
         case 5:
             while (1){
-                int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios);
+                int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios, tipo_config);
                 if (t == 1){
                     return 0;
                 }

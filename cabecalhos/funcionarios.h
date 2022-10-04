@@ -18,9 +18,13 @@ typedef struct
     autentificacao login;
 }funcionarios;
 /*
+ * Função que permite a inserção de dados para um novo funcionario
+ */
+funcionarios criarFuncionario(int *idFuncionario);
+/*
  * Função que permite a inserção de um novo funcionario ao array de funcionarios
  */
-int criarFuncionario(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFuncionarios,int atualizar,int id);
+int inserirFuncionario(funcionarios **dtbase, funcionarios novoFuncionario, int *qtdFuncionario, int *tamanhoFuncionario);
 /*
  * Função que permite a listar os funcionario
  */
@@ -28,12 +32,16 @@ void listFuncionarios(funcionarios **dtbase, int qtd);
 /*
  * Função que permite a Alterar os dados dos funcionario.
  */
-void editaFuncionarios(funcionarios **dtbase,int *qtdFuncionarios,int *tamanhoFuncionarios,int id);
+void editaFuncionarios(funcionarios **dtbase,int qtdFuncionarios,int *tamanhoFuncionarios,int id, int tipo_config);
 /*
  * Função que permite a "Exclusão" de determinado funcionario.
  */
-int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id);
+int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id, int tipo_config);
 /*
  * Função que Gerencia as operaçoes de funcionario.
  */
-int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFuncionarios,int *id);
+int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFuncionarios,int *idControle, int tipo_config);
+/*
+ * Função que salva os funcionarios no arquivo
+ */
+int saveFuncionario(funcionarios objeto, int tipo_config);

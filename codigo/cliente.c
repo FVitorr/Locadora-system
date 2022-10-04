@@ -68,7 +68,7 @@ cliente criarCliente(int *idCliente){
     return obj;
 }
 
-int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *tamanhoCliente, int tipo_config) {
+int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *tamanhoCliente) {
     if (*qtdCliente == *tamanhoCliente)
     {
         *tamanhoCliente = *tamanhoCliente + 1;
@@ -152,7 +152,7 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
         switch (escolha) {
             case 1: {
                 cliente newCliente = criarCliente((idControleCliente));
-                inserirCliente(bd_cliente, newCliente, qtdCliente, tamanhoCliente, *idControleCliente);
+                inserirCliente(bd_cliente, newCliente, qtdCliente, tamanhoCliente);
                 saveCliente(newCliente, tipo_config);
                 break;
             }
@@ -291,7 +291,7 @@ int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoClient
             limpa_final_string(new.endereco.estado);
 
             if (verificaId(dtBase, *qtdClientes, new.id) == 0){
-                t = inserirCliente(dtBase, new, qtdClientes, tamanhoCliente, tipo_config);
+                t = inserirCliente(dtBase, new, qtdClientes, tamanhoCliente);
                 if (*id <= new.id) {
                     *id = new.id + 1;
                 }
@@ -313,7 +313,7 @@ int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoClient
             printf("%s %s %s %s %s %s %s %s %s %s %s", new.nome, new.cpf, new.telefone, new.email, new.sexo,
                    new.estadoCivil, new.dataNascimento, new.endereco.rua, new.endereco.bairro, new.endereco.cidade, new.endereco.estado);
             if (verificaId(dtBase, *qtdClientes, new.id) == 0){
-                t = inserirCliente(dtBase, new, qtdClientes, tamanhoCliente, tipo_config);
+                t = inserirCliente(dtBase, new, qtdClientes, tamanhoCliente);
                 if (*id <= new.id) {
                     *id = new.id + 1;
                 }
