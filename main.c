@@ -86,7 +86,7 @@ int menuprincipal(int tipo_config,
 
         case 6:
             while (1){
-                int t = menuFornecedor(dtbaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor);
+                int t = menuFornecedor(dtbaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -112,13 +112,15 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
                       filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                       locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
                       fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *idCategoria,
-                      cliente **dtBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente){
+                      cliente **dtBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente,
+                      fornecedor **dtBaseFornecedor, int *qtd_Fornecedor, int *tamanho_Fornecedor, int *idFornecedor){
 
     int newID = verifica_log(config_system,tipoConfig);
     carregarDados_filme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, idFilme, *tipoConfig);
     carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
     carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
     carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
+    carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
 
     return 0;
 }
@@ -142,7 +144,8 @@ int main() {
                       &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                       &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
                       &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
-                      &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente);
+                      &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente,
+                      &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor);
 
     while (1){
         int v;

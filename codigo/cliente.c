@@ -154,7 +154,6 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
                 cliente newCliente = criarCliente((idControleCliente));
                 inserirCliente(bd_cliente, newCliente, qtdCliente, tamanhoCliente, *idControleCliente);
                 saveCliente(newCliente, tipo_config);
-//                idControleCliente += 1;
                 break;
             }
             case 2: {

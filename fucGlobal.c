@@ -301,13 +301,14 @@ int creatFile(char *nameFile,int tipo_config){
 }
 
 int verifica_arquivos(int tipo_config){
-    int t_txt = 4;
+    int t_txt = 5;
     FILE *p;
 
-    char namesArqConstTXT[4][20] = {{"cpyBdFilme\0"},
+    char namesArqConstTXT[5][20] = {{"cpyBdFilme\0"},
                                     {"cpyBdLocadora\0"},
                                     {"cpyBdCategoria\0"},
-                                    {"cpyBdCliente\0"}};
+                                    {"cpyBdCliente\0"},
+                                    {"cpyBdFornecedor\0"}};
     line(100,"Verificando Arquivos\0");
     if (tipo_config == 1){
         for (int i = 0 ; i < t_txt; i++){
