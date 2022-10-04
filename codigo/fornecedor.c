@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <io.h>
 #include <stdint.h>
 #include <string.h>
+#include "../cabecalhos/fucGlobal.h"
 #include "../cabecalhos/fornecedor.h"
 
 fornecedor criarFornecedor(int id) {
@@ -70,7 +72,7 @@ int inserirFornecedor(fornecedor **dtbase, fornecedor novoFornecedor, int *qtdFo
     return 1;
 }
 
-int removerFornecedor(fornecedor **dtbase, int id, int *qtdFornecedor) {
+int removerFornecedor(fornecedor **dtbase, int id, int *qtdFornecedor, int tipo_config) {
     for (int i = 0; i < *qtdFornecedor; i ++){
         if((*dtbase)[i].id == id){
             while (i < *qtdFornecedor - 1)
@@ -82,6 +84,7 @@ int removerFornecedor(fornecedor **dtbase, int id, int *qtdFornecedor) {
             break;
         }
     }
+    refazDadosFornecedor(dtbase, qtdFornecedor, tipo_config);
     return 0;
 }
 
@@ -112,19 +115,19 @@ void listFornecedor(fornecedor **dtbase, int qtd) {
     printf("\n");
 }
 
-void editarFornecedor(fornecedor **dtbase, int *qtdFornecedor, int *tamanghoFornecedor, int id)
+void editarFornecedor(fornecedor **dtbase, int qtdFornecedor, int *tamanhoFornecedor, int id, int tipo_config)
 {
-    for (int i = 0; i < *qtdFornecedor; i++) {
+    for (int i = 0; i < qtdFornecedor; i++) {
         if ((*dtbase)[i].id == id) {
             fornecedor newEntrada = criarFornecedor(id);
-            inserirFornecedor(dtbase, newEntrada, qtdFornecedor, tamanghoFornecedor, id);
+            (*dtbase)[i] = newEntrada;
             break;
         }
     }
-    *qtdFornecedor = *qtdFornecedor - 1;
+    refazDadosFornecedor(dtbase, tamanhoFornecedor, tipo_config);
 }
 
-int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFornecedor,int *idControleFornecedor) {
+int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFornecedor,int *idControleFornecedor, int tipo_config) {
     int escolha = INT32_MAX;
 
     while (escolha != 0 && escolha != 5) {
@@ -136,7 +139,7 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
             case 1: {
                 fornecedor newFornecedor = criarFornecedor(*idControleFornecedor);
                 inserirFornecedor(bd_fornecedor, newFornecedor, qtdFornecedor, tamanhoFornecedor, *idControleFornecedor);
-                idControleFornecedor += 1;
+                saveFornecedor(newFornecedor, tipo_config);
                 break;
             }
             case 2: {
@@ -148,7 +151,7 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
                 listFornecedor(bd_fornecedor, *qtdFornecedor);
                 printf("Digite o ID do Fornecedor que deseja editar.\n");
                 scanf("%d", &id);
-                editarFornecedor(bd_fornecedor, qtdFornecedor, tamanhoFornecedor, id);
+                editarFornecedor(bd_fornecedor, *qtdFornecedor, tamanhoFornecedor, id, tipo_config);
                 break;
             }
             case 4: {
@@ -156,12 +159,8 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
                 listFornecedor(bd_fornecedor, *qtdFornecedor);
                 printf("Digite o ID do Cliente que deseja excluir.\n");
                 scanf("%d", &id);
-                removerFornecedor(bd_fornecedor, id, qtdFornecedor);
+                removerFornecedor(bd_fornecedor, id, qtdFornecedor, tipo_config);
                 break;
-            }
-            case 5: {
-                printf("Voltando...\n");
-                return 1;
             }
             case 0: {
                 printf("Saindo...\n");
@@ -175,4 +174,160 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
     }
     return escolha;
 }
+
+
+int saveFornecedor(fornecedor objeto, int tipo_config){
+    FILE *fonecedores;
+
+    if (tipo_config == 1){//Arquivo TXT
+        fonecedores = fopen("cpyBdFornecedor.txt", "a");
+
+        if (fonecedores == NULL){ // Se a abertura falhar
+            return 1;
+        }
+
+        fprintf(fonecedores, "%d\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
+                objeto.id,
+                objeto.nomeFantasia,
+                objeto.razaoSocial,
+                objeto.inscricaoEstadual,
+                objeto.cnpj,
+                objeto.telefone,
+                objeto.email,
+                objeto.endereco.rua,
+                objeto.endereco.numero,
+                objeto.endereco.bairro,
+                objeto.endereco.cidade,
+                objeto.endereco.estado
+        );
+
+    }else if (tipo_config == 0){ //Arquivo BINARIO
+        fonecedores = fopen("cpyBdFornecedor.bin", "ab");
+        if (fonecedores == NULL){ // Se a abertura falhar
+            return 1;
+        }
+        fwrite(&objeto, sizeof(fornecedor), 1, fonecedores);
+    }
+    fclose(fonecedores);
+    return 0;
+}
+
+int verificaIdFornecedor(fornecedor **dtbase, int qtdFornecedor, int id) {
+    for (int i = 0; i < qtdFornecedor; i++) {
+        if ((*dtbase)[i].id == id) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int carregarDadosFornecedores(fornecedor **dtBase, int *qtdFornecedor, int *tamanhoFornecedor, int *id, int tipo_config) {
+    FILE *p;
+    fornecedor new;
+    int t = 0;
+    if (tipo_config == 1){ //Arquivo TXT
+        p = fopen("cpyBdFornecedor.txt", "r");
+
+        if (p == NULL){
+            printf("\nErro na Leitura 'cpyBdFornecedor.txt' \n");
+            system("Pause");
+            return 1;
+        }
+
+        while (!feof(p)){
+            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fscanf(p, "%d\n", &new.id);
+
+            fgets(new.nomeFantasia, 100, p);
+            limpa_final_string(new.nomeFantasia);
+
+            fgets(new.razaoSocial, 100, p);
+            limpa_final_string(new.razaoSocial);
+
+            fgets(new.inscricaoEstadual, 30, p);
+            limpa_final_string(new.inscricaoEstadual);
+
+            fscanf(p, "%d\n", &new.cnpj);
+
+            fgets(new.telefone, 15, p);
+            limpa_final_string(new.telefone);
+
+            fgets(new.email, 50, p);
+            limpa_final_string(new.email);
+
+            fgets(new.endereco.rua, 50, p);
+            limpa_final_string(new.endereco.rua);
+
+            fscanf(p, "%d\n", &new.endereco.numero);
+
+            fgets(new.endereco.bairro, 50, p);
+            limpa_final_string(new.endereco.bairro);
+
+            fgets(new.endereco.cidade, 50, p);
+            limpa_final_string(new.endereco.cidade);
+
+            fgets(new.endereco.estado, 3, p);
+            limpa_final_string(new.endereco.estado);
+
+            if (verificaIdFornecedor(dtBase, *qtdFornecedor, new.id) == 0){
+                t = inserirFornecedor(dtBase, new, qtdFornecedor, tamanhoFornecedor, tipo_config);
+                if (*id <= new.id) {
+                    *id = new.id + 1;
+                }
+            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    else  if (tipo_config == 0){ //Arquivo BIN
+        p = fopen("cpyBdFornecedor.bin", "rb");
+        while (!feof(p)){
+            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fread(&new,sizeof(fornecedor),1,p);
+            printf("%s %s %s %s %s %s %s %s %s", new.nomeFantasia, new.razaoSocial, new.inscricaoEstadual, new.telefone, new.email, new.endereco.rua, new.endereco.bairro, new.endereco.cidade, new.endereco.estado);
+            if (verificaIdFornecedor(dtBase, *qtdFornecedor, new.id) == 0){
+                t = inserirFornecedor(dtBase, new, qtdFornecedor, tamanhoFornecedor, tipo_config);
+                if (*id <= new.id) {
+                    *id = new.id + 1;
+                }
+            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    fclose(p);
+    return 0;
+}
+
+
+int refazDadosFornecedor(fornecedor **dtbase, int *tamanhoFornecedor, int tipo_config){
+
+    FILE *p;
+    if (tipo_config== 1){
+        p = fopen("cpyBdFornecedor.txt", "w");
+        fclose(p);
+        p = NULL;
+        for (int i = 0; i < *tamanhoFornecedor; i++){
+            saveFornecedor((*dtbase)[i],1);
+        }
+    }else if (tipo_config == 0){
+        p = fopen("cpyBdFornecedor.bin", "wb");
+        fclose(p);
+        for (int i = 0; i < *tamanhoFornecedor; i++){
+            saveFornecedor((*dtbase)[i],0);
+        }
+    }
+    return 0;
+}
+
 

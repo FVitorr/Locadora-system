@@ -27,11 +27,6 @@ int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 0;
 fornecedor *bd_fornecedor;
 int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
 
-int carregaTodosDados(int *tipoConfig, config *config_system,
-                      filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
-                      locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
-                      fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *id);
-
 int menuprincipal(int tipo_config,
                   fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,int *idCategoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
@@ -62,7 +57,7 @@ int menuprincipal(int tipo_config,
             return 0;
         case 2:
             while (1){
-                int t = menuClientes(dtbaseCliente,qtd_Cliente,tamanho_Cliente,idCliente);
+                int t = menuClientes(dtbaseCliente,qtd_Cliente,tamanho_Cliente,idCliente, tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -83,7 +78,7 @@ int menuprincipal(int tipo_config,
             }
         case 5:
             while (1){
-                int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios);
+                int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios, tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -91,7 +86,7 @@ int menuprincipal(int tipo_config,
 
         case 6:
             while (1){
-                int t = menuFornecedor(dtbaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor);
+                int t = menuFornecedor(dtbaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -108,6 +103,27 @@ int menuprincipal(int tipo_config,
             break;
         }
     }
+    return 0;
+}
+
+
+
+int carregaTodosDados(int *tipoConfig, config *config_system,
+                      filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
+                      locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
+                      fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *idCategoria,
+                      cliente **dtBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente,
+                      fornecedor **dtBaseFornecedor, int *qtd_Fornecedor, int *tamanho_Fornecedor, int *idFornecedor,
+                      funcionarios **dtBaseFuncionario, int *qtd_Funcionario, int *tamanho_Funcionario, int *idFuncionario){
+
+    int newID = verifica_log(config_system,tipoConfig);
+    carregarDados_filme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, idFilme, *tipoConfig);
+    carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
+    carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
+    carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
+    carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
+    carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
+
     return 0;
 }
 
@@ -129,7 +145,10 @@ int main() {
     carregaTodosDados(&tipoConfig,&config_System,
                       &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                       &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
-                      &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria);
+                      &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
+                      &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente,
+                      &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor,
+                      &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios);
 
     while (1){
         int v;
@@ -149,24 +168,11 @@ int main() {
     free(bd_funcionarios);
     free(bd_cliente);
     free(bd_locadora);
+    free(bd_fornecedor);
     bd_cat = NULL;
     bd_filme = NULL;
     bd_funcionarios = NULL;
     bd_locadora = NULL;
     bd_cliente = NULL;
-    return 0;
-}
-
-int carregaTodosDados(int *tipoConfig,config *config_system,
-                      filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
-                      locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
-                      fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *idCategoria){
-
-    int newID = verifica_log(config_system,tipoConfig);
-    //set_configuracao_Locadora(dtbaseLocadora,config_system->user,config_system->password,qtd_Locadora,tamanho_Locadora,newID);
-    carregarDados_filme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,*tipoConfig);
-    carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
-    carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
-
     return 0;
 }

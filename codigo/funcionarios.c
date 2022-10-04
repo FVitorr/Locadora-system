@@ -1,64 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <stdint.h>
+#include <io.h>
 #include "../cabecalhos/funcionarios.h"
 #include "../cabecalhos/fucGlobal.h"
 
-
-int criarFuncionario(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFuncionarios,int atualizar,int id){
+funcionarios criarFuncionario(int *idFuncionario) {
     funcionarios obj;
-    int erro = 0;
 
-    obj.codigo = id;
+    obj.codigo = *idFuncionario;
 
-    (atualizar == 1) ? line(30,"Atualizando Funcionarios\0") : line(30,"Adicionar novo funcionario\0");
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
     printf("Nome : ");
     scanf("%[^\n]s", obj.nome);
 
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
     printf("Cargo: ");
     scanf("%s", obj.cargo);
 
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
-    line(20,"Endereço Funcionario\n");
+    line(20, "Endereço Funcionario\n");
     printf("Rua: ");
     scanf("%s", obj.endereco.rua);
 
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
     printf("Número: ");
     scanf("%d", &obj.endereco.numero);
 
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
     printf("Bairro: ");
     scanf("%s", obj.endereco.bairro);
 
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
     printf("Cidade: ");
     scanf("%s", obj.endereco.cidade);
 
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
     printf("Estado: ");
     scanf("%s", obj.endereco.estado);
 
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
     printf("Telefone: ");
     scanf("%[^\n]s", obj.telefone);
 
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
     printf("E-mail: ");
     scanf("%[^\n]s", obj.email);
 
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
     printf("===============================================\n");
     printf("\tAcesso\n");
@@ -66,29 +64,30 @@ int criarFuncionario(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFun
     printf("Usuario: ");
     scanf("%[^\n]s", obj.login.user);
 
-    setbuf(stdin,NULL);
+    setbuf(stdin, NULL);
 
     printf("Senha: ");
     obj.login.password = obterPassword(16);
-    if (*qtdFuncionarios == *tamanhoFuncionarios) {
-            *tamanhoFuncionarios = *tamanhoFuncionarios +  1;
-            (*dtbase) = realloc((*dtbase), *tamanhoFuncionarios * sizeof(funcionarios));
-    }
-    if ((*dtbase) == NULL ) {
-        printf("Erro de Memoria");
-        erro = 1;
-    }
-    if (atualizar == 1){
-        (*dtbase)[id] = obj;
-    }else{
-        (*dtbase)[*qtdFuncionarios] = obj;
-    }
-    *qtdFuncionarios = *qtdFuncionarios + 1;
-    
-    return erro;
+    return obj;
 }
 
-void listFuncionarios(funcionarios **dtbase, int qtd){
+int
+inserirFuncionario(funcionarios **dtbase, funcionarios novoFuncionario, int *qtdFuncionario, int *tamanhoFuncionario) {
+    if (*qtdFuncionario == *tamanhoFuncionario) {
+        *tamanhoFuncionario = *tamanhoFuncionario + 1;
+        *dtbase = (funcionarios *) realloc(*dtbase, *tamanhoFuncionario * sizeof(funcionarios));
+    }
+    if (*dtbase == NULL) {
+        printf("\n  Erro na alocação de memória!");
+        system("pause");
+        exit(1);
+    }
+    (*dtbase)[*tamanhoFuncionario - 1] = novoFuncionario;
+    *qtdFuncionario = *qtdFuncionario + 1;
+    return 1;
+}
+
+void listFuncionarios(funcionarios **dtbase, int qtd) {
     if (qtd > 0) {
         printf("\n ID \t Nome \t\t Cargo \t Telefone \t Email \t\t\t User \t Password\n");
         for (int c = 0; c < qtd; c++) {
@@ -99,33 +98,29 @@ void listFuncionarios(funcionarios **dtbase, int qtd){
                    (*dtbase)[c].telefone,
                    (*dtbase)[c].email,
                    (*dtbase)[c].login.user,
-                   (*dtbase)[c].login.password );
+                   (*dtbase)[c].login.password);
         }
-    }
-    else{
+    } else {
         printf("\n\t>> Nada para mostrar aqui");
     }
     printf("\n");
 }
 
-void editaFuncionarios(funcionarios **dtbase,int *qtdFuncionarios,int *tamanhoFuncionarios,int id)
-{
-    int t;
-    for (int i = 0; i < *qtdFuncionarios; i++) {
+void editaFuncionarios(funcionarios **dtbase, int qtdFuncionarios, int *tamanhoFuncionarios, int id, int tipo_config) {
+    for (int i = 0; i < qtdFuncionarios; i++) {
         if ((*dtbase)[i].codigo == id) {
-            t = criarFuncionario(dtbase,qtdFuncionarios,tamanhoFuncionarios,1,id);
-            (t == 0) ? printf(">>Sucess") : printf("Erro");
+            funcionarios newEntrada = criarFuncionario(&id);
+            (*dtbase)[i] = newEntrada;
             break;
         }
     }
-    *qtdFuncionarios = *qtdFuncionarios - 1;
+    refazDadosFuncionario(dtbase, tamanhoFuncionarios, tipo_config);
 }
 
-int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id){
-    for (int i = 0; i < *qtdFuncionarios; i ++){
-        if((*dtbase)[i].codigo == id){
-            while (i < *qtdFuncionarios - 1)
-            {
+int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id, int tipo_config) {
+    for (int i = 0; i < *qtdFuncionarios; i++) {
+        if ((*dtbase)[i].codigo == id) {
+            while (i < *qtdFuncionarios - 1) {
                 (*dtbase)[i] = (*dtbase)[i + 1];
                 i++;
             }
@@ -133,115 +128,212 @@ int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id){
             break;
         }
     }
+    refazDadosFuncionario(dtbase, qtdFuncionarios, tipo_config);
     return 0;
 }
 
-int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFuncionarios,int *id){
-    int erro = 0, exit = 0, opc = 0;
-    system("cls");
-    line(30,"Funcionarios\0");
-    printf("\t 0 - Sair \n\t 1 - Cadastrar \n\t 2 - Cadastrar Multiplas \n");
-    printf("\t 3 - Visualizar \n\t 4 - Editar \n\t 5 - Remover");
-    line(30,"-\0");
+int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFuncionarios, int *idControleCliente,
+                     int tipo_config) {
+    int escolha = INT32_MAX;
 
-    do
-    {
-        if (erro == 1)
-        {
-            printf(">> Parametro Invalido\n");
-        }
-        printf("\n>> Opc: ");
-        scanf("%d", &opc);
-        erro = 1;
-    } while (opc < 0 || opc > 5);
+    while (escolha != 0) {
+        printf("Digite a opcao referente a operacao que deseja executar\n\n");
+        printf("0 - Sair \n1 - Cadastrar \n2 - Visualizar \n3 - Editar \n4 - Remover\n");
+        scanf("%d", &escolha);
 
-    if (opc == 0)
-    {
-        printf(">> Exit");
-        exit = 1;
-    }
-    else if (opc == 1)
-    {
-        // Cadastrar um Filme
-        system("cls");
-        printf(">> Novo Funcionario     \tID: %d \n", *id);
-        criarFuncionario(dtbase,qtdFuncionarios,tamanhoFuncionarios,0,*id);
-        *id = *id + 1;
-    }
-    else if (opc == 2)
-    {
-        // Cadastrar multiplas categoria
-        system("cls");
-        int op = 1;
-        printf(">> Multiplos Funcionario     \tID: %d \n", *id);
-        while (1)
-        {
-            criarFuncionario(dtbase,qtdFuncionarios,tamanhoFuncionarios,0,*id);
-            printf("\n >> [1 - Mais] \t [0 - Exit]: ");
-            scanf("%d", &op);
-            *id = *id + 1;
-            if (op == 0)
-            {
+        switch (escolha) {
+            case 1: {
+                funcionarios newFuncionario = criarFuncionario((idControleCliente));
+                inserirFuncionario(dtbase, newFuncionario, qtdFuncionarios, tamanhoFuncionarios);
+                saveFuncionario(newFuncionario, tipo_config);
                 break;
             }
-
+            case 2: {
+                listFuncionarios(dtbase, *qtdFuncionarios);
+                break;
+            }
+            case 3: {
+                int id = 0;
+                listFuncionarios(dtbase, *qtdFuncionarios);
+                printf("Digite o ID do Funcionario que deseja editar.\n");
+                scanf("%d", &id);
+                editaFuncionarios(dtbase, *qtdFuncionarios, tamanhoFuncionarios, id, tipo_config);
+                break;
+            }
+            case 4: {
+                int id = 0;
+                listFuncionarios(dtbase, *qtdFuncionarios);
+                printf("Digite o ID do Funcionario que deseja excluir.\n");
+                scanf("%d", &id);
+                removerFuncionarios(dtbase, qtdFuncionarios, id, tipo_config);
+                break;
+            }
+            case 0: {
+                printf("Saindo...\n");
+                return 1;
+            }
+            default: {
+                printf("Esta não é uma opção válida, favor selecionar novamente.\n");
+                break;
+            }
         }
     }
-    else if (opc == 3)
-    {
-        // Visualizar
-        system("cls");
-        printf(">> Funcionarios Cadastrados  \t Total: %d\n\n", *qtdFuncionarios);
-        listFuncionarios(dtbase, *qtdFuncionarios);
-        system("pause");
+    return escolha;
+}
+
+int saveFuncionario(funcionarios objeto, int tipo_config) {
+    FILE *fileFuncionario;
+
+    if (tipo_config == 1) {//Arquivo TXT
+        fileFuncionario = fopen("cpyBdFuncionario.txt", "a");
+
+        if (fileFuncionario == NULL) { // Se a abertura falhar
+            return 1;
+        }
+
+        fprintf(fileFuncionario, "%d\n%s\n%s\n%s\n%s\n"
+                                 "%s\n%d\n%s\n%s\n%s\n%s\n%s\n",
+                objeto.codigo,
+                objeto.nome,
+                objeto.cargo,
+                objeto.telefone,
+                objeto.email,
+                objeto.endereco.rua,
+                objeto.endereco.numero,
+                objeto.endereco.bairro,
+                objeto.endereco.cidade,
+                objeto.endereco.estado,
+                objeto.login.user,
+                objeto.login.password
+        );
+
+    } else if (tipo_config == 0) { //Arquivo BINARIO
+        fileFuncionario = fopen("cpyBdFuncionario.bin", "ab");
+        if (fileFuncionario == NULL) { // Se a abertura falhar
+            return 1;
+        }
+        fwrite(&objeto, sizeof(funcionarios), 1, fileFuncionario);
     }
-    else if (opc == 4)
-    {
-        // editar
-        system("cls");
-        printf(">> Funcionarios Cadastrados  \t Total: %d\n\n", *qtdFuncionarios);
-        listFuncionarios(dtbase, *qtdFuncionarios);
+    fclose(fileFuncionario);
+    return 0;
+}
 
-        int cod;
-        printf("Editar (ID):");
-        scanf("%d", &cod);
-
-        editaFuncionarios(dtbase,qtdFuncionarios,tamanhoFuncionarios,cod);
+int verificaIdFuncionario(funcionarios **dtbase, int qtdFuncionarios, int id) {
+    for (int i = 0; i < qtdFuncionarios; i++) {
+        if ((*dtbase)[i].codigo == id) {
+            return 1;
+        }
     }
-    else if (opc == 5)
-    {
-        // Remover
-        system("cls");
-        listFuncionarios(dtbase, *qtdFuncionarios);
+    return 0;
+}
 
-        int cod;
-        printf("Remover (ID):");
-        scanf("%d", &cod);
+int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *tamanhoFuncionarios, int *id, int tipo_config) {
+    FILE *p;
+    funcionarios new;
+    int t = 0;
+    if (tipo_config == 1){ //Arquivo TXT
+        p = fopen("cpyBdFuncionario.txt", "r");
 
-        removerFuncionarios(dtbase,qtdFuncionarios,cod);
+        if (p == NULL){
+            printf("\nErro na Leitura 'cpyBdFuncionario.txt' \n");
+            system("Pause");
+            return 1;
+        }
 
-        printf("%d",*qtdFuncionarios);
-        system("pause");
+        while (!feof(p)){
+            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fscanf(p, "%d\n", &new.codigo);
+
+            fgets(new.nome, 120, p);
+            limpa_final_string(new.nome);
+
+            fgets(new.cargo, 50, p);
+            limpa_final_string(new.cargo);
+
+            fgets(new.endereco.rua, 50, p);
+            limpa_final_string(new.endereco.rua);
+
+            fscanf(p, "%d\n", &new.endereco.numero);
+
+            fgets(new.endereco.bairro, 50, p);
+            limpa_final_string(new.endereco.bairro);
+
+            fgets(new.endereco.cidade, 50, p);
+            limpa_final_string(new.endereco.cidade);
+
+            fgets(new.endereco.estado, 3, p);
+            limpa_final_string(new.endereco.estado);
+
+            fgets(new.telefone, 15, p);
+            limpa_final_string(new.telefone);
+
+            fgets(new.email, 50, p);
+            limpa_final_string(new.email);
+
+            fgets(new.login.user, 120, p);
+            limpa_final_string(new.login.user);
+
+            fgets(new.login.password, 1, p);
+            limpa_final_string(new.login.password);
+
+            if (verificaIdFuncionario(dtBase, *qtdFuncionarios, new.codigo) == 0){
+                t = inserirFuncionario(dtBase, new, qtdFuncionarios, tamanhoFuncionarios);
+                if (*id <= new.codigo) {
+                    *id = new.codigo + 1;
+                }
+            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
     }
-    return exit;
+    else  if (tipo_config == 0){ //Arquivo BIN
+        p = fopen("cpyBdFuncionario.bin", "rb");
+        while (!feof(p)){
+            if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fread(&new,sizeof(funcionarios),1,p);
+            printf("%s %s %s %s %s %s %s %s %s %s", new.nome, new.cargo, new.endereco.rua, new.endereco.bairro,
+                   new.endereco.cidade, new.endereco.estado, new.telefone, new.email, new.login.user, new.login.password);
+            if (verificaIdFuncionario(dtBase, *qtdFuncionarios, new.codigo) == 0){
+                t = inserirFuncionario(dtBase, new, qtdFuncionarios, tamanhoFuncionarios);
+                if (*id <= new.codigo) {
+                    *id = new.codigo + 1;
+                }
+            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    fclose(p);
+    return 0;
 }
 
 
+int refazDadosFuncionario(funcionarios **dtbase, int *tamanhoFuncionario, int tipo_config){
 
-//funcionarios  *bd_funcionarios;
-//int qtdFuncionarios = 0,TamanhoFuncionarios = 1, idControle = 0;
-//
-//int main() {
-//    //printf("\n%p\n",&bd_cat);
-//    bd_funcionarios = malloc(TamanhoFuncionarios * sizeof(funcionarios));
-//
-//    while (1){
-//        int v;
-//        v = menuFuncionarios(&bd_funcionarios,&qtdFuncionarios,&TamanhoFuncionarios,&idControle);
-//        if (v == 1){
-//            break;
-//        }
-//    }
-//    free(bd_funcionarios);
-//    return 0;
-//}
+    FILE *p;
+    if (tipo_config== 1){
+        p = fopen("cpyBdFuncionario.txt", "w");
+        fclose(p);
+        p = NULL;
+        for (int i = 0; i < *tamanhoFuncionario; i++){
+            saveFuncionario((*dtbase)[i],1);
+        }
+    }else if (tipo_config == 0){
+        p = fopen("cpyBdFuncionario.bin", "wb");
+        fclose(p);
+        for (int i = 0; i < *tamanhoFuncionario; i++){
+            saveFuncionario((*dtbase)[i],0);
+        }
+    }
+    return 0;
+}

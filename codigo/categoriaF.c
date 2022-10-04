@@ -229,7 +229,7 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
                 break;
             }
         }
-        printf("Quantidade Categoria: %d",*qtdCategoria);
+        printf("Quantidade Categoria: %d \n",*qtdCategoria);
         system("pause");
     }
     else  if (tipo_config == 0){ //Arquivo BIN
