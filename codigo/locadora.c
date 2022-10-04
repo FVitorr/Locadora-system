@@ -132,6 +132,7 @@ void listLocadora(locadora **dtbase, int qtd){
                    (*dtbase)[c].endereco.bairro,
                    (*dtbase)[c].endereco.cidade,
                    (*dtbase)[c].endereco.estado);
+            //printf("\n\nUser: %s\nPassword:  %s",(*dtbase)[c].user,(*dtbase)[c].password);
         }
     }
     else{
@@ -277,9 +278,9 @@ int verifica_IDLocadora(locadora **dtbase,int qtd_Locadora,int id) {
 }
 
 int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLocadora, int *id,int tipo_config) {
-    printf(">> Carregando Dados de Locadora ...\n");
     locadora new;
     int t = 0;
+    char password[16];
     if (tipo_config == 1){ //Arquivo TXT
         FILE *arquivo;
         arquivo = fopen("cpyBdLocadora.txt", "r");
@@ -290,7 +291,7 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
             return 1;
         }
 
-        for (int i = 0; !feof(arquivo); i++){
+        while(!feof(arquivo)){
             if (!filelength(fileno(arquivo))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
             }
@@ -314,19 +315,19 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
 
             fscanf(arquivo, "%d\n", &new.endereco.numero);
 
-            fgets(new.endereco.bairro, 10, arquivo);
+            fgets(new.endereco.bairro, 50, arquivo);
             limpa_final_string(new.endereco.bairro);
 
-            fgets(new.endereco.cidade, 10, arquivo);
+            fgets(new.endereco.cidade, 50, arquivo);
             limpa_final_string(new.endereco.cidade);
 
-            fgets(new.endereco.estado, 3, arquivo);
+            fgets(new.endereco.estado, 2, arquivo);
             limpa_final_string(new.endereco.estado);
 
             fgets(new.telefone, 15, arquivo);
             limpa_final_string(new.telefone);
 
-            fgets(new.email, 15, arquivo);
+            fgets(new.email, 50, arquivo);
             limpa_final_string(new.email);
 
             fgets(new.nomeResponsavel, 50, arquivo);
@@ -338,8 +339,10 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
             fgets(new.user, 30, arquivo);
             limpa_final_string(new.user);
 
-            fgets(new.password, 16, arquivo);
-            limpa_final_string(new.password);
+            fgets(password, 16, arquivo);
+
+            new.password = retorna_password_file(password);
+            //printf("New.PassWord: %s",new.password);
 
             if (verifica_IDLocadora(dtBase,*qtdLocadora,new.id) == 0){
                 t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora,tipo_config);

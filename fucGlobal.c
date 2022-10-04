@@ -144,6 +144,17 @@ char  *obterPassword(int max){
     return senha;
 }
 
+char *retorna_password_file (char password_e[16]){
+    int i = 0;
+    char *password = (char *)malloc(sizeof(char) * 16);
+    while (password_e[i] != '#' && i < 16 && password_e[i] != '\n'){
+        password[i] = password_e[i];
+        i++;
+    }
+    password[i] = '\0';
+    return password;
+}
+
 /*
    Função para converter char em Int
    retorna o numero inteiro ou -1 se a operação falhar
@@ -326,7 +337,6 @@ int verifica_arquivos(int tipo_config){
         }
     }
     line(100,"=\0");
-    system("Pause");
     return 0;
 }
 

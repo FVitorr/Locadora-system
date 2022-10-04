@@ -12,7 +12,7 @@ typedef struct
     char nome[120];
     char cargo[50];
     endereco endereco;
-    char telefone[13];
+    char telefone[17];
     char email[50];
 
     autentificacao login;

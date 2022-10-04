@@ -118,12 +118,17 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
 
     int newID = verifica_log(config_system,tipoConfig);
     carregarDados_filme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, idFilme, *tipoConfig);
+    printf("\n>> Dados Filme Carregados ");
     carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
+    printf("\n>> Dados Locadora Carregados ");
     carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
+    printf("\n>> Dados Categoria Carregados ");
     carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
+    printf("\n>> Dados Clientes Carregados ");
     carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
+    printf("\n>> Dados Fornecedores Carregados \n\n");
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
-
+    system("pause");
     return 0;
 }
 

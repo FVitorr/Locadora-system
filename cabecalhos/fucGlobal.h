@@ -48,6 +48,8 @@ void sucess(void);
 
 char  *obterPassword(int max);
 
+char *retorna_password_file (char password[16]);
+
 /*
    Função para converter char em Int
    retorna o numero inteiro ou -1 se a operação falhar

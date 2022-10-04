@@ -91,7 +91,7 @@ int editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,i
 int locID(fCategoria **dtbase,int qtd_Categoria, int ID) {
     for (int i = 0; i < qtd_Categoria; i++)
     {
-        if ((*dtbase[i]).codigo == ID) {
+        if ((*dtbase)[i].codigo == ID) {
             return 1;
         }
     }
@@ -221,7 +221,6 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
             t = insCategoria(dtBase,new,qtdCategoria,tamanhoCategoria,tipo_config);
             if (*id <= new.codigo) {
                 *id = new.codigo + 1;
-                printf("ID: %d",*id);
             }
 
             if (t == 0){
@@ -229,8 +228,6 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
                 break;
             }
         }
-        printf("Quantidade Categoria: %d \n",*qtdCategoria);
-        system("pause");
     }
     else  if (tipo_config == 0){ //Arquivo BIN
         p = fopen("cpyBdCategoria.bin", "rb");
@@ -253,7 +250,6 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
         }
     }
     fclose(p);
-    printf("\n>>Categoria Carregada.");
     return 0;
 }
 
