@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include  <stdlib.h>
 
-#include "cabecalhos/filmes.h"
+//#include "cabecalhos/filmes.h"
 #include "cabecalhos/locadora.h"
-#include "cabecalhos/cliente.h"
+//#include "cabecalhos/cliente.h"
 #include "cabecalhos/funcionarios.h"
 #include "cabecalhos/fornecedor.h"
+#include "cabecalhos/locacao.h"
 
 /*Arrays Dinamicos*/
 

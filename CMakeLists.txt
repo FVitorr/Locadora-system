@@ -9,6 +9,7 @@ add_executable(Locadora_system
         cabecalhos/categoriaF.h
         cabecalhos/filmes.h
         cabecalhos/locadora.h
+        cabecalhos/locacao.h
         cabecalhos/cliente.h
         cabecalhos/funcionarios.h
         cabecalhos/fornecedor.h
@@ -16,6 +17,7 @@ add_executable(Locadora_system
         codigo/categoriaF.c
         codigo/filmes.c
         codigo/locadora.c
+        codigo/locacao.c
         codigo/cliente.c
         codigo/funcionarios.c
         codigo/fornecedor.c
