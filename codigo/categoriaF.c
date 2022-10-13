@@ -98,15 +98,15 @@ int locID(fCategoria **dtbase,int qtd_Categoria, int ID) {
     return 0;
 }
 
-int *obterID(fCategoria **dtbase,int *qtdCategoria){
-    int *ids;
-    ids = malloc((*qtdCategoria) * sizeof (int));
-    for (int i = 0; i < *qtdCategoria; i++){
-        ids[i] = (*dtbase)[0].codigo;
+float valorCategoria(fCategoria **dtbase,int qtd_Categoria, int ID) {
+    for (int i = 0; i < qtd_Categoria; i++)
+    {
+        if ((*dtbase)[i].codigo == ID) {
+            return (*dtbase)[i].vAlocacao;
+        }
     }
-    return  ids;
+    return 0;
 }
-
 
 int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,int *idCategoria, int tipo_config) {
     int escolha = INT32_MAX;

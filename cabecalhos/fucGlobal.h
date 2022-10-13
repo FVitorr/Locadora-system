@@ -19,7 +19,7 @@ typedef struct
     int qtd;            // quantidade de mídias existentes na locadora
     int c_categoria;
     char lingua[120];
-
+    int qtdEmprestado
 } filme;
 
 typedef struct {

@@ -35,6 +35,8 @@ void editaCliente(cliente **dtbase, int qtdCliente, int *tamanhoCliente, int id,
 */
 int menuClientes(cliente **bd_cliente, int *qtdCliente,int *tamanhoCliente,int *idControleCliente, int tipo_config);
 
+int verificaIdCliente(cliente **dtbase, int qtdClientes, int id);
+
 int saveCliente(cliente objeto, int tipo_config);
 
 int refazDadosCliente(cliente **dtbase, int *tamanhoCliente, int tipo_config);

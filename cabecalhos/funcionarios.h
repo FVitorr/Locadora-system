@@ -53,3 +53,7 @@ int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *
  * Função que refaz o arquivo de registros de funcionario
  */
 int refazDadosFuncionario(funcionarios **dtbase, int *tamanhoFuncionario, int tipo_config);
+/*
+ *
+ */
+int verificaIdFuncionario(funcionarios **dtbase, int qtdFuncionarios, int id);

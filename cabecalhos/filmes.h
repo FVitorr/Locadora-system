@@ -19,7 +19,7 @@ extern "C" {
     void listFilme(filme **dtbase, int qtd);
 
     void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id, int tipo_config);
-
+    //Verificar se a categoria Existe, se não permite a criação
     int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id);
 
     int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id, int tipo_config);
@@ -29,6 +29,12 @@ extern "C" {
     int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id,int tipo_config);
 
     int refazDados_filme(filme **dtbase, int *qtdFilme, int *tmnhoFilme, int tipo_config);
+
+    int verificaIdFilme(filme **dtbase,int qtd_filme,int id);
+    /*Retorna a categoria do filme*/
+    int categoriaFilme(filme **dtbase,int qtd_filme,int id);
+
+    int altQtdEmprestadaFilme(filme **dtbase,int qtd_filme,int id);
 
 #ifdef __cplusplus
 }

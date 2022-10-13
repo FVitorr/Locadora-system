@@ -28,6 +28,8 @@ int editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,i
 
 int locID(fCategoria **dtbase,int qtd_Categoria, int ID) ;
 
+float valorCategoria(fCategoria **dtbase,int qtd_Categoria, int ID);
+
 int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,int *idCategoria, int tipo_config);
 
 int saveCategoria(fCategoria objeto,int tipo_config);

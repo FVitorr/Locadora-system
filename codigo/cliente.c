@@ -227,7 +227,7 @@ int saveCliente(cliente objeto, int tipo_config){
     return 0;
 }
 
-int verificaId(cliente **dtbase, int qtdClientes, int id) {
+int verificaIdCliente(cliente **dtbase, int qtdClientes, int id) {
     for (int i = 0; i < qtdClientes; i++) {
         if ((*dtbase)[i].id == id) {
             return 1;
@@ -290,7 +290,7 @@ int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoClient
             fgets(new.endereco.estado, 3, p);
             limpa_final_string(new.endereco.estado);
 
-            if (verificaId(dtBase, *qtdClientes, new.id) == 0){
+            if (verificaIdCliente(dtBase, *qtdClientes, new.id) == 0){
                 t = inserirCliente(dtBase, new, qtdClientes, tamanhoCliente);
                 if (*id <= new.id) {
                     *id = new.id + 1;
@@ -312,7 +312,7 @@ int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoClient
             fread(&new,sizeof(cliente),1,p);
             printf("%s %s %s %s %s %s %s %s %s %s %s", new.nome, new.cpf, new.telefone, new.email, new.sexo,
                    new.estadoCivil, new.dataNascimento, new.endereco.rua, new.endereco.bairro, new.endereco.cidade, new.endereco.estado);
-            if (verificaId(dtBase, *qtdClientes, new.id) == 0){
+            if (verificaIdCliente(dtBase, *qtdClientes, new.id) == 0){
                 t = inserirCliente(dtBase, new, qtdClientes, tamanhoCliente);
                 if (*id <= new.id) {
                     *id = new.id + 1;

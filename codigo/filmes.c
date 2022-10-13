@@ -38,6 +38,7 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
 
     printf("Lingua: ");
     scanf("%[^\n]s", p.lingua);
+
     return p;
 }
 
@@ -231,13 +232,14 @@ int saveFilme(filme objeto, int tipo_config){
             return 1;
         }
 
-        fprintf(filme_, "%d\n%s\n%s\n%d\n%d\n%s\n",
+        fprintf(filme_, "%d\n%s\n%s\n%d\n%d\n%s\n%d\n",
                 objeto.codigo,
                 objeto.nome,
                 objeto.descricao,
                 objeto.qtd,
                 objeto.c_categoria,
-                objeto.lingua);
+                objeto.lingua,
+                objeto.qtdEmprestado);
 
     }else if (tipo_config == 0){ //Arquivo BINARIO
         filme_ = fopen("cpyBdFilme.bin", "ab");
@@ -251,7 +253,7 @@ int saveFilme(filme objeto, int tipo_config){
 }
 
 
-int verifica_ID(filme **dtbase,int qtd_filme,int id) {
+int verificaIdFilme(filme **dtbase,int qtd_filme,int id) {
     for (int i = 0; i < qtd_filme; i++) {
         if ((*dtbase)[i].codigo == id) {
             return 1;
@@ -259,6 +261,28 @@ int verifica_ID(filme **dtbase,int qtd_filme,int id) {
     }
     return 0;
 }
+
+
+int categoriaFilme(filme **dtbase,int qtd_filme,int id) {
+    for (int i = 0; i < qtd_filme; i++) {
+        if ((*dtbase)[i].codigo == id) {
+            return (*dtbase)[i].c_categoria;
+        }
+    }
+    return 0;
+}
+
+int altQtdEmprestadaFilme(filme **dtbase,int qtd_filme,int id) {
+    for (int i = 0; i < qtd_filme; i++) {
+        if ((*dtbase)[i].codigo == id) {
+            (*dtbase)[i].qtdEmprestado = (*dtbase)[i].qtdEmprestado + 1;
+        }
+    }
+    return 0;
+}
+
+
+
 
 int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id,int tipo_config) {
     FILE *p;
@@ -292,7 +316,9 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
             fgets(new.lingua, 120, p);
             limpa_final_string(new.lingua);
 
-            if (verifica_ID(dtBase,*qtdFilme,new.codigo) == 0){
+            fscanf(p, "%d\n", &new.qtdEmprestado);
+
+            if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
                 t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
                 if (*id <= new.codigo) {
                     *id = new.codigo + 1;
@@ -313,7 +339,7 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
             }
             fread(&new,sizeof(filme),1,p);
             printf("%s %s",new.nome,new.descricao);
-            if (verifica_ID(dtBase,*qtdFilme,new.codigo) == 0){
+            if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
                 t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
                 if (*id <= new.codigo) {
                     *id = new.codigo + 1;
