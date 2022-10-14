@@ -11,8 +11,8 @@ typedef struct
     int id;
     char nome[120];
     endereco endereco;
-    char cpf[11];
-    char telefone[15];
+    char cpf[12];
+    char telefone[20];
     char email[50];
     char sexo[15];
     char estadoCivil[15];
@@ -36,6 +36,8 @@ void editaCliente(cliente **dtbase, int qtdCliente, int *tamanhoCliente, int id,
 int menuClientes(cliente **bd_cliente, int *qtdCliente,int *tamanhoCliente,int *idControleCliente, int tipo_config);
 
 int verificaIdCliente(cliente **dtbase, int qtdClientes, int id);
+
+char *nomeCliente(cliente **dtbase,int qtd_Cliente, int ID);
 
 int saveCliente(cliente objeto, int tipo_config);
 

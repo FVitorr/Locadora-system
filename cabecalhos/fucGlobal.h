@@ -11,15 +11,14 @@ typedef struct{
     int ano;
 }data;
 
-typedef struct
-{
+typedef struct {
     int codigo;
     char nome[120];
     char descricao[120];
     int qtd;            // quantidade de mídias existentes na locadora
     int c_categoria;
     char lingua[120];
-    int qtdEmprestado
+    int qtdEmprestado;
 } filme;
 
 typedef struct {
@@ -106,3 +105,5 @@ int verifica_log(config *set,int *tipo_config);
 int confirm_remover(int cod);
 
 void info_cancela(void);
+
+void systemPause();

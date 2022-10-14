@@ -103,11 +103,10 @@ int removerCliente(cliente **dtbase, int id, int *qtdCliente, int tipo_config) {
 
 void listCliente(cliente **dtbase, int qtd) {
     if (qtd > 0) {
-        printf("\nID \t Nome \t CPF \t Telefone \t E-mail \t Sexo \t Estado civil \t "
-               "Data de Nascimento \t Rua \t Número \t Bairro \t Cidade \t Estado\n");
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
-            printf("(%d)\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %d\t %s\t %s\t %s \n",
+            printf("(%d)\nNome: %s\nCPF %s\nTelefone %s\nE-mail %s\nSexo %s\nEstado civil %s"
+                   "\nData de Nascimento %s \nRua %s ,%d Bairo: %s \tCidade: %s - %s",
                    (*dtbase)[c].id,
                    (*dtbase)[c].nome,
                    (*dtbase)[c].cpf,
@@ -236,6 +235,18 @@ int verificaIdCliente(cliente **dtbase, int qtdClientes, int id) {
     return 0;
 }
 
+char *nomeCliente(cliente **dtbase,int qtd_Cliente, int ID){
+    for (int i = 0; i < qtd_Cliente; i++)
+    {
+        if ((*dtbase)[i].id == ID) {
+            printf("%s",(*dtbase)[i].nome);
+            return (*dtbase)[i].nome;
+        }
+    }
+    return NULL;
+}
+
+
 int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoCliente, int *id, int tipo_config) {
     FILE *p;
     cliente new;
@@ -258,11 +269,12 @@ int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoClient
             fgets(new.nome, 120, p);
             limpa_final_string(new.nome);
 
-            fgets(new.cpf, 11, p);
+            fgets(new.cpf, 12, p);
             limpa_final_string(new.cpf);
 
-            fgets(new.telefone, 15, p);
+            fgets(new.telefone, 20, p);
             limpa_final_string(new.telefone);
+            printf("%s",new.telefone);
 
             fgets(new.email, 50, p);
             limpa_final_string(new.email);

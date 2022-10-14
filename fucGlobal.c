@@ -372,5 +372,10 @@ int verifica_log(config *set,int *tipo_config){
         set_tipoARQ_config(set, tipo_config);
         return 0; // Este retorno usado para criar locadora de ID 0
     }
+}
 
+void systemPause(){
+    char a;
+    printf("\nPrecione uma Tecla para continuar...");
+    scanf("%c",&a);
 }

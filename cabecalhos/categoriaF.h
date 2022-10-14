@@ -27,7 +27,7 @@ void listCategorias(fCategoria **dtbase, int qtd);
 int editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,int id,int tipo_config);
 
 int locID(fCategoria **dtbase,int qtd_Categoria, int ID) ;
-
+/*Retorna o Valor pago na Categoria de acordo com o ID informado*/
 float valorCategoria(fCategoria **dtbase,int qtd_Categoria, int ID);
 
 int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,int *idCategoria, int tipo_config);

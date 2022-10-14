@@ -28,12 +28,22 @@ int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 0;
 fornecedor *bd_fornecedor;
 int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
 
+locados *bd_locados;
+int qtdLocados = 0, tamanhoLocados = 1, idControleLocados = 0;
+
+
+operacoe *bd_Operacao;
+int qtdOperacao = 0, tamanhoOperacao = 1, KEY_Controle = 0;
+
+
 int menuprincipal(int tipo_config,
                   fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,int *idCategoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
                   locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
+                  locados **dtbaseLocados, int *qtd_Locados, int *tamanho_Locados, int *idLocados,
                   cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente,
+                  operacoe **dtbaseOperacoe, int *qtd_Operacoe, int *tamanho_Operacoe,int *key_controle,
                   fornecedor **dtbaseFornecedor, int *qtd_Fornecedor,int *tamanho_Fornecedor,int *idFornecedor){
 
     system("cls");
@@ -55,7 +65,13 @@ int menuprincipal(int tipo_config,
             printf(">> Exit \n");
             return 1;
         case 1:
-            return 0;
+            while (1){
+                int t = menuLocacao(dtbaseFilme,*qtd_Filmes,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,
+                                    dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,dtbaseCategoria,*qtd_Categoria,key_controle);
+                if (t == 1){
+                    return 0;
+                }
+            }
         case 2:
             while (1){
                 int t = menuClientes(dtbaseCliente,qtd_Cliente,tamanho_Cliente,idCliente, tipo_config);
@@ -145,6 +161,9 @@ int main() {
     bd_locadora = malloc(tamanhoLocadora * sizeof(locadora));
     bd_fornecedor = malloc(tamanhoFornecedor * sizeof(fornecedor));
 
+    bd_locados = malloc(tamanhoLocados * sizeof(locados));
+    bd_Operacao = malloc(tamanhoOperacao * sizeof(operacoe));
+
     //Verifica se os arquivos existem caso contrario criar
     verifica_arquivos(tipoConfig);
     //Carrega os arquivos e Verifica se é primeira execursão
@@ -163,7 +182,9 @@ int main() {
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                           &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,
                           &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
+                          &bd_locados,&qtdLocados,&tamanhoLocados,&idControleLocados,
                           &bd_cliente,&qtdCliente,&tamanhoCliente,&idControleCliente,
+                          &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_Controle,
                           &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor);
         if (v == 1){
             break;
@@ -175,10 +196,14 @@ int main() {
     free(bd_cliente);
     free(bd_locadora);
     free(bd_fornecedor);
+    free(bd_locados);
+    free(bd_Operacao);
     bd_cat = NULL;
     bd_filme = NULL;
     bd_funcionarios = NULL;
     bd_locadora = NULL;
     bd_cliente = NULL;
+    bd_locados = NULL;
+    bd_Operacao = NULL;
     return 0;
 }
