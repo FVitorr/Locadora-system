@@ -37,10 +37,12 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,cliente **dtbaseCliente,int qtd
                 funcionarios **dtbaseFuncionarios, int qtdFuncionarios,
                 locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle);
+                fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipo_config);
 
 int inserirLocados(locados **dtbaseLocados,locados newLocados, int *qtdLocados, int *tamanhoLocados);
 
 void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator);
 
 void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe, int qtdOperacoes);
+
+int saveLocacao(locados objeto, int tipo_config);

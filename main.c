@@ -67,7 +67,7 @@ int menuprincipal(int tipo_config,
         case 1:
             while (1){
                 int t = menuLocacao(dtbaseFilme,*qtd_Filmes,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,
-                                    dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,dtbaseCategoria,*qtd_Categoria,key_controle);
+                                    dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,dtbaseCategoria,*qtd_Categoria,key_controle,tipo_config);
                 if (t == 1){
                     return 0;
                 }

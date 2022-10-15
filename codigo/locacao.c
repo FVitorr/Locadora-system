@@ -129,7 +129,7 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
     } while (newObjeto.tipoPagamento > 2 || newObjeto.tipoPagamento < 1);
 
     if (newObjeto.tipoPagamento == 1){
-        //Adc a contas
+        newObjeto.qtdParcelas = 1;
     }else{
         int ent = 0,qtdParcelas;
         float valor;
@@ -211,13 +211,45 @@ void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator) {
     printf("\n");
 }
 
+int saveLocacao(locados objeto, int tipo_config){
+    FILE *locadosF;
+
+    if (tipo_config == 1){//Arquivo TXT
+        locadosF = fopen("cpyBdLocados.txt", "a");
+
+        if (locadosF == NULL){ // Se a abertura falhar
+            return 1;
+        }
+
+        fprintf(locadosF, "%d\n%d\n%d\n%s\n%d\n%f\n%d\n%d\n%d\n",
+                objeto.ID,
+                objeto.KEY_operator,
+                objeto.CodCliente,
+                objeto.Nome,
+                objeto.qtdFilme,
+                objeto.valorPago,
+                objeto.tipoPagamento,
+                objeto.qtdParcelas,
+                objeto.TDdevolvido);
+
+    }else if (tipo_config == 0){ //Arquivo BINARIO
+        locadosF = fopen("cpyBdLocados.bin", "ab");
+        if (locadosF == NULL){ // Se a abertura falhar
+            return 1;
+        }
+        fwrite(&objeto, sizeof(locados), 1,locadosF);
+    }
+    fclose(locadosF);
+    return 0;
+}
+
 
 int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 cliente **dtbaseCliente,int qtdcliente,
                 funcionarios **dtbaseFuncionarios, int qtdFuncionarios,
                 locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle){
+                fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipo_config){
     int op = 0;
     line(100,"Locacao\0");
     printf("\t 1- Emprestar \n\t 2- Devolver \n\t 3- Vizualizar Operaçoes \n\t 0- Sair");
@@ -235,6 +267,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
     else if (op == 1){
         locados newLocados = objetoLocados(idLocados,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Controle);
         inserirLocados(dtbaseLocados,newLocados,qtdLocados,tamanhoLocados);
+        saveLocacao(newLocados,tipo_config);
     }else if (op == 3){
         listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe);
         systemPause();
