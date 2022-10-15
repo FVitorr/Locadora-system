@@ -269,14 +269,14 @@ int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoClient
             fgets(new.nome, 120, p);
             limpa_final_string(new.nome);
 
-            fgets(new.cpf, 12, p);
+            fgets(new.cpf, 20, p);
             limpa_final_string(new.cpf);
 
-            fgets(new.telefone, 20, p);
+            fgets(new.telefone, 120, p);
             limpa_final_string(new.telefone);
-            printf("%s",new.telefone);
 
-            fgets(new.email, 50, p);
+
+            fgets(new.email, 120, p);
             limpa_final_string(new.email);
 
             fgets(new.sexo, 15, p);

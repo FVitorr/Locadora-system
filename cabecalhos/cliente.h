@@ -12,8 +12,8 @@ typedef struct
     char nome[120];
     endereco endereco;
     char cpf[12];
-    char telefone[20];
-    char email[50];
+    char telefone[120];
+    char email[120];
     char sexo[15];
     char estadoCivil[15];
     char dataNascimento[12];

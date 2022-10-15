@@ -56,6 +56,9 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
     newObjeto.ID = *id;
     *id = *id + 1; //Incrementar ID
 
+    //Operaçoes
+    newObjeto.KEY_operator = *KEY_Controle;
+
     //Cliente
     int idtpm;
     do {
@@ -78,8 +81,6 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
     newObjeto.qtdFilme = 0;
     int tamanhoArray = 1;
 
-    //Operaçoes
-    newObjeto.KEY_operator = *KEY_Controle;
 
     while (1){
         operacoe  op = objetoOperacoe(&newObjeto,dtbaseFilme,qtdFilme,dtbaseCategoria,qtdCategoria,*KEY_Controle);
@@ -148,13 +149,14 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
     newObjeto.TDdevolvido = 0; // 0 - Não
 
     *KEY_Controle =  *KEY_Controle + 1;
+//    printf("(%d)\nCodigo Cliente: %d\n"
+//           "Nome Cliente: %s\n"
+//           "Quantidade de Filmes: %d\n"
+//           "Valor Total: R$ %.2f\n",newObjeto.ID,newObjeto.CodCliente,newObjeto.Nome,newObjeto.qtdFilme,newObjeto.valorPago);
+    return newObjeto;
 }
 
 int inserirLocados(locados **dtbaseLocados,locados newLocados, int *qtdLocados, int *tamanhoLocados){
-    printf("(%d)\nCodigo Cliente: %d\n"
-           "Nome Cliente: %s\n"
-           "Quantidade de Filmes: %d\n"
-           "Valor Total: R$ %.2f\n",newLocados.ID,newLocados.CodCliente,newLocados.Nome,newLocados.qtdFilme,newLocados.valorPago);
     if (*qtdLocados == *tamanhoLocados)
     {
         *tamanhoLocados = *tamanhoLocados + 1;
@@ -184,7 +186,7 @@ void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOpera
         }
         printf("-----------------------------------------------------------------\n");
         printf("(%d)\nCodigo Cliente: %d\n"
-               "Data: %d/%d/%d"
+               "Data: %d/%d/%d\n"
                "Nome Cliente: %s\n"
                "Quantidade de Filmes: %d\n"
                "Valor Total: R$ %.2f\n",(*dtbaselocados)[c].ID,(*dtbaselocados)[c].CodCliente,emprestimo.dia,emprestimo.mes,emprestimo.ano,(*dtbaselocados)[c].Nome,(*dtbaselocados)[c].qtdFilme,(*dtbaselocados)[c].valorPago);
@@ -207,7 +209,8 @@ void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator) {
 }
 
 
-int menuLocacao(filme **dtbaseFilme,int qtdFilme,cliente **dtbaseCliente,int qtdcliente,
+int menuLocacao(filme **dtbaseFilme,int qtdFilme,
+                cliente **dtbaseCliente,int qtdcliente,
                 funcionarios **dtbaseFuncionarios, int qtdFuncionarios,
                 locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
