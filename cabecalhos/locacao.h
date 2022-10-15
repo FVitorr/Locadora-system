@@ -46,3 +46,5 @@ void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator);
 void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe, int qtdOperacoes);
 
 int saveLocacao(locados objeto, int tipo_config);
+
+int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,int tipo_config);

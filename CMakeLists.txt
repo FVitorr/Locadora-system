@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.23)
 project(Locadora_system C)
 
 set(CMAKE_C_STANDARD 11)
+add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 
 include_directories(cabecalhos)
 

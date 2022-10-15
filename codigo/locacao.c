@@ -1,6 +1,8 @@
 #include "locacao.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <io.h>
 
 operacoe objetoOperacoe(locados *newObjeto, filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
                         int KEY_operator){
@@ -159,8 +161,8 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
     return newObjeto;
 }
 
-int inserirLocados(locados **dtbaseLocados,locados newLocados, int *qtdLocados, int *tamanhoLocados){
-    if (*qtdLocados == *tamanhoLocados)
+int inserirLocados(locados **dtbaseLocados,locados newLocados, int *qtd, int *tamanhoLocados){
+    if (*qtd == *tamanhoLocados)
     {
         *tamanhoLocados = *tamanhoLocados + 1;
         *dtbaseLocados = (locados *) realloc(*dtbaseLocados, *tamanhoLocados * sizeof(locados));
@@ -173,7 +175,7 @@ int inserirLocados(locados **dtbaseLocados,locados newLocados, int *qtdLocados, 
     }
     // adc obj ao bd local
     (*dtbaseLocados)[*tamanhoLocados - 1] = newLocados;
-    *qtdLocados = *qtdLocados + 1;
+    *qtd = *qtd + 1;
     return 1;
 }
 
@@ -211,6 +213,37 @@ void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator) {
     printf("\n");
 }
 
+int menuLocacao(filme **dtbaseFilme,int qtdFilme,
+                cliente **dtbaseCliente,int qtdcliente,
+                funcionarios **dtbaseFuncionarios, int qtdFuncionarios,
+                locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
+                operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
+                fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipo_config){
+    int op = 0;
+    line(100,"Locacao\0");
+    printf("\t 1- Emprestar \n\t 2- Devolver \n\t 3- Vizualizar Operaçoes \n\t 0- Sair");
+    line(100,"1\0");
+
+    do {
+        printf(">>OPC: ");
+        scanf("%d", &op);
+    } while (op < 0 || op > 3);
+
+
+    if (op == 0){
+        return 1;
+    }
+    else if (op == 1){
+        locados newLocados = objetoLocados(idLocados,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Controle);
+        inserirLocados(dtbaseLocados,newLocados,qtdLocados,tamanhoLocados);
+        saveLocacao(newLocados,tipo_config);
+    }else if (op == 3){
+        listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe);
+        systemPause();
+    }
+    return 0;
+}
+
 int saveLocacao(locados objeto, int tipo_config){
     FILE *locadosF;
 
@@ -244,33 +277,78 @@ int saveLocacao(locados objeto, int tipo_config){
 }
 
 
-int menuLocacao(filme **dtbaseFilme,int qtdFilme,
-                cliente **dtbaseCliente,int qtdcliente,
-                funcionarios **dtbaseFuncionarios, int qtdFuncionarios,
-                locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
-                operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipo_config){
-    int op = 0;
-    line(100,"Locacao\0");
-    printf("\t 1- Emprestar \n\t 2- Devolver \n\t 3- Vizualizar Operaçoes \n\t 0- Sair");
-    line(100,"1\0");
 
-    do {
-        printf(">>OPC: ");
-        scanf("%d", &op);
-    } while (op < 0 || op > 3);
+int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,int tipo_config) {
+    FILE *fileLocados;
+    locados new;
+    int t = 0;
+    if (tipo_config == 1){ //Arquivo TXT
+        fileLocados = fopen("cpyBdLocados.txt", "r");
 
+        if (fileLocados == NULL){
+            printf("\nErro na Leitura 'cpyBdLocados.txt' \n");
+            system("Pause");
+            return 1;
+        }
 
-    if (op == 0){
-        return 1;
+        while (!feof(fileLocados)){
+            if (!filelength(fileno(fileLocados))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fscanf(fileLocados, "%d\n", &new.ID);
+
+            fscanf(fileLocados, "%d\n", &new.KEY_operator);
+
+            fscanf(fileLocados, "%d\n", &new.CodCliente);
+
+            fgets(new.Nome, 120, fileLocados);
+            limpa_final_string(new.Nome);
+
+            fscanf(fileLocados, "%d\n", &new.qtdFilme);
+
+            fscanf(fileLocados, "%f\n", &new.valorPago);
+
+            fscanf(fileLocados, "%d\n", &new.tipoPagamento);
+
+            fscanf(fileLocados, "%d\n", &new.qtdParcelas);
+
+            fscanf(fileLocados, "%d\n", &new.TDdevolvido);
+
+//            if (verificaIdFilme(dtBase,*qtdLocados,new.codigo) == 0){
+//                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
+//                if (*id <= new.codigo) {
+//                    *id = new.codigo + 1;
+//                }
+//            }
+
+            t = inserirLocados(dtbaseLocados,new,qtdLocados,tamanhoLocados);
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
     }
-    else if (op == 1){
-        locados newLocados = objetoLocados(idLocados,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Controle);
-        inserirLocados(dtbaseLocados,newLocados,qtdLocados,tamanhoLocados);
-        saveLocacao(newLocados,tipo_config);
-    }else if (op == 3){
-        listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe);
-        systemPause();
+    else  if (tipo_config == 0){ //Arquivo BIN
+        fileLocados = fopen("cpyBdFilme.bin", "rb");
+        while (!feof(fileLocados)){
+            if (!filelength(fileno(fileLocados))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fread(&new,sizeof(locados),1,fileLocados);
+//            if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
+//                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
+//                if (*id <= new.codigo) {
+//                    *id = new.codigo + 1;
+//                }
+//            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
     }
+    fclose(fileLocados);
     return 0;
 }

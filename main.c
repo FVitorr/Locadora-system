@@ -128,6 +128,7 @@ int menuprincipal(int tipo_config,
 int carregaTodosDados(int *tipoConfig, config *config_system,
                       filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                       locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
+                      locados **dtbaseLocados, int *qtd_Locados, int *tamanho_Locados, int *idLocados,
                       fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *idCategoria,
                       cliente **dtBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente,
                       fornecedor **dtBaseFornecedor, int *qtd_Fornecedor, int *tamanho_Fornecedor, int *idFornecedor,
@@ -145,6 +146,9 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
     carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
     printf("\n>> Dados Fornecedores Carregados \n\n");
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
+    printf("\n>> Dados de Funcionarios Carregados \n\n");
+    carregarDados_locacao(dtbaseLocados,qtd_Locados,tamanho_Locados,*tipoConfig);
+    printf("\n>> Dados de Locacao Carregados \n\n");
     system("pause");
     return 0;
 }
@@ -170,6 +174,7 @@ int main() {
     carregaTodosDados(&tipoConfig,&config_System,
                       &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                       &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
+                      &bd_locados,&qtdLocados,&tamanhoLocados,&idControleLocados,
                       &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                       &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente,
                       &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor,
