@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-
 operacoe objetoOperacoe(locados *newObjeto, filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
                         int KEY_operator){
     int idtpm;
@@ -21,9 +19,13 @@ operacoe objetoOperacoe(locados *newObjeto, filme **dtbaseFilme, int qtdFilme,fC
             //Incrementar o valor do campo emprestados
             altQtdEmprestadaFilme(dtbaseFilme,qtdFilme,idtpm);
 
+            //Nome Filme
+            newOpc.nomeFilme = nomeFilme(dtbaseFilme,qtdFilme,idtpm);
+
             //Valor Pago
 
             int idCategoria = categoriaFilme(dtbaseFilme,qtdFilme, idtpm);
+            printf("%d",idCategoria);
             newOpc.valorPago = valorCategoria(dtbaseCategoria,qtdCategoria,idCategoria);
 
             break;
@@ -94,9 +96,8 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
         }
         // adc obj ao bd local
         (*dtbaseOperacoe)[*tamanhoOperacoe - 1] = op;
-        printf("Objeto OP CRIADO");
         *qtdOperacoe = *qtdOperacoe + 1;
-        listOperacoes(dtbaseOperacoe,*qtdOperacoe,*KEY_Controle);
+        //listOperacoes(dtbaseOperacoe,*qtdOperacoe,*KEY_Controle);
 
         newObjeto.qtdFilme =  newObjeto.qtdFilme + 1;
 
@@ -150,6 +151,10 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
 }
 
 int inserirLocados(locados **dtbaseLocados,locados newLocados, int *qtdLocados, int *tamanhoLocados){
+    printf("(%d)\nCodigo Cliente: %d\n"
+           "Nome Cliente: %s\n"
+           "Quantidade de Filmes: %d\n"
+           "Valor Total: R$ %.2f\n",newLocados.ID,newLocados.CodCliente,newLocados.Nome,newLocados.qtdFilme,newLocados.valorPago);
     if (*qtdLocados == *tamanhoLocados)
     {
         *tamanhoLocados = *tamanhoLocados + 1;
@@ -190,7 +195,7 @@ void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOpera
 void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator) {
     for (int c = 0; c < qtd; c++) {
         if ((*dtbaseOperacoe)[c].KEY_operator == KEY_operator) {
-            printf("-----------------------------------------------------------------\n");
+            printf("\n-----------------------------------------------------------------\n");
             printf("(%d)\n"
                    "Codigo Filme: %d\n"
                    "Nome Filme: %s\n"

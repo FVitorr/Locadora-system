@@ -262,6 +262,16 @@ int verificaIdFilme(filme **dtbase,int qtd_filme,int id) {
     return 0;
 }
 
+char *nomeFilme(filme **dtbase,int qtd_filme, int ID){
+    for (int i = 0; i < qtd_filme; i++)
+    {
+        if ((*dtbase)[i].codigo == ID) {
+            return (*dtbase)[i].nome;
+        }
+    }
+    return NULL;
+}
+
 
 int categoriaFilme(filme **dtbase,int qtd_filme,int id) {
     for (int i = 0; i < qtd_filme; i++) {
@@ -269,7 +279,7 @@ int categoriaFilme(filme **dtbase,int qtd_filme,int id) {
             return (*dtbase)[i].c_categoria;
         }
     }
-    return 0;
+    return -1;
 }
 
 int altQtdEmprestadaFilme(filme **dtbase,int qtd_filme,int id) {
