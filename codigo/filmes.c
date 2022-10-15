@@ -75,7 +75,7 @@ int removerFilme(filme **dtbase, int id, int *qtdFilmes, int *tamanhoFilmes,int 
             break;
         }
     }
-    refazDados_filme(dtbase,qtdFilmes,tamanhoFilmes,tipo_config);
+    refazDados_filme(dtbase,*qtdFilmes,tipo_config);
     return 0;
 }
 
@@ -98,17 +98,28 @@ void listFilme(filme **dtbase, int qtd){
     }
     printf("\n");
 }
+int qtdEmprestada(filme **dtbase,int qtdFilmes, int id){
+    for (int i = 0; i < qtdFilmes; i++) {
+        if ((*dtbase)[i].codigo == id) {
+            return (*dtbase)[i].qtdEmprestado;
+        }
+    }
+    return 0;
+}
+
 
 void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id, int tipo_config)
 {
+    int qtd_emprestada = qtdEmprestada(dtbase,*qtdFilmes,id);
     for (int i = 0; i < *qtdFilmes; i++) {
         if ((*dtbase)[i].codigo == id) {
             filme newEntrada = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,&id);
+            newEntrada.qtdEmprestado = qtd_emprestada;
             (*dtbase)[i] = newEntrada;
             break;
         }
     }
-    refazDados_filme(dtbase,qtdFilmes,tamanhoFilmes, tipo_config);
+    refazDados_filme(dtbase,*qtdFilmes, tipo_config);
 }
 
 int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id) {
@@ -367,20 +378,20 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
 }
 
 
-int refazDados_filme(filme **dtbase, int *qtdFilme, int *tamanhoFilme, int tipo_config){
+int refazDados_filme(filme **dtbase, int qtdFilme, int tipo_config){
 
     FILE *p;
     if (tipo_config== 1){
         p = fopen("cpyBdFilme.txt", "w");
         fclose(p);
         p = NULL;
-        for (int i = 0; i < *tamanhoFilme; i++){
+        for (int i = 0; i < qtdFilme; i++){
             saveFilme((*dtbase)[i],1);
         }
     }else if (tipo_config == 0){
         p = fopen("cpyBdFilme.bin", "wb");
         fclose(p);
-        for (int i = 0; i < *tamanhoFilme; i++){
+        for (int i = 0; i < qtdFilme; i++){
             saveFilme((*dtbase)[i],0);
         }
     }

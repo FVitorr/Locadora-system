@@ -19,6 +19,8 @@ operacoe objetoOperacoe(locados *newObjeto, filme **dtbaseFilme, int qtdFilme,fC
             //Incrementar o valor do campo emprestados
             altQtdEmprestadaFilme(dtbaseFilme,qtdFilme,idtpm);
 
+            refazDados_filme(dtbaseFilme,qtdFilme, 1);
+
             //Nome Filme
             newOpc.nomeFilme = nomeFilme(dtbaseFilme,qtdFilme,idtpm);
 
