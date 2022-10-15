@@ -27,7 +27,6 @@ operacoe objetoOperacoe(locados *newObjeto, filme **dtbaseFilme, int qtdFilme,fC
             //Valor Pago
 
             int idCategoria = categoriaFilme(dtbaseFilme,qtdFilme, idtpm);
-            printf("%d",idCategoria);
             newOpc.valorPago = valorCategoria(dtbaseCategoria,qtdCategoria,idCategoria);
 
             break;
@@ -38,7 +37,7 @@ operacoe objetoOperacoe(locados *newObjeto, filme **dtbaseFilme, int qtdFilme,fC
     }while (1);
 
     obterData(&newOpc.dtemprestimo);
-    printf("\nData do emprestimo: %d/%d/%d\n",newOpc.dtemprestimo.dia,newOpc.dtemprestimo.mes,newOpc.dtemprestimo.ano);
+    printf("\n>> Data do emprestimo: %d/%d/%d\n",newOpc.dtemprestimo.dia,newOpc.dtemprestimo.mes,newOpc.dtemprestimo.ano);
 
     newOpc.dtdevolucao.dia = 0;
     newOpc.dtdevolucao.mes = 0;
@@ -64,15 +63,17 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
     //Cliente
     int idtpm;
     do {
-        printf("Informe ID do Cliente:");
+        printf("Informe ID do Cliente: ");
         scanf("%d", &idtpm);
 
+        int confirm;
         if (verificaIdCliente(dtbaseCliente, qtdcliente, idtpm) == 1) { //Verifica se o cliente existe
             //Guardar Codico do cliente
             newObjeto.CodCliente = idtpm;
             //Retornar o nome do cliente
             newObjeto.Nome = nomeCliente(dtbaseCliente,qtdcliente,idtpm);
-            printf("\nNome do Cliente: %s", newObjeto.Nome);
+            printf("\nNome do Cliente: %s \nCorreto: [1 - SIM   0 - Nao] \n >> OPC: ", newObjeto.Nome);
+            scanf("%d",&confirm);
             break;
         } else {
             printf("\nID invalido");
@@ -106,7 +107,7 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
 
         int opc = 0;
         line(100,"1\0");
-        printf("\n1- Adicionar Mais Filme  0 - Finalizar");
+        printf("\n 1- Adicionar Mais Filme  0 - Finalizar \n>>OPC: ");
         scanf("%d",&opc);
 
         if (opc != 1){
@@ -123,7 +124,7 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
 
     //TIPO PAGAMENTO
     do{
-        printf("Tipo do pagamento: 1- A vista \t2 - A prazo\nOPC:");
+        printf("\nTipo do pagamento: [1- A vista \t2 - A prazo]\n>>OPC: ");
         scanf("%d",&newObjeto.tipoPagamento);
     } while (newObjeto.tipoPagamento > 2 || newObjeto.tipoPagamento < 1);
 
@@ -133,18 +134,18 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
         int ent = 0,qtdParcelas;
         float valor;
         do{
-            printf(">> Deseja dar uma entrada ?  1-Sim \t0-Não");
+            printf("\n >>Mais Filmes ?  [ 1 - Sim \t0 - Nao ]");
             scanf("%d",&ent);
             if (ent == 0 || ent == 1){break;}
-            else{ printf(">>Opc Invalida");}
+            else{ printf("\n>> Opc Invalida");}
         } while (1);
 
         if (ent == 1){
-            printf(">> Valor R$ ");
+            printf("\n>> Valor R$ ");
             scanf("%f",&valor);
             //Adc a contas
             //Dividir
-            printf(">> Dividir de quantas Vezes [3x Valor Maximo] ? ");
+            printf("\n>> Dividir de quantas Vezes [3x Valor Maximo] ? ");
             scanf("%f",&qtdParcelas);
         }
     }
@@ -186,7 +187,7 @@ void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOpera
                 break;
             }
         }
-        printf("-----------------------------------------------------------------\n");
+        printf("\n-----------------------------------------------------------------\n");
         printf("(%d)\nCodigo Cliente: %d\n"
                "Data: %d/%d/%d\n"
                "Nome Cliente: %s\n"
@@ -219,7 +220,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle){
     int op = 0;
     line(100,"Locacao\0");
-    printf("\t 1- Emprestar \n\t 2- Devolver \n\t 3- Vizualizar Operaçoes");
+    printf("\t 1- Emprestar \n\t 2- Devolver \n\t 3- Vizualizar Operaçoes \n\t 0- Sair");
     line(100,"1\0");
 
     do {
@@ -227,7 +228,11 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
         scanf("%d", &op);
     } while (op < 0 || op > 3);
 
-    if (op == 1){
+
+    if (op == 0){
+        return 1;
+    }
+    else if (op == 1){
         locados newLocados = objetoLocados(idLocados,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Controle);
         inserirLocados(dtbaseLocados,newLocados,qtdLocados,tamanhoLocados);
     }else if (op == 3){
