@@ -26,7 +26,7 @@ typedef struct {
 }locados;
 
 
-operacoe objetoOperacoe(locados *newObjeto, filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
+operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
                         int KEY_operator);
 
 locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dtbaseFilme,int qtdFilme,
@@ -39,12 +39,18 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,cliente **dtbaseCliente,int qtd
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
                 fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipo_config);
 
-int inserirLocados(locados **dtbaseLocados,locados newLocados, int *qtdLocados, int *tamanhoLocados);
+int inserirLocados(locados **dtbaseLocados,locados newEntry, int *qtdLocados, int *tamanhoLocados);
+
+int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *qtdOperacao, int *tamanhoOperacao);
 
 void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator);
 
-void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe, int qtdOperacoes);
+void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe);
 
 int saveLocacao(locados objeto, int tipo_config);
 
-int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,int tipo_config);
+int saveOperacao(operacoe objeto, int tipo_config);
+
+int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *id,int tipo_config);
+
+int carregarDados_Operacoes(operacoe **dtbaseLocados, int *qtd_lo, int *tamanhoLocados, int *id,int tipo_config);

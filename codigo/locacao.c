@@ -4,10 +4,9 @@
 #include <stdint.h>
 #include <io.h>
 
-operacoe objetoOperacoe(locados *newObjeto, filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
+operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
                         int KEY_operator){
     int idtpm;
-    int tamanhoArray = 1;
 
     operacoe newOpc;
     newOpc.KEY_operator = KEY_operator;
@@ -84,11 +83,9 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
     } while(1);
 
     newObjeto.qtdFilme = 0;
-    int tamanhoArray = 1;
-
 
     while (1){
-        operacoe  op = objetoOperacoe(&newObjeto,dtbaseFilme,qtdFilme,dtbaseCategoria,qtdCategoria,*KEY_Controle);
+        operacoe  op = objetoOperacoe(dtbaseFilme,qtdFilme,dtbaseCategoria,qtdCategoria,*KEY_Controle);
 
         if (*qtdOperacoe >= *tamanhoOperacoe)
         {
@@ -148,7 +145,7 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
             //Adc a contas
             //Dividir
             printf("\n>> Dividir de quantas Vezes [3x Valor Maximo] ? ");
-            scanf("%f",&qtdParcelas);
+            scanf("%d",&qtdParcelas);
         }
     }
     newObjeto.TDdevolvido = 0; // 0 - Não
@@ -161,25 +158,7 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
     return newObjeto;
 }
 
-int inserirLocados(locados **dtbaseLocados,locados newLocados, int *qtd, int *tamanhoLocados){
-    if (*qtd == *tamanhoLocados)
-    {
-        *tamanhoLocados = *tamanhoLocados + 1;
-        *dtbaseLocados = (locados *) realloc(*dtbaseLocados, *tamanhoLocados * sizeof(locados));
-    }
-    if (*dtbaseLocados == NULL)
-    {
-        printf("\n  Erro na alocação de memória!");
-        system("pause");
-        return 0;
-    }
-    // adc obj ao bd local
-    (*dtbaseLocados)[*tamanhoLocados - 1] = newLocados;
-    *qtd = *qtd + 1;
-    return 1;
-}
-
-void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe, int qtdOperacoes){
+void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe){
     data emprestimo,devolucao;
     for (int c = 0; c < qtdLocados; c++) {
         for (int a = 0; a < qtdLocados; a++) {
@@ -194,7 +173,8 @@ void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOpera
                "Data: %d/%d/%d\n"
                "Nome Cliente: %s\n"
                "Quantidade de Filmes: %d\n"
-               "Valor Total: R$ %.2f\n",(*dtbaselocados)[c].ID,(*dtbaselocados)[c].CodCliente,emprestimo.dia,emprestimo.mes,emprestimo.ano,(*dtbaselocados)[c].Nome,(*dtbaselocados)[c].qtdFilme,(*dtbaselocados)[c].valorPago);
+               "Data Devolucao: %d/%d/%d\n"
+               "Valor Total: R$ %.2f\n",(*dtbaselocados)[c].ID,(*dtbaselocados)[c].CodCliente,emprestimo.dia,emprestimo.mes,emprestimo.ano,(*dtbaselocados)[c].Nome,(*dtbaselocados)[c].qtdFilme,devolucao.dia,devolucao.mes,devolucao.ano,(*dtbaselocados)[c].valorPago);
     }
     printf("\n");
 }
@@ -238,9 +218,155 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
         inserirLocados(dtbaseLocados,newLocados,qtdLocados,tamanhoLocados);
         saveLocacao(newLocados,tipo_config);
     }else if (op == 3){
-        listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe);
+        listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe);
         systemPause();
     }
+    return 0;
+}
+
+int inserirLocados(locados **dtbaseLocados,locados newEntry, int *qtdLocados, int *tamanhoLocados){
+    //Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
+    if (*qtdLocados == *tamanhoLocados)
+    {
+        *tamanhoLocados = *tamanhoLocados + 1;
+        *dtbaseLocados = (locados *) realloc(*dtbaseLocados, *tamanhoLocados * sizeof(locados));
+    }
+    if (*dtbaseLocados == NULL)
+    {
+        printf("\n  Erro na alocação de memória!");
+        system("pause");
+        return 0;
+    }
+    // adc obj ao bd local
+    (*dtbaseLocados)[*tamanhoLocados - 1] = newEntry;
+    *qtdLocados = *qtdLocados + 1;
+
+    return 1;
+}
+
+int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *qtdOperacao, int *tamanhoOperacao){
+    //Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
+    if (*qtdOperacao == *tamanhoOperacao)
+    {
+        *tamanhoOperacao = *tamanhoOperacao + 1;
+        *dtbaseOperacao = (operacoe *) realloc(*dtbaseOperacao, *tamanhoOperacao * sizeof(operacoe));
+    }
+    if (*dtbaseOperacao == NULL)
+    {
+        printf("\n  Erro na alocação de memória!");
+        system("pause");
+        return 0;
+    }
+    // adc obj ao bd local
+    (*dtbaseOperacao)[*tamanhoOperacao - 1] = newEntry;
+    *qtdOperacao = *qtdOperacao + 1;
+
+    return 1;
+}
+
+
+int saveOperacao(operacoe objeto, int tipo_config){
+    FILE *operacao;
+
+    if (tipo_config == 1){//Arquivo TXT
+        operacao = fopen("cpyBdOperacao.txt", "a");
+
+        if (operacao == NULL){ // Se a abertura falhar
+            return 1;
+        }
+
+        fprintf(operacao, "%d\n%d\n%s\n%f\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",
+                objeto.KEY_operator,
+                objeto.CodFilme,
+                objeto.nomeFilme,
+                objeto.valorPago,
+                objeto.dtemprestimo.dia,
+                objeto.dtemprestimo.mes,
+                objeto.dtemprestimo.ano,
+                objeto.dtdevolucao.dia,
+                objeto.dtdevolucao.mes,
+                objeto.dtdevolucao.ano,
+                objeto.devolvido);
+
+    }else{ //Arquivo BINARIO
+        operacao = fopen("cpyBdOperacao.bin", "ab");
+        if (operacao == NULL){ // Se a abertura falhar
+            return 1;
+        }
+        fwrite(&objeto, sizeof(operacoe), 1,operacao);
+    }
+    fclose(operacao);
+    operacao = NULL;
+    return 0;
+}
+
+
+int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *tamanhoOperaca, int *id,int tipo_config) {
+    FILE *fOperacoe;
+    operacoe new;
+    int t = 0;
+    if (tipo_config == 1){ //Arquivo TXT
+        fOperacoe = fopen("cpyBdLocados.txt", "r");
+
+        if (fOperacoe == NULL){
+            printf("\nErro na Leitura 'cpyBdLocados.txt' \n");
+            system("Pause");
+            return 1;
+        }
+
+        while (!feof(fOperacoe)){
+            if (!filelength(fileno(fOperacoe))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fscanf(fOperacoe, "%d\n", &new.KEY_operator);
+
+            fscanf(fOperacoe, "%d\n", &new.CodFilme);
+
+            fgets(new.nomeFilme, 120, fOperacoe);
+            limpa_final_string(new.nomeFilme);
+
+            fscanf(fOperacoe, "%f\n", &new.valorPago);
+
+            fscanf(fOperacoe, "%d\n", &new.dtemprestimo.dia);
+            fscanf(fOperacoe, "%d\n", &new.dtemprestimo.mes);
+            fscanf(fOperacoe, "%d\n", &new.dtemprestimo.ano);
+
+            fscanf(fOperacoe, "%d\n", &new.dtdevolucao.dia);
+            fscanf(fOperacoe, "%d\n", &new.dtdevolucao.mes);
+            fscanf(fOperacoe, "%d\n", &new.dtdevolucao.ano);
+
+            fscanf(fOperacoe, "%d\n", &new.devolvido);
+
+            t = inserirOperacao(dtbaseoperacoe,new,qtdOperacao,tamanhoOperaca);
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    else { //Arquivo BIN
+        fOperacoe = fopen("cpyBdFilme.bin", "rb");
+        while (!feof(fOperacoe)){
+            if (!filelength(fileno(fOperacoe))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fread(&new,sizeof(locados),1,fOperacoe);
+//            if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
+//                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
+//                if (*id <= new.codigo) {
+//                    *id = new.codigo + 1;
+//                }
+//            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    fclose(fOperacoe);
+    fOperacoe = NULL;
     return 0;
 }
 
@@ -265,7 +391,7 @@ int saveLocacao(locados objeto, int tipo_config){
                 objeto.qtdParcelas,
                 objeto.TDdevolvido);
 
-    }else if (tipo_config == 0){ //Arquivo BINARIO
+    }else{ //Arquivo BINARIO
         locadosF = fopen("cpyBdLocados.bin", "ab");
         if (locadosF == NULL){ // Se a abertura falhar
             return 1;
@@ -273,12 +399,11 @@ int saveLocacao(locados objeto, int tipo_config){
         fwrite(&objeto, sizeof(locados), 1,locadosF);
     }
     fclose(locadosF);
+    locadosF = NULL;
     return 0;
 }
 
-
-
-int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,int tipo_config) {
+int carregarDados_locacao(locados **dtbaseLocados, int *qtd_lo, int *tamanhoLocados, int *id,int tipo_config) {
     FILE *fileLocados;
     locados new;
     int t = 0;
@@ -316,12 +441,12 @@ int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanho
 
 //            if (verificaIdFilme(dtBase,*qtdLocados,new.codigo) == 0){
 //                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
-//                if (*id <= new.codigo) {
-//                    *id = new.codigo + 1;
-//                }
 //            }
 
-            t = inserirLocados(dtbaseLocados,new,qtdLocados,tamanhoLocados);
+            t = inserirLocados(dtbaseLocados,new,qtd_lo,tamanhoLocados);
+            if (*id <= new.ID) {
+                *id = new.ID + 1;
+            }
 
             if (t == 0){
                 printf("\nAcao Interrompida");
@@ -329,7 +454,7 @@ int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanho
             }
         }
     }
-    else  if (tipo_config == 0){ //Arquivo BIN
+    else { //Arquivo BIN
         fileLocados = fopen("cpyBdFilme.bin", "rb");
         while (!feof(fileLocados)){
             if (!filelength(fileno(fileLocados))){  /* teste para saber se o tamanho do arquivo é zero */
