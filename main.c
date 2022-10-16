@@ -147,7 +147,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
     printf("\n>> Dados Fornecedores Carregados\n");
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
     printf("\n>> Dados de Funcionarios Carregados\n");
-    //carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
+    carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
     printf("\n>> Dados de Locacao Carregados\n");
     return 0;
 }
