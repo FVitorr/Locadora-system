@@ -96,7 +96,7 @@ void limpa_final_string(char *c);
  *                     0 - BIN
  */
 
-int verifica_arquivos(int tipo_configuracao);
+int verifica_arquivos(int tipo_config,char nameFile[120]);
 
 int tipo_configuracao(int *tipo);
 

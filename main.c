@@ -147,7 +147,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
     printf("\n>> Dados Fornecedores Carregados\n");
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
     printf("\n>> Dados de Funcionarios Carregados\n");
-    carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
+    //carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
     printf("\n>> Dados de Locacao Carregados\n");
     return 0;
 }
@@ -168,7 +168,7 @@ int main() {
     bd_Operacao = malloc(tamanhoOperacao * sizeof(operacoe));
 
     //Verifica se os arquivos existem caso contrario criar
-    verifica_arquivos(tipoConfig);
+    //verifica_arquivos(tipoConfig);
     //Carrega os arquivos e Verifica se é primeira execursão
     carregaTodosDados(&tipoConfig,&config_System,
                       &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,

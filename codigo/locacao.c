@@ -87,20 +87,7 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
     while (1){
         operacoe  op = objetoOperacoe(dtbaseFilme,qtdFilme,dtbaseCategoria,qtdCategoria,*KEY_Controle);
 
-        if (*qtdOperacoe >= *tamanhoOperacoe)
-        {
-            *tamanhoOperacoe = *tamanhoOperacoe + 1;
-            *dtbaseOperacoe = (operacoe *) realloc(*dtbaseOperacoe, *tamanhoOperacoe * sizeof(operacoe));
-        }
-        if (*dtbaseOperacoe == NULL)
-        {
-            printf("\n  Erro na alocação de memória!");
-            exit(0);
-        }
-        // adc obj ao bd local
-        (*dtbaseOperacoe)[*tamanhoOperacoe - 1] = op;
-        *qtdOperacoe = *qtdOperacoe + 1;
-        //listOperacoes(dtbaseOperacoe,*qtdOperacoe,*KEY_Controle);
+        inserirOperacao(dtbaseOperacoe,op,qtdOperacoe,tamanhoOperacoe);
 
         newObjeto.qtdFilme =  newObjeto.qtdFilme + 1;
 
@@ -266,16 +253,20 @@ int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *qtdOperaca
 
 
 int saveOperacao(operacoe objeto, int tipo_config){
-    FILE *operacao;
+    FILE *operacaoF;
 
     if (tipo_config == 1){//Arquivo TXT
-        operacao = fopen("cpyBdOperacao.txt", "a");
+        if (verifica_arquivos(tipo_config,"cpyBdOperacao.txt\0") == 1){
+            operacaoF = fopen("cpyBdOperacao.txt", "a");
+        } else{
+            operacaoF = fopen("cpyBdOperacao.txt", "w");
+        }
 
-        if (operacao == NULL){ // Se a abertura falhar
+        if (operacaoF == NULL){ // Se a abertura falhar
             return 1;
         }
 
-        fprintf(operacao, "%d\n%d\n%s\n%f\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",
+        fprintf(operacaoF, "%d\n%d\n%s\n%f\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",
                 objeto.KEY_operator,
                 objeto.CodFilme,
                 objeto.nomeFilme,
@@ -289,24 +280,23 @@ int saveOperacao(operacoe objeto, int tipo_config){
                 objeto.devolvido);
 
     }else{ //Arquivo BINARIO
-        operacao = fopen("cpyBdOperacao.bin", "ab");
-        if (operacao == NULL){ // Se a abertura falhar
+        operacaoF = fopen("cpyBdOperacao.bin", "ab");
+        if (operacaoF == NULL){ // Se a abertura falhar
             return 1;
         }
-        fwrite(&objeto, sizeof(operacoe), 1,operacao);
+        fwrite(&objeto, sizeof(operacoe), 1,operacaoF);
     }
-    fclose(operacao);
-    operacao = NULL;
+    fclose(operacaoF);
+    operacaoF = NULL;
     return 0;
 }
-
 
 int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *tamanhoOperaca, int *id,int tipo_config) {
     FILE *fOperacoe;
     operacoe new;
     int t = 0;
     if (tipo_config == 1){ //Arquivo TXT
-        fOperacoe = fopen("cpyBdLocados.txt", "r");
+        fOperacoe = fopen("cpyBdOperacoes.txt", "r");
 
         if (fOperacoe == NULL){
             printf("\nErro na Leitura 'cpyBdLocados.txt' \n");
@@ -374,7 +364,11 @@ int saveLocacao(locados objeto, int tipo_config){
     FILE *locadosF;
 
     if (tipo_config == 1){//Arquivo TXT
-        locadosF = fopen("cpyBdLocados.txt", "a");
+        if (verifica_arquivos(tipo_config,"cpyBdLocados.txt\0") == 1){
+            locadosF = fopen("cpyBdLocados.txt", "a");
+        } else{
+            locadosF = fopen("cpyBdLocados.txt", "w");
+        }
 
         if (locadosF == NULL){ // Se a abertura falhar
             return 1;

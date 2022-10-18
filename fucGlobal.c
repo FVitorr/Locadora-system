@@ -311,34 +311,23 @@ int creatFile(char *nameFile,int tipo_config){
     return 0;
 }
 
-int verifica_arquivos(int tipo_config){
-    int t_txt = 7;
+int verifica_arquivos(int tipo_config,char nameFile[120]){
     FILE *p;
 
-    char namesArqConstTXT[7][20] = {{"cpyBdFilme\0"},
-                                    {"cpyBdLocadora\0"},
-                                    {"cpyBdCategoria\0"},
-                                    {"cpyBdCliente\0"},
-                                    {"cpyBdFornecedor\0"},
-                                    {"cpyBdFuncionario\0"},
-                                    {"cpyBdLocados\0"}};
-    line(100,"Verificando Arquivos\0");
+    //strcat(nameFile,".txt\0");
+
     if (tipo_config == 1){
-        for (int i = 0 ; i < t_txt; i++){
-            strcat(namesArqConstTXT[i],".txt");
-            p = fopen(namesArqConstTXT[i], "r");
-            if (p == NULL){ // Se a leitura do arquivo falhar criar
-                limpa_extensao(namesArqConstTXT[i]);
-                creatFile(namesArqConstTXT[i],tipo_config);
-                printf("\n>> %s Criado",namesArqConstTXT[i]);
-            }else{
-                printf("\n>> %s Existe",namesArqConstTXT[i]);
-            }
+        p = fopen(nameFile,"r");
+        if (p != NULL){ //Arquivo existe
             fclose(p);
+            p = NULL;
+            //printf("Existe Arquivo %s",nameFile);
+            return 1;
         }
+        fclose(p);
+        p = NULL;
+        return 0;
     }
-    line(100,"=\0");
-    return 0;
 }
 
 int tipo_configuracao(int *tipo) {
