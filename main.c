@@ -132,6 +132,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
                       fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *idCategoria,
                       cliente **dtBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente,
                       fornecedor **dtBaseFornecedor, int *qtd_Fornecedor, int *tamanho_Fornecedor, int *idFornecedor,
+                      operacoe **dtbaseoperacoe, int *qtd_Operacao, int *tamanho_Operacao, int *key_controle,
                       funcionarios **dtBaseFuncionario, int *qtd_Funcionario, int *tamanho_Funcionario, int *idFuncionario){
 
     int newID = verifica_log(config_system,tipoConfig);
@@ -147,7 +148,9 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
     printf("\n>> Dados Fornecedores Carregados\n");
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
     printf("\n>> Dados de Funcionarios Carregados\n");
-    //carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
+    carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
+    printf("\n>> Dados de Locacao Carregados\n");
+    carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
     printf("\n>> Dados de Locacao Carregados\n");
     return 0;
 }
@@ -177,6 +180,7 @@ int main() {
                       &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                       &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente,
                       &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor,
+                      &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_Controle,
                       &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios);
 
     while (1){

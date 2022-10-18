@@ -154,6 +154,20 @@ char *retorna_password_file (char password_e[16]){
     password[i] = '\0';
     return password;
 }
+/*
+ * Algumas Struct
+ */
+
+char *string_to_pointer (char entry[120]){
+    int i = 0;
+    char *string = (char *)malloc(sizeof(char) * 120);
+    while (entry[i] != '\n' && i < 120 && entry[i] != '\0'){
+        string[i] = entry[i];
+        i++;
+    }
+    string[i] = '\0';
+    return string;
+}
 
 /*
    Função para converter char em Int

@@ -49,6 +49,8 @@ char  *obterPassword(int max);
 
 char *retorna_password_file (char password[16]);
 
+char *string_to_pointer (char entry[120]);
+
 /*
    Função para converter char em Int
    retorna o numero inteiro ou -1 se a operação falhar

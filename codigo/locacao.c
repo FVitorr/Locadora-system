@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <io.h>
 
+
 operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
                         int KEY_operator){
     int idtpm;
@@ -11,6 +12,8 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
     operacoe newOpc;
     newOpc.KEY_operator = KEY_operator;
     line(100,"Filme\0");
+    printf("[Chave da Operacao: %d]\n",KEY_operator);
+
     do {
         printf("Informe ID do Filme: ");
         scanf("%d", &idtpm);
@@ -51,7 +54,7 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 
 locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dtbaseFilme,int qtdFilme,
                        operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                       fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle){
+                       fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipoConfig){
     
     locados newObjeto;
 
@@ -73,7 +76,7 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
             newObjeto.CodCliente = idtpm;
             //Retornar o nome do cliente
             newObjeto.Nome = nomeCliente(dtbaseCliente,qtdcliente,idtpm);
-            printf("\nNome do Cliente: %s \nCorreto: [1 - SIM   0 - Nao] \n >> OPC: ", newObjeto.Nome);
+            printf("\nNome do Cliente: %s \nCorreto [1 - SIM   0 - Nao]: ", newObjeto.Nome);
             scanf("%d",&confirm);
             break;
         } else {
@@ -88,12 +91,13 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
         operacoe  op = objetoOperacoe(dtbaseFilme,qtdFilme,dtbaseCategoria,qtdCategoria,*KEY_Controle);
 
         inserirOperacao(dtbaseOperacoe,op,qtdOperacoe,tamanhoOperacoe);
+        saveOperacao(op, tipoConfig);
 
         newObjeto.qtdFilme =  newObjeto.qtdFilme + 1;
 
         int opc = 0;
         line(100,"1\0");
-        printf("\n 1- Adicionar Mais Filme  0 - Finalizar \n>>OPC: ");
+        printf("\nDigite: 1 - Adicionar mais Filme  \t0 - Finalizar \n>>OPC: ");
         scanf("%d",&opc);
 
         if (opc != 1){
@@ -157,11 +161,12 @@ void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOpera
         }
         printf("\n-----------------------------------------------------------------\n");
         printf("(%d)\nCodigo Cliente: %d\n"
+               "Registro da Operacao: %d\n"
                "Data: %d/%d/%d\n"
                "Nome Cliente: %s\n"
                "Quantidade de Filmes: %d\n"
                "Data Devolucao: %d/%d/%d\n"
-               "Valor Total: R$ %.2f\n",(*dtbaselocados)[c].ID,(*dtbaselocados)[c].CodCliente,emprestimo.dia,emprestimo.mes,emprestimo.ano,(*dtbaselocados)[c].Nome,(*dtbaselocados)[c].qtdFilme,devolucao.dia,devolucao.mes,devolucao.ano,(*dtbaselocados)[c].valorPago);
+               "Valor Total: R$ %.2f\n",(*dtbaselocados)[c].ID,(*dtbaselocados)[c].CodCliente,(*dtbaselocados)[c].KEY_operator,emprestimo.dia,emprestimo.mes,emprestimo.ano,(*dtbaselocados)[c].Nome,(*dtbaselocados)[c].qtdFilme,devolucao.dia,devolucao.mes,devolucao.ano,(*dtbaselocados)[c].valorPago);
     }
     printf("\n");
 }
@@ -201,7 +206,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
         return 1;
     }
     else if (op == 1){
-        locados newLocados = objetoLocados(idLocados,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Controle);
+        locados newLocados = objetoLocados(idLocados,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Controle,tipo_config);
         inserirLocados(dtbaseLocados,newLocados,qtdLocados,tamanhoLocados);
         saveLocacao(newLocados,tipo_config);
     }else if (op == 3){
@@ -291,15 +296,15 @@ int saveOperacao(operacoe objeto, int tipo_config){
     return 0;
 }
 
-int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *tamanhoOperaca, int *id,int tipo_config) {
-    FILE *fOperacoe;
+int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *tamanhoOperaca, int *key_operator ,int tipo_config) {
+    FILE *fOperacoe = NULL;
     operacoe new;
     int t = 0;
     if (tipo_config == 1){ //Arquivo TXT
-        fOperacoe = fopen("cpyBdOperacoes.txt", "r");
+        fOperacoe = fopen("cpyBdOperacao.txt", "r");
 
         if (fOperacoe == NULL){
-            printf("\nErro na Leitura 'cpyBdLocados.txt' \n");
+            printf("\nErro na Leitura 'cpyBdOperacao.txt' \n");
             system("Pause");
             return 1;
         }
@@ -312,8 +317,11 @@ int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *ta
 
             fscanf(fOperacoe, "%d\n", &new.CodFilme);
 
-            fgets(new.nomeFilme, 120, fOperacoe);
-            limpa_final_string(new.nomeFilme);
+            char nameTemp[120];
+            fgets(nameTemp, 120, fOperacoe);
+            limpa_final_string(nameTemp);
+
+            new.nomeFilme = string_to_pointer(nameTemp);
 
             fscanf(fOperacoe, "%f\n", &new.valorPago);
 
@@ -329,6 +337,10 @@ int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *ta
 
             t = inserirOperacao(dtbaseoperacoe,new,qtdOperacao,tamanhoOperaca);
 
+            if (*key_operator <= new.KEY_operator){
+                *key_operator =  new.KEY_operator + 1;
+            }
+
             if (t == 0){
                 printf("\nAcao Interrompida");
                 break;
@@ -336,19 +348,13 @@ int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *ta
         }
     }
     else { //Arquivo BIN
-        fOperacoe = fopen("cpyBdFilme.bin", "rb");
+        fOperacoe = fopen("cpyBdOperacao.bin", "rb");
         while (!feof(fOperacoe)){
             if (!filelength(fileno(fOperacoe))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
             }
-            fread(&new,sizeof(locados),1,fOperacoe);
-//            if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
-//                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
-//                if (*id <= new.codigo) {
-//                    *id = new.codigo + 1;
-//                }
-//            }
-
+            fread(&new,sizeof(operacoe),1,fOperacoe);
+            t = inserirOperacao(dtbaseoperacoe,new,qtdOperacao,tamanhoOperaca);
             if (t == 0){
                 printf("\nAcao Interrompida");
                 break;
@@ -397,9 +403,13 @@ int saveLocacao(locados objeto, int tipo_config){
     return 0;
 }
 
-int carregarDados_locacao(locados **dtbaseLocados, int *qtd_lo, int *tamanhoLocados, int *id,int tipo_config) {
-    FILE *fileLocados;
+int carregarDados_locacao(locados **dtbaseLocados, int *qtdlocados, int *tamanhoLocados, int *id,int tipo_config) {
+    FILE *fileLocados = NULL;
     locados new;
+
+    int *qtdTemp = qtdlocados;
+    printf("QTD: %d",*qtdTemp);
+    system("Pause");
     int t = 0;
     if (tipo_config == 1){ //Arquivo TXT
         fileLocados = fopen("cpyBdLocados.txt", "r");
@@ -436,8 +446,8 @@ int carregarDados_locacao(locados **dtbaseLocados, int *qtd_lo, int *tamanhoLoca
 //            if (verificaIdFilme(dtBase,*qtdLocados,new.codigo) == 0){
 //                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
 //            }
-
-            t = inserirLocados(dtbaseLocados,new,qtd_lo,tamanhoLocados);
+            //printf("QTD: %d",*qtd_lo);
+            t = inserirLocados(dtbaseLocados,new,qtdlocados,tamanhoLocados);
             if (*id <= new.ID) {
                 *id = new.ID + 1;
             }

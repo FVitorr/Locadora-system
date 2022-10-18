@@ -31,7 +31,7 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 
 locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dtbaseFilme,int qtdFilme,
                        operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                       fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle);
+                       fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipoConfig);
 
 int menuLocacao(filme **dtbaseFilme,int qtdFilme,cliente **dtbaseCliente,int qtdcliente,
                 funcionarios **dtbaseFuncionarios, int qtdFuncionarios,
@@ -53,4 +53,4 @@ int saveOperacao(operacoe objeto, int tipo_config);
 
 int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *id,int tipo_config);
 
-int carregarDados_Operacoes(operacoe **dtbaseLocados, int *qtd_lo, int *tamanhoLocados, int *id,int tipo_config);
+int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *tamanhoOperaca, int *key_operator ,int tipo_config);

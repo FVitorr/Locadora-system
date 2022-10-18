@@ -239,7 +239,6 @@ char *nomeCliente(cliente **dtbase,int qtd_Cliente, int ID){
     for (int i = 0; i < qtd_Cliente; i++)
     {
         if ((*dtbase)[i].id == ID) {
-            printf("%s",(*dtbase)[i].nome);
             return (*dtbase)[i].nome;
         }
     }
