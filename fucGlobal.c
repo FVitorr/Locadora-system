@@ -380,6 +380,8 @@ int tipo_configuracao(config *set) {
 
 int verifica_log(config *set,int *tipo_config){
     //Arquivo log.bin armazenas informaçoes do sistema
+    config setTpm;
+
     FILE *log;
     log = fopen("log.bin","rb");
     line(100,"Bem Vindo\0");
@@ -388,15 +390,13 @@ int verifica_log(config *set,int *tipo_config){
         *tipo_config = tipo_configuracao(set);
         return 1; // Primeira Execussão do programa
     }else{
-        printf("Lendo LOG");
-        while (!feof(log)){
-            if (!filelength(fileno(log))){  /* teste para saber se o tamanho do arquivo é zero */
-                break;
-            }
-            fread(set,sizeof(config),1,log);
-        }
-        printf("%d",set->tipo_configuracao);
+        do{
+            fread(&setTpm,sizeof(config),1,log);
+        }while (!feof(log));
+
+        set->tipo_configuracao = setTpm.tipo_configuracao;
         *tipo_config = set->tipo_configuracao;
+
         system("pause");
     }
     return 0;
