@@ -152,7 +152,7 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
 }
 
 void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe){
-    data emprestimo,devolucao;
+    data emprestimo, devolucao;
     for (int c = 0; c < qtdLocados; c++) {
         for (int a = 0; a < qtdLocados; a++) {
             if ((*dtbaselocados)[c].KEY_operator == (*dtbaseOperacoe)[c].KEY_operator){

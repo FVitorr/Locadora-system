@@ -1,11 +1,11 @@
 #ifndef LOCADORA_SYSTEM_DATAS_H
 #define LOCADORA_SYSTEM_DATAS_H
 
-typedef struct{
+typedef struct {
     int dia;
     int mes;
     int ano;
-}data;
+} data;
 
 data dataAtual();
 void formatarData(data data);
