@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include  <stdlib.h>
+#include <string.h>
 
 //#include "cabecalhos/filmes.h"
 #include "cabecalhos/locadora.h"
@@ -135,28 +136,41 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
                       operacoe **dtbaseoperacoe, int *qtd_Operacao, int *tamanho_Operacao, int *key_controle,
                       funcionarios **dtBaseFuncionario, int *qtd_Funcionario, int *tamanho_Funcionario, int *idFuncionario){
 
-    int newID = verifica_log(config_system,tipoConfig);
+    int pExecute = verifica_log(config_system,tipoConfig);
     carregarDados_filme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, idFilme, *tipoConfig);
-    //printf("\n>> Dados Filme Carregados ");
     carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
-    printf("\n>> Dados Locadora Carregados ");
     carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
-    printf("\n>> Dados Categoria Carregados ");
-    carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
-    printf("\n>> Dados Clientes Carregados ");
-    carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
-    printf("\n>> Dados Fornecedores Carregados\n");
+    //carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
+    //carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
-    printf("\n>> Dados de Funcionarios Carregados\n");
-    carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
-    printf("\n>> Dados de Locacao Carregados\n");
-    carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
-    printf("\n>> Dados de Locacao Carregados\n");
+    //carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
+    //carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
+    system("cls");
+    char nConfig[5];
+    printf("tipoConfig: %d ",*tipoConfig);
+    if (*tipoConfig == 1){
+        strcpy(nConfig,".txt\0");
+    }else{
+        strcpy(nConfig,".bin\0");
+    }
+    if (*qtd_Locadora == 0){
+        line(100,"Informacoes da Locadora\0");
+        printf("\nOs dados estao sendo salvos no formato: %s\ne pode ser alterado no Menu de configuracao\n",nConfig);
+        printf("\nPrecisamos de algumas infomacoes para inicializar o Sistema\n");
+        line(100,"-\0");
+        locadora newLocadora = criarLocadora(idLocadora);
+        inserirLocadora(dtbaseLocadora,newLocadora,qtd_Locadora,tamanho_Locadora, *tipoConfig);
+        saveLocadora(newLocadora,*tipoConfig);
+    }
+    if (pExecute == 0){
+        autentificacaoSystem(&bd_funcionarios,qtdFuncionarios);
+    }
+
     return 0;
 }
 
 int main() {
-    int tipoConfig = 1; // 0- BIN 1 - TXT
+    int tipoConfig; // 0- BIN 1 - TXT
 
     config config_System;
 
@@ -182,6 +196,8 @@ int main() {
                       &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor,
                       &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_Controle,
                       &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios);
+
+
 
     while (1){
         int v;

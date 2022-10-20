@@ -306,7 +306,6 @@ int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *ta
 
         if (fOperacoe == NULL){
             printf("\nErro na Leitura 'cpyBdOperacao.txt' \n");
-            system("Pause");
             return 1;
         }
 
@@ -417,15 +416,13 @@ int carregarDados_locacao(locados **dtbaseLocados, int *qtdlocados, int *tamanho
     locados new;
 
     int *qtdTemp = qtdlocados;
-    printf("QTD: %d",*qtdTemp);
-    system("Pause");
+
     int t = 0;
     if (tipo_config == 1){ //Arquivo TXT
         fileLocados = fopen("cpyBdLocados.txt", "r");
 
         if (fileLocados == NULL){
             printf("\nErro na Leitura 'cpyBdLocados.txt' \n");
-            system("Pause");
             return 1;
         }
 

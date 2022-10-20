@@ -5,6 +5,7 @@
 // Comentei pq essa biblioteca não existe no linux
 #include <conio.h>
 #include "cabecalhos/fucGlobal.h"
+#include <io.h>
 
 
 //Macro typeof(var) retorna o tipo do dado
@@ -355,7 +356,11 @@ int verifica_arquivos(int tipo_config,char nameFile[120]){
     }
 }
 
-int tipo_configuracao(int *tipo) {
+
+int tipo_configuracao(config *set) {
+    FILE *log = NULL;
+    log = fopen("log.bin","wb");
+
     char entry;
     while (1){
         line(100, "Configuracoes de Sistema\0");
@@ -368,29 +373,37 @@ int tipo_configuracao(int *tipo) {
         system("cls");
         printf(">>Parametro Invalido");
     }
-    *tipo = ctoi(entry);
-    return 0;
-}
-
-void set_tipoARQ_config(config *set, int *tipo_config){
-    tipo_configuracao(tipo_config);
-    (*set).tipo_configuracao = *tipo_config;
+    set->tipo_configuracao = ctoi(entry);
+    fwrite(set, sizeof(config), 1,log);
+    return (ctoi(entry));
 }
 
 int verifica_log(config *set,int *tipo_config){
     //Arquivo log.bin armazenas informaçoes do sistema
     FILE *log;
-    char *nameFile = "log";
     log = fopen("log.bin","rb");
+    line(100,"Bem Vindo\0");
     if (log == NULL){
-        creatFile(nameFile,0);
-        set_tipoARQ_config(set, tipo_config);
-        return 0; // Este retorno usado para criar locadora de ID 0
+        printf("\nPrecisamos de algumas infomacoes para inicializar o Sistema\n");
+        *tipo_config = tipo_configuracao(set);
+        return 1; // Primeira Execussão do programa
+    }else{
+        printf("Lendo LOG");
+        while (!feof(log)){
+            if (!filelength(fileno(log))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fread(set,sizeof(config),1,log);
+        }
+        printf("%d",set->tipo_configuracao);
+        *tipo_config = set->tipo_configuracao;
+        system("pause");
     }
+    return 0;
 }
 
 void systemPause(){
     char a;
     printf("\nPrecione uma Tecla para continuar...");
-    scanf("%c",&a);
+    scanf("%c",a);
 }

@@ -23,8 +23,6 @@ typedef struct {
 
 typedef struct {
     int tipo_configuracao;
-    char user[120];
-    char *password;
 }config;
 
 void obterHour(hora *n);
@@ -100,7 +98,7 @@ void limpa_final_string(char *c);
 
 int verifica_arquivos(int tipo_config,char nameFile[120]);
 
-int tipo_configuracao(int *tipo);
+int tipo_configuracao(config *set);
 
 int verifica_log(config *set,int *tipo_config);
 

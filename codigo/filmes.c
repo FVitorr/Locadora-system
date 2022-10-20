@@ -323,7 +323,6 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
 
         if (p == NULL){
             printf("\n[503] Erro na Leitura ou Arquivo não encontrado: 'cpyBdFilme.txt' \n");
-            system("Pause");
             return 1;
         }
 

@@ -298,7 +298,6 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
 
         if (arquivo == NULL){
             printf("\nErro na Leitura 'cpyBdLocadora.txt' \n");
-            system("Pause");
             return 1;
         }
 

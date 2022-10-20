@@ -93,7 +93,8 @@ void listFuncionarios(funcionarios **dtbase, int qtd) {
         //printf("\n ID \t Nome \t\t Cargo \t Telefone \t Email \t\t\t User \t Password\n");
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
-            printf("(%d) Nome : %s\nCargo: %s \n\nRua: %s \nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s\nTelefone: %s\nEmail: %s",
+            printf("(%d) Nome : %s\nCargo: %s \n\nRua: %s \nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s\nTelefone: %s\nEmail: %s"
+                   "\nUser: %s \n Password: %s",
                    (*dtbase)[c].codigo,
                    (*dtbase)[c].nome,
                    (*dtbase)[c].cargo,
@@ -103,7 +104,9 @@ void listFuncionarios(funcionarios **dtbase, int qtd) {
                    (*dtbase)[c].endereco.cidade,
                    (*dtbase)[c].endereco.estado,
                    (*dtbase)[c].telefone,
-                   (*dtbase)[c].email);
+                   (*dtbase)[c].email,
+                   (*dtbase)[c].login.user,
+                   (*dtbase)[c].login.password);
         }
     } else {
         printf("\n\t>> Nada para mostrar aqui");
@@ -244,6 +247,50 @@ int verificaIdFuncionario(funcionarios **dtbase, int qtdFuncionarios, int id) {
     return 0;
 }
 
+int autentificacaoSystem(funcionarios **dtBase,int qtdFuncionarios){
+    while (1) {
+        if (qtdFuncionarios == 0){
+            break;
+            //Primeiro Acesso ou Funcionarios não existe funcionarios
+        }
+        system("cls");
+        char user[120], *password;
+        line(100, "Login\0");
+
+        printf("Usuario: ");
+
+        scanf("%[^\n]s", user);
+        limpa_final_string(user);
+
+        setbuf(stdin, NULL);
+
+        printf("\n[!]Nao e possivel apagar os caracteres informados na Senha\n\n Senha: ");
+
+        password = obterPassword(16);
+        //Criar Opção para recuperar senha
+        for (int i = 0; i < qtdFuncionarios; i++) {
+            if (strcmp((*dtBase)[i].login.user, user) == 0) {
+                if (strcmp((*dtBase)[i].login.password, password) == 0) {
+                    printf("\n>> Sucess\n");
+                    system("Pause");
+                    return 0;
+                } else {
+                    printf("\n[Erro 401] Senha errada.\n");
+                    system("Pause");
+                }
+
+            } else {
+                printf("\n[Erro 401] Usuario nao Encontrado.\n");
+                system("Pause");
+            }
+        }
+    }
+}
+
+
+
+
+
 int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *tamanhoFuncionarios, int *id, int tipo_config) {
     FILE *p = NULL;
     funcionarios new;
@@ -254,7 +301,6 @@ int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *
 
         if (p == NULL){
             printf("\nErro na Leitura 'cpyBdFuncionario.txt' \n");
-            system("Pause");
             return 1;
         }
 
@@ -287,14 +333,14 @@ int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *
             fgets(new.endereco.cidade, 50, p);
             limpa_final_string(new.endereco.cidade);
 
-            fgets(new.endereco.estado, 3, p);
+            fgets(new.endereco.estado, 4, p);
             limpa_final_string(new.endereco.estado);
 
 
-            fgets(new.login.user, 120, p);
+            fgets(new.login.user, 50, p);
             limpa_final_string(new.login.user);
 
-            fgets(password, 1, p);
+            fgets(password, 16, p);
             new.login.password = retorna_password_file(password);
 
 

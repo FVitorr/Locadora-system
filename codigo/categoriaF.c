@@ -201,7 +201,6 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
 
         if (p == NULL){
             printf("\nErro na Leitura 'cpyBdCategoria.txt' \n");
-            system("Pause");
             return 1;
         }
 

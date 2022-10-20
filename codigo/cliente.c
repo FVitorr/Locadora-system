@@ -267,7 +267,6 @@ int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoClient
 
         if (p == NULL){
             printf("\nErro na Leitura 'cpyBdCliente.txt' \n");
-            system("Pause");
             return 1;
         }
 
