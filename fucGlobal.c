@@ -341,6 +341,17 @@ int verifica_arquivos(int tipo_config,char nameFile[120]){
         fclose(p);
         p = NULL;
         return 0;
+    }else {
+        p = fopen(nameFile,"rb");
+        if (p != NULL){ //Arquivo existe
+            fclose(p);
+            p = NULL;
+            //printf("Existe Arquivo %s",nameFile);
+            return 1;
+        }
+        fclose(p);
+        p = NULL;
+        return 0;
     }
 }
 

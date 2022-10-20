@@ -177,16 +177,20 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
 
 
 int saveFornecedor(fornecedor objeto, int tipo_config){
-    FILE *fonecedores;
+    FILE *fonecedoresF = NULL;
 
     if (tipo_config == 1){//Arquivo TXT
-        fonecedores = fopen("cpyBdFornecedor.txt", "a");
+        if (verifica_arquivos(tipo_config,"cpyBdFornecedor.txt\0") == 1){
+            fonecedoresF = fopen("cpyBdFornecedor.txt", "ab");
+        } else{
+            fonecedoresF = fopen("cpyBdFornecedor.txt", "wb");
+        }
 
-        if (fonecedores == NULL){ // Se a abertura falhar
+        if (fonecedoresF == NULL){ // Se a abertura falhar
             return 1;
         }
 
-        fprintf(fonecedores, "%d\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
+        fprintf(fonecedoresF, "%d\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
                 objeto.id,
                 objeto.nomeFantasia,
                 objeto.razaoSocial,
@@ -202,13 +206,17 @@ int saveFornecedor(fornecedor objeto, int tipo_config){
         );
 
     }else if (tipo_config == 0){ //Arquivo BINARIO
-        fonecedores = fopen("cpyBdFornecedor.bin", "ab");
-        if (fonecedores == NULL){ // Se a abertura falhar
+        if (verifica_arquivos(tipo_config,"cpyBdFornecedor.bin\0") == 1){
+            fonecedoresF = fopen("cpyBdFornecedor.bin", "ab");
+        } else{
+            fonecedoresF = fopen("cpyBdFornecedor.bin", "wb");
+        }
+        if (fonecedoresF == NULL){ // Se a abertura falhar
             return 1;
         }
-        fwrite(&objeto, sizeof(fornecedor), 1, fonecedores);
+        fwrite(&objeto, sizeof(fornecedor), 1, fonecedoresF);
     }
-    fclose(fonecedores);
+    fclose(fonecedoresF);
     return 0;
 }
 

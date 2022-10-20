@@ -189,16 +189,21 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
 }
 
 int saveCliente(cliente objeto, int tipo_config){
-    FILE *clientes;
+    FILE *clientesF = NULL;
 
     if (tipo_config == 1){//Arquivo TXT
-        clientes = fopen("cpyBdCliente.txt", "a");
 
-        if (clientes == NULL){ // Se a abertura falhar
+        if (verifica_arquivos(tipo_config,"cpyBdCliente.txt\0") == 1){
+            clientesF = fopen("cpyBdCliente.txt", "a");
+        } else{
+            clientesF = fopen("cpyBdCliente.txt", "w");
+        }
+
+        if (clientesF == NULL){ // Se a abertura falhar
             return 1;
         }
 
-        fprintf(clientes, "%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
+        fprintf(clientesF, "%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
                           "%s\n%d\n%s\n%s\n%s\n",
                 objeto.id,
                 objeto.nome,
@@ -216,13 +221,20 @@ int saveCliente(cliente objeto, int tipo_config){
                 );
 
     }else if (tipo_config == 0){ //Arquivo BINARIO
-        clientes = fopen("cpyBdCliente.bin", "ab");
-        if (clientes == NULL){ // Se a abertura falhar
+        if (verifica_arquivos(tipo_config,"cpyBdCliente.bin\0") == 1){
+            clientesF = fopen("cpyBdCliente.bin", "ab");
+        } else{
+            clientesF = fopen("cpyBdCliente.bin", "wb");
+        }
+
+        if (clientesF == NULL){ // Se a abertura falhar
+            printf("\nArquivo não encontrado ou erro na criação: 'cpyBdCliente.bin'");
             return 1;
         }
-        fwrite(&objeto, sizeof(cliente), 1,clientes);
+        fwrite(&objeto, sizeof(cliente), 1,clientesF);
     }
-    fclose(clientes);
+    fclose(clientesF);
+    clientesF = NULL;
     return 0;
 }
 

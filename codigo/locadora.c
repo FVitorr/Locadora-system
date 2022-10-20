@@ -229,16 +229,21 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
 }
 
 int saveLocadora(locadora objeto,int tipo_config){
-    FILE *locadora;
+    FILE *locadoraF = NULL;
 
     if (tipo_config == 1){//Arquivo TXT
-        locadora = fopen("cpyBdLocadora.txt", "a");
+        //Se o arquivo não existir, tentar criar.
+        if (verifica_arquivos(tipo_config,"cpyBdLocadora.txt\0") == 1){
+            locadoraF = fopen("cpyBdLocadora.txt", "a");
+        } else{
+            locadoraF = fopen("cpyBdLocadora.txt", "w");
+        }
 
-        if (locadora == NULL){ // Se a abertura falhar
+        if (locadoraF == NULL){ // Se a abertura falhar
             return 1;
         }
 
-        fprintf(locadora,"%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+        fprintf(locadoraF,"%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
                 objeto.id,
                 objeto.nomeFantasia,
                 objeto.razaoSocial,
@@ -259,13 +264,19 @@ int saveLocadora(locadora objeto,int tipo_config){
 
     }
     if (tipo_config == 0){ //Arquivo BINARIO
-        locadora = fopen("cpyBdLocadora.bin", "ab");
-        if (locadora == NULL){ // Se a abertura falhar
+        //Se o arquivo não existir, tentar criar.
+        if (verifica_arquivos(tipo_config,"cpyBdLocadora.bin\0") == 1){
+            locadoraF = fopen("cpyBdLocadora.bin", "ab");
+        } else{
+            locadoraF = fopen("cpyBdLocadora.bin", "wb");
+        }
+        if (locadoraF == NULL){ // Se a abertura falhar
             return 1;
         }
-        fwrite(&objeto, sizeof(filme), 1,locadora);
+        fwrite(&objeto, sizeof(filme), 1,locadoraF);
     }
-    fclose(locadora);
+    fclose(locadoraF);
+    locadoraF = NULL;
     return 0;
 }
 int verifica_IDLocadora(locadora **dtbase,int qtd_Locadora,int id) {
@@ -361,6 +372,10 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
     else  if (tipo_config == 0){ //Arquivo BIN
         FILE *p;
         p = fopen("cpyBdLocadora.bin", "rb");
+        if (p == NULL){
+            printf("\nErro na Leitura 'cpyBdLocadora.bin' \n");
+            return 1;
+        }
         while (!feof(p)){
             if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;

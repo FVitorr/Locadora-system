@@ -11,25 +11,25 @@
 /*Arrays Dinamicos*/
 
 fCategoria *bd_cat;
-int qtdCategoria = 0, tamanhoCategoria = 1, idControleCategoria;
+int qtdCategoria = 0, tamanhoCategoria = 1, idControleCategoria = 1;
 
 filme  *bd_filme;
-int qtdFilmes = 0, tamanhoFilme = 1, idControleFilmes = 0;
+int qtdFilmes = 0, tamanhoFilme = 1, idControleFilmes = 1;
 
 funcionarios *bd_funcionarios;
-int qtdFuncionarios = 0, tamanhoFuncionarios = 1, idControleFuncionarios = 0;
+int qtdFuncionarios = 0, tamanhoFuncionarios = 1, idControleFuncionarios = 1;
 
 locadora *bd_locadora;
-int qtdLocadora = 0, tamanhoLocadora = 1, idControleLocadora = 0;
+int qtdLocadora = 0, tamanhoLocadora = 1, idControleLocadora = 1;
 
 cliente *bd_cliente;
-int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 0;
+int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 1;
 
 fornecedor *bd_fornecedor;
-int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 0;
+int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 1;
 
 locados *bd_locados;
-int qtdLocado = 0, tamanhoLocados = 1, idControleLocados = 0;
+int qtdLocado = 0, tamanhoLocados = 1, idControleLocados = 1;
 
 
 operacoe *bd_Operacao;
@@ -137,7 +137,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
 
     int newID = verifica_log(config_system,tipoConfig);
     carregarDados_filme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, idFilme, *tipoConfig);
-    printf("\n>> Dados Filme Carregados ");
+    //printf("\n>> Dados Filme Carregados ");
     carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
     printf("\n>> Dados Locadora Carregados ");
     carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);

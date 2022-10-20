@@ -189,16 +189,22 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFu
 }
 
 int saveFuncionario(funcionarios objeto, int tipo_config) {
-    FILE *fileFuncionario;
+    FILE *funcionarioF = NULL;
 
     if (tipo_config == 1) {//Arquivo TXT
-        fileFuncionario = fopen("cpyBdFuncionario.txt", "a");
+        //Se o arquivo não existir, tentar criar.
+        if (verifica_arquivos(tipo_config,"cpyBdFuncionario.txt\0") == 1){
+            funcionarioF = fopen("cpyBdFuncionario.txt", "a");
+        } else{
+            funcionarioF = fopen("cpyBdFuncionario.txt", "w");
+        }
 
-        if (fileFuncionario == NULL) { // Se a abertura falhar
+
+        if (funcionarioF == NULL) { // Se a abertura falhar
             return 1;
         }
 
-        fprintf(fileFuncionario, "%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n",
+        fprintf(funcionarioF, "%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n",
                 objeto.codigo,
                 objeto.nome,
                 objeto.cargo,
@@ -214,13 +220,18 @@ int saveFuncionario(funcionarios objeto, int tipo_config) {
         );
 
     } else if (tipo_config == 0) { //Arquivo BINARIO
-        fileFuncionario = fopen("cpyBdFuncionario.bin", "ab");
-        if (fileFuncionario == NULL) { // Se a abertura falhar
+        if (verifica_arquivos(tipo_config,"cpyBdFuncionario.bin\0") == 1){
+            funcionarioF = fopen("cpyBdFuncionario.bin", "ab");
+        } else{
+            funcionarioF = fopen("cpyBdFuncionario.bin", "wb");
+        }
+        if (funcionarioF == NULL) { // Se a abertura falhar
             return 1;
         }
-        fwrite(&objeto, sizeof(funcionarios), 1, fileFuncionario);
+        fwrite(&objeto, sizeof(funcionarios), 1, funcionarioF);
     }
-    fclose(fileFuncionario);
+    fclose(funcionarioF);
+    funcionarioF = NULL;
     return 0;
 }
 

@@ -234,16 +234,20 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
 
 
 int saveFilme(filme objeto, int tipo_config){
-    FILE *filme_;
+    FILE *filmeF = NULL;
 
     if (tipo_config == 1){//Arquivo TXT
-        filme_ = fopen("cpyBdFilme.txt", "a");
+        if (verifica_arquivos(tipo_config,"cpyBdFilme.txt\0") == 1){
+            filmeF = fopen("cpyBdFilme.txt", "a");
+        } else{
+            filmeF = fopen("cpyBdFilme.txt", "w");
+        }
 
-        if (filme_ == NULL){ // Se a abertura falhar
+        if (filmeF == NULL){ // Se a abertura falhar
             return 1;
         }
 
-        fprintf(filme_, "%d\n%s\n%s\n%d\n%d\n%s\n%d\n",
+        fprintf(filmeF, "%d\n%s\n%s\n%d\n%d\n%s\n%d\n",
                 objeto.codigo,
                 objeto.nome,
                 objeto.descricao,
@@ -253,13 +257,18 @@ int saveFilme(filme objeto, int tipo_config){
                 objeto.qtdEmprestado);
 
     }else if (tipo_config == 0){ //Arquivo BINARIO
-        filme_ = fopen("cpyBdFilme.bin", "ab");
-        if (filme_ == NULL){ // Se a abertura falhar
+        if (verifica_arquivos(tipo_config,"cpyBdFilme.bin\0") == 1){
+            filmeF = fopen("cpyBdFilme.bin", "ab");
+        } else{
+            filmeF = fopen("cpyBdFilme.bin", "wb");
+        }
+        if (filmeF == NULL){ // Se a abertura falhar
             return 1;
         }
-        fwrite(&objeto, sizeof(filme), 1,filme_);
+        fwrite(&objeto, sizeof(filme), 1,filmeF);
     }
-    fclose(filme_);
+    fclose(filmeF);
+    filmeF = NULL;
     return 0;
 }
 
@@ -313,7 +322,7 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
         p = fopen("cpyBdFilme.txt", "r");
 
         if (p == NULL){
-            printf("\nErro na Leitura 'cpyBdFilme.txt' \n");
+            printf("\n[503] Erro na Leitura ou Arquivo não encontrado: 'cpyBdFilme.txt' \n");
             system("Pause");
             return 1;
         }
@@ -354,6 +363,11 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
     }
     else  if (tipo_config == 0){ //Arquivo BIN
         p = fopen("cpyBdFilme.bin", "rb");
+        if (p == NULL){
+            printf("Arquivo não Encontrado: 'cpyBdFilme.bin'");
+            return 1;
+        }
+
         while (!feof(p)){
             if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;

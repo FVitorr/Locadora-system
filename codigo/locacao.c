@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <io.h>
 
+/*Ids 0 não serão aceitos*/
 
 operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
                         int KEY_operator){
@@ -12,10 +13,10 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
     operacoe newOpc;
     newOpc.KEY_operator = KEY_operator;
     line(100,"Filme\0");
-    printf("[Chave da Operacao: %d]\n",KEY_operator);
+    printf("[Operacao: %d]\n",KEY_operator);
 
     do {
-        printf("Informe ID do Filme: ");
+        printf("[0 - IDs Cadastrados ]Informe ID do Filme: ");
         scanf("%d", &idtpm);
 
         if (verificaIdFilme(dtbaseFilme, qtdFilme, idtpm) == 1) { //Verificar se o ID do filme Existe
