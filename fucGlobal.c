@@ -6,52 +6,6 @@
 #include <conio.h>
 #include "cabecalhos/fucGlobal.h"
 
-
-//Macro typeof(var) retorna o tipo do dado
-
-// ****************** Estruturas de Tempo *******************//
-
-// http://linguagemc.com.br/exibindo-data-e-hora-com-time-h/
-// Referente ao sinstema
-//ponteiro para struct que armazena data e hora
-
-// struct tm {
-// int tm_sec; //representa os segundos de 0 a 59
-// int tm_min; //representa os minutos de 0 a 59
-// int tm_hour; //representa as horas de 0 a 24
-// int tm_mday: //dia do mês de 1 a 31
-// int tm_mon; //representa os meses do ano de 0 a 11
-// int tm_year; //representa o ano a partir de 1900
-// int tm_wday; //dia da semana de 0 (domingo) até 6 (sábado)
-// int tm_yday; // dia do ano de 1 a 365
-// int tm_isdst; //indica horário de verão se for diferente de zero
-// };
-
-
-
-void obterHour(hora *n){
-    struct tm * DATAHORA_ATUAL;
-    time_t segundos;
-        //obtendo o tempo em segundos  
-    time(&segundos); 
-    DATAHORA_ATUAL = localtime(&segundos); 
-
-    n->hora = DATAHORA_ATUAL->tm_hour;
-    n->min = DATAHORA_ATUAL->tm_min;
-    n->seg = DATAHORA_ATUAL->tm_sec;
-}
-void obterData(data *n){
-    struct tm * DATAHORA_ATUAL;
-    time_t segundos;
-        //obtendo o tempo em segundos  
-    time(&segundos); 
-    DATAHORA_ATUAL = localtime(&segundos); 
-
-    n->dia = DATAHORA_ATUAL->tm_mday;
-    n->mes = DATAHORA_ATUAL->tm_mon + 1;
-    n->ano = DATAHORA_ATUAL->tm_year + 1900;
-}
-
 /* +++++++++++++++++ Gerenciamento de Endereço +++++++++++++++++ */
 
 void addTab(char *str){

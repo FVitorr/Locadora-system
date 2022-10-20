@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <io.h>
+#include "../cabecalhos/datas.h"
 
 /*Ids 0 não serão aceitos*/
 
@@ -41,7 +42,7 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
         }
     }while (1);
 
-    obterData(&newOpc.dtemprestimo);
+    newOpc.dtemprestimo = dataAtual();
     printf("\n>> Data do emprestimo: %d/%d/%d\n",newOpc.dtemprestimo.dia,newOpc.dtemprestimo.mes,newOpc.dtemprestimo.ano);
 
     newOpc.dtdevolucao.dia = 0;

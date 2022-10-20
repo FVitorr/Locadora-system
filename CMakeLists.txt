@@ -23,4 +23,4 @@ add_executable(Locadora_system
         codigo/funcionarios.c
         codigo/fornecedor.c
         fucGlobal.c
-        main.c)
+        main.c codigo/datas.c cabecalhos/datas.h)

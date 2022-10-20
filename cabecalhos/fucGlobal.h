@@ -1,15 +1,11 @@
+#include "datas.h"
+
 typedef struct
 {
     int hora;
     int min;
     int seg;
 }hora;
-
-typedef struct{
-    int dia;
-    int mes;
-    int ano;
-}data;
 
 typedef struct {
     int codigo;
@@ -26,10 +22,6 @@ typedef struct {
     char user[120];
     char *password;
 }config;
-
-void obterHour(hora *n);
-
-void obterData(data *n);
 
 int replaceInt(int newValue, int *camp);
 
