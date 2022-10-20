@@ -315,7 +315,7 @@ int altQtdEmprestadaFilme(filme **dtbase,int qtd_filme,int id) {
 
 
 int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *id,int tipo_config) {
-    FILE *p;
+    FILE *p = NULL;
     filme new;
     int t = 0;
     if (tipo_config == 1){ //Arquivo TXT

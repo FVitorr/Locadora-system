@@ -350,6 +350,10 @@ int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *ta
     }
     else { //Arquivo BIN
         fOperacoe = fopen("cpyBdOperacao.bin", "rb");
+        if (fOperacoe == NULL){
+            printf("\nErro na Leitura 'cpyBdOperacao.bin' \n");
+            return 1;
+        }
         while (!feof(fOperacoe)){
             if (!filelength(fileno(fOperacoe))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
@@ -368,7 +372,7 @@ int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *ta
 }
 
 int saveLocacao(locados objeto, int tipo_config){
-    FILE *locadosF;
+    FILE *locadosF = NULL;
 
     if (tipo_config == 1){//Arquivo TXT
         if (verifica_arquivos(tipo_config,"cpyBdLocados.txt\0") == 1){
@@ -393,7 +397,11 @@ int saveLocacao(locados objeto, int tipo_config){
                 objeto.TDdevolvido);
 
     }else{ //Arquivo BINARIO
-        locadosF = fopen("cpyBdLocados.bin", "ab");
+        if (verifica_arquivos(tipo_config,"cpyBdLocados.bin\0") == 1){
+            locadosF = fopen("cpyBdLocados.bin", "ab");
+        } else{
+            locadosF = fopen("cpyBdLocados.bin", "wb");
+        }
         if (locadosF == NULL){ // Se a abertura falhar
             return 1;
         }
@@ -460,7 +468,11 @@ int carregarDados_locacao(locados **dtbaseLocados, int *qtdlocados, int *tamanho
         }
     }
     else { //Arquivo BIN
-        fileLocados = fopen("cpyBdFilme.bin", "rb");
+        fileLocados = fopen("cpyBdLocados.bin", "rb");
+        if (fileLocados == NULL){
+            printf("\nErro na Leitura 'cpyBdLocados.bin' \n");
+            return 1;
+        }
         while (!feof(fileLocados)){
             if (!filelength(fileno(fileLocados))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
@@ -480,5 +492,6 @@ int carregarDados_locacao(locados **dtbaseLocados, int *qtdlocados, int *tamanho
         }
     }
     fclose(fileLocados);
+    fileLocados = NULL;
     return 0;
 }

@@ -259,7 +259,7 @@ char *nomeCliente(cliente **dtbase,int qtd_Cliente, int ID){
 
 
 int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoCliente, int *id, int tipo_config) {
-    FILE *p;
+    FILE *p = NULL;
     cliente new;
     int t = 0;
     if (tipo_config == 1){ //Arquivo TXT
@@ -328,6 +328,10 @@ int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoClient
     }
     else  if (tipo_config == 0){ //Arquivo BIN
         p = fopen("cpyBdCliente.bin", "rb");
+        if (p == NULL){
+            printf("Arquivo não Encontrado: 'cpyBdCliente.bin'");
+            return 1;
+        }
         while (!feof(p)){
             if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
@@ -349,6 +353,7 @@ int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoClient
         }
     }
     fclose(p);
+    p = NULL;
     return 0;
 }
 

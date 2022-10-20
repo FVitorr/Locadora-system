@@ -293,7 +293,7 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
     int t = 0;
     char password[16];
     if (tipo_config == 1){ //Arquivo TXT
-        FILE *arquivo;
+        FILE *arquivo = NULL;
         arquivo = fopen("cpyBdLocadora.txt", "r");
 
         if (arquivo == NULL){

@@ -245,7 +245,7 @@ int verificaIdFuncionario(funcionarios **dtbase, int qtdFuncionarios, int id) {
 }
 
 int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *tamanhoFuncionarios, int *id, int tipo_config) {
-    FILE *p;
+    FILE *p = NULL;
     funcionarios new;
     char password[16];
     int t = 0;
@@ -313,6 +313,10 @@ int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *
     }
     else  if (tipo_config == 0){ //Arquivo BIN
         p = fopen("cpyBdFuncionario.bin", "rb");
+        if (p == NULL){
+            printf("\nErro na Leitura 'cpyBdFuncionario.bin' \n");
+            return 1;
+        }
         while (!feof(p)){
             if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
@@ -334,6 +338,7 @@ int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *
         }
     }
     fclose(p);
+    p = NULL;
     return 0;
 }
 

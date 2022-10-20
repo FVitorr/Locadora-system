@@ -230,7 +230,7 @@ int verificaIdFornecedor(fornecedor **dtbase, int qtdFornecedor, int id) {
 }
 
 int carregarDadosFornecedores(fornecedor **dtBase, int *qtdFornecedor, int *tamanhoFornecedor, int *id, int tipo_config) {
-    FILE *p;
+    FILE *p = NULL;
     fornecedor new;
     int t = 0;
     if (tipo_config == 1){ //Arquivo TXT
@@ -294,6 +294,10 @@ int carregarDadosFornecedores(fornecedor **dtBase, int *qtdFornecedor, int *tama
     }
     else  if (tipo_config == 0){ //Arquivo BIN
         p = fopen("cpyBdFornecedor.bin", "rb");
+        if (p == NULL){
+            printf("\nErro na Leitura 'cpyBdFornecedor.bin' \n");
+            return 1;
+        }
         while (!feof(p)){
             if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;

@@ -231,6 +231,10 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
     }
     else  if (tipo_config == 0){ //Arquivo BIN
         p = fopen("cpyBdCategoria.bin", "rb");
+        if (p == NULL){
+            printf("\nErro na Leitura 'cpyBdCategoria.bin' \n");
+            return 1;
+        }
         while (!feof(p)){
             if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
