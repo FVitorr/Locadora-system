@@ -23,6 +23,8 @@ typedef struct {
 
 typedef struct {
     int tipo_configuracao;
+    char user[120];
+    char password[17];
 }config;
 
 void obterHour(hora *n);
@@ -101,6 +103,10 @@ int verifica_arquivos(int tipo_config,char nameFile[120]);
 int tipo_configuracao(config *set);
 
 int verifica_log(config *set,int *tipo_config);
+
+void refazLog(config *set);
+
+void remover_espaco(char *c);
 
 int confirm_remover(int cod);
 

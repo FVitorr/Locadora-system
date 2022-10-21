@@ -247,7 +247,7 @@ int verificaIdFuncionario(funcionarios **dtbase, int qtdFuncionarios, int id) {
     return 0;
 }
 
-int autentificacaoSystem(funcionarios **dtBase,int qtdFuncionarios){
+int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
     while (1) {
         if (qtdFuncionarios == 0){
             break;
@@ -261,6 +261,7 @@ int autentificacaoSystem(funcionarios **dtBase,int qtdFuncionarios){
 
         scanf("%[^\n]s", user);
         limpa_final_string(user);
+        remover_espaco(user);
 
         setbuf(stdin, NULL);
 
@@ -269,11 +270,17 @@ int autentificacaoSystem(funcionarios **dtBase,int qtdFuncionarios){
         password = obterPassword(16);
         //Criar Opção para recuperar senha
         for (int i = 0; i < qtdFuncionarios; i++) {
-            if (strcmp((*dtBase)[i].login.user, user) == 0) {
-                if (strcmp((*dtBase)[i].login.password, password) == 0) {
+            if (strcmp((*dtBase)[i].login.user, user) == 0 || strcmp(set->user, user) == 0) {
+                if (strcmp((*dtBase)[i].login.password, password) == 0 || strcmp(set->password, password) == 0) {
                     printf("\n>> Sucess\n");
                     system("Pause");
-                    return 0;
+                    if (strcmp(set->password, password) == 0){
+                        //Informa que o ADM esta Logado.
+                        return 0;
+                    }else{
+                        //Informa qual funcionario esta Logado.
+                        return (*dtBase)[i].codigo;
+                    }
                 } else {
                     printf("\n[Erro 401] Senha errada.\n");
                     system("Pause");

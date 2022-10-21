@@ -68,9 +68,12 @@ locadora criarLocadora(int *id) {
     line(100,"Autentificacao de Administrador\0");
     printf("Usuario: ");
     scanf("%[^\n]s", obj.user);
+    limpa_final_string(obj.user);
+    remover_espaco(obj.user);
 
     setbuf(stdin,NULL);
 
+    printf("Tamanho Maximo: 15\n");
     printf("Senha: ");
     obj.password = obterPassword(16);
 

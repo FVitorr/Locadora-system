@@ -33,8 +33,9 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
                        operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
                        fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipoConfig);
 
-int menuLocacao(filme **dtbaseFilme,int qtdFilme,cliente **dtbaseCliente,int qtdcliente,
-                funcionarios **dtbaseFuncionarios, int qtdFuncionarios,
+int menuLocacao(filme **dtbaseFilme,int qtdFilme,
+                cliente **dtbaseCliente,int qtdcliente,
+                funcionarios **dtbaseFuncionarios, int qtdFuncionarios,int idFuncionarioLogado,
                 locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
                 fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipo_config);

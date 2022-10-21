@@ -36,6 +36,8 @@ int qtdLocado = 0, tamanhoLocados = 1, idControleLocados = 1;
 operacoe *bd_Operacao;
 int qtdOperacao = 0, tamanhoOperacao = 1, KEY_Controle = 0;
 
+int IdfuncionarioLogado = -1;
+
 
 int menuprincipal(int tipo_config,
                   fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,int *idCategoria,
@@ -154,16 +156,29 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
         strcpy(nConfig,".bin\0");
     }
     if (*qtd_Locadora == 0){
+
         line(100,"Informacoes da Locadora\0");
         printf("\nOs dados estao sendo salvos no formato: %s\ne pode ser alterado no Menu de configuracao\n",nConfig);
         printf("\nPrecisamos de algumas infomacoes para inicializar o Sistema\n");
         line(100,"-\0");
+
         locadora newLocadora = criarLocadora(idLocadora);
         inserirLocadora(dtbaseLocadora,newLocadora,qtd_Locadora,tamanho_Locadora, *tipoConfig);
         saveLocadora(newLocadora,*tipoConfig);
+
+        //Passar os parametros de Autentificação(Administrador)  para o arquivo de LOG
+        //Id 0 - Retorno de ADM
+        strcpy(config_system->user,newLocadora.user);
+        strcpy(config_system->password,newLocadora.password);
+        refazLog(config_system);
     }
     if (pExecute == 0){
-        autentificacaoSystem(&bd_funcionarios,qtdFuncionarios);
+        adm set;
+        set.id = 0;
+        strcpy(set.user,config_system->user);
+        strcpy(set.password,config_system->password);
+
+        autentificacaoSystem(&set,&bd_funcionarios,qtdFuncionarios);
     }
 
     return 0;

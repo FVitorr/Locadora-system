@@ -188,11 +188,15 @@ void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator) {
 
 int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 cliente **dtbaseCliente,int qtdcliente,
-                funcionarios **dtbaseFuncionarios, int qtdFuncionarios,
+                funcionarios **dtbaseFuncionarios, int qtdFuncionarios,int idFuncionarioLogado,
                 locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
                 fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipo_config){
     int op = 0;
+    for (int i = 0; i < qtdFuncionarios; i++){
+
+    }
+    printf("Funcionario: %s",);
     line(100,"Locacao\0");
     printf("\t 1- Emprestar \n\t 2- Devolver \n\t 3- Vizualizar Operaçoes \n\t 0- Sair");
     line(100,"1\0");

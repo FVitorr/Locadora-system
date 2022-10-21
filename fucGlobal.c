@@ -292,6 +292,14 @@ void limpa_final_string(char *c) {
     }
 }
 
+void remover_espaco(char *c){
+    for(int i = 0; i < strlen(c); i++){
+        if(c[i]==' '){
+            c[i]=c[i+1];
+        }
+    }
+}
+
 
 void limpa_extensao(char *c) {
     int i;
@@ -378,6 +386,13 @@ int tipo_configuracao(config *set) {
     return (ctoi(entry));
 }
 
+void refazLog(config *set){
+    FILE *log = NULL;
+    log = fopen("log.bin","wb");
+    fwrite(set, sizeof(config), 1,log);
+    fclose(log);
+}
+
 int verifica_log(config *set,int *tipo_config){
     //Arquivo log.bin armazenas informaçoes do sistema
     config setTpm;
@@ -395,6 +410,8 @@ int verifica_log(config *set,int *tipo_config){
         }while (!feof(log));
 
         set->tipo_configuracao = setTpm.tipo_configuracao;
+        strcpy(set->user,setTpm.user);
+        strcpy(set->password,setTpm.password);
         *tipo_config = set->tipo_configuracao;
 
         system("pause");
