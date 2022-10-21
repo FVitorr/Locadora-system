@@ -37,17 +37,20 @@ operacoe *bd_Operacao;
 int qtdOperacao = 0, tamanhoOperacao = 1, KEY_Controle = 0;
 
 int IdfuncionarioLogado = -1;
+financeiro monetario;
 
 
-int menuprincipal(int tipo_config,
+int menuprincipal(int tipo_config,financeiro *monetario_,
                   fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,int *idCategoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
-                  funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
+                  funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,int idFuncionarioLogado,
                   locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
                   locados **dtbaseLocados, int *qtd_Locados, int *tamanho_Locados, int *idLocados,
                   cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente,
                   operacoe **dtbaseOperacoe, int *qtd_Operacoe, int *tamanho_Operacoe,int *key_controle,
                   fornecedor **dtbaseFornecedor, int *qtd_Fornecedor,int *tamanho_Fornecedor,int *idFornecedor){
+
+
 
     system("cls");
     int opc = 0, erro = 0;
@@ -69,8 +72,8 @@ int menuprincipal(int tipo_config,
             return 1;
         case 1:
             while (1){
-                int t = menuLocacao(dtbaseFilme,*qtd_Filmes,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,
-                                    dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,dtbaseCategoria,*qtd_Categoria,key_controle,tipo_config);
+                int t = menuLocacao(dtbaseFilme,*qtd_Filmes,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
+                                    dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,dtbaseCategoria,*qtd_Categoria,key_controle,monetario_,tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -136,17 +139,17 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
                       cliente **dtBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente,
                       fornecedor **dtBaseFornecedor, int *qtd_Fornecedor, int *tamanho_Fornecedor, int *idFornecedor,
                       operacoe **dtbaseoperacoe, int *qtd_Operacao, int *tamanho_Operacao, int *key_controle,
-                      funcionarios **dtBaseFuncionario, int *qtd_Funcionario, int *tamanho_Funcionario, int *idFuncionario){
+                      funcionarios **dtBaseFuncionario, int *qtd_Funcionario, int *tamanho_Funcionario, int *idFuncionario,int *idFuncionarioLogado){
 
     int pExecute = verifica_log(config_system,tipoConfig);
     carregarDados_filme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, idFilme, *tipoConfig);
     carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
     carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
-    //carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
+    carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
     //carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
-    //carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
-    //carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
+    carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
+    carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
     system("cls");
     char nConfig[5];
     printf("tipoConfig: %d ",*tipoConfig);
@@ -178,7 +181,9 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
         strcpy(set.user,config_system->user);
         strcpy(set.password,config_system->password);
 
-        autentificacaoSystem(&set,&bd_funcionarios,qtdFuncionarios);
+        *idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,qtdFuncionarios);
+        printf("%d",*idFuncionarioLogado);
+        system("pause");
     }
 
     return 0;
@@ -210,16 +215,16 @@ int main() {
                       &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente,
                       &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor,
                       &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_Controle,
-                      &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios);
+                      &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios,&IdfuncionarioLogado);
 
 
 
     while (1){
         int v;
-        v = menuprincipal(tipoConfig,
+        v = menuprincipal(tipoConfig,&monetario,
                           &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
-                          &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,
+                          &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,IdfuncionarioLogado,
                           &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
                           &bd_locados,&qtdLocado,&tamanhoLocados,&idControleLocados,
                           &bd_cliente,&qtdCliente,&tamanhoCliente,&idControleCliente,

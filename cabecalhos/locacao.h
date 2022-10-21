@@ -12,6 +12,10 @@ typedef struct {
     int devolvido; // 0-Sim 1-Não //Não Altera
 }operacoe;
 
+typedef struct {
+    float caixa;
+    float despesas;
+}financeiro;
 
 typedef struct {
     int ID;
@@ -31,14 +35,15 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 
 locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dtbaseFilme,int qtdFilme,
                        operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                       fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipoConfig);
+                       fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle,
+                       financeiro *monetario,int tipoConfig);
 
 int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 cliente **dtbaseCliente,int qtdcliente,
                 funcionarios **dtbaseFuncionarios, int qtdFuncionarios,int idFuncionarioLogado,
                 locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipo_config);
+                fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle,financeiro *monetario,int tipo_config);
 
 int inserirLocados(locados **dtbaseLocados,locados newEntry, int *qtdLocados, int *tamanhoLocados);
 

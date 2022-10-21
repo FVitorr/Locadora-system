@@ -247,6 +247,18 @@ int verificaIdFuncionario(funcionarios **dtbase, int qtdFuncionarios, int id) {
     return 0;
 }
 
+char *nomefuncionario(funcionarios **dtbase, int qtdFuncionarios,int id){
+    for (int i = 0 ; i < qtdFuncionarios; i++){
+        if((*dtbase)[i].codigo == id){
+            //printf("%s",(*dtbase)[i].nome);
+            return (*dtbase)[i].nome;
+        }
+    }
+    return NULL;
+}
+
+
+
 int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
     while (1) {
         if (qtdFuncionarios == 0){
@@ -274,7 +286,7 @@ int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
                 if (strcmp((*dtBase)[i].login.password, password) == 0 || strcmp(set->password, password) == 0) {
                     printf("\n>> Sucess\n");
                     system("Pause");
-                    if (strcmp(set->password, password) == 0){
+                    if (strcmp(set->password, password) == 0 && strcmp(set->user, user) == 0){
                         //Informa que o ADM esta Logado.
                         return 0;
                     }else{

@@ -67,3 +67,5 @@ typedef struct {
 
 
 int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios);
+
+char *nomefuncionario(funcionarios **dtbase, int qtdFuncionarios,int id);

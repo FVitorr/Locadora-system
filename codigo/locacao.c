@@ -55,7 +55,8 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 
 locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dtbaseFilme,int qtdFilme,
                        operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                       fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipoConfig){
+                       fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle,
+                       financeiro *monetario,int tipoConfig){
     
     locados newObjeto;
 
@@ -121,6 +122,7 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
 
     if (newObjeto.tipoPagamento == 1){
         newObjeto.qtdParcelas = 1;
+        monetario->caixa = monetario->caixa + newObjeto.valorPago;
     }else{
         int ent = 0,qtdParcelas;
         float valor;
@@ -191,12 +193,9 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 funcionarios **dtbaseFuncionarios, int qtdFuncionarios,int idFuncionarioLogado,
                 locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle, int tipo_config){
+                fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Controle,financeiro *monetario,int tipo_config){
     int op = 0;
-    for (int i = 0; i < qtdFuncionarios; i++){
-
-    }
-    printf("Funcionario: %s",);
+    printf("Funcionario: %s",nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado));
     line(100,"Locacao\0");
     printf("\t 1- Emprestar \n\t 2- Devolver \n\t 3- Vizualizar Operaçoes \n\t 0- Sair");
     line(100,"1\0");
@@ -211,7 +210,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
         return 1;
     }
     else if (op == 1){
-        locados newLocados = objetoLocados(idLocados,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Controle,tipo_config);
+        locados newLocados = objetoLocados(idLocados,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Controle,&monetario,tipo_config);
         inserirLocados(dtbaseLocados,newLocados,qtdLocados,tamanhoLocados);
         saveLocacao(newLocados,tipo_config);
     }else if (op == 3){
@@ -440,8 +439,10 @@ int carregarDados_locacao(locados **dtbaseLocados, int *qtdlocados, int *tamanho
 
             fscanf(fileLocados, "%d\n", &new.CodCliente);
 
-            fgets(new.Nome, 120, fileLocados);
-            limpa_final_string(new.Nome);
+            char nome[120];
+            fgets(nome, 120, fileLocados);
+            new.Nome = string_to_pointer(nome);
+
 
             fscanf(fileLocados, "%d\n", &new.qtdFilme);
 
