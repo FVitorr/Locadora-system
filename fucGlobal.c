@@ -414,7 +414,7 @@ int verifica_log(config *set,int *tipo_config){
         strcpy(set->password,setTpm.password);
         *tipo_config = set->tipo_configuracao;
 
-        system("pause");
+        //system("pause");
     }
     return 0;
 }

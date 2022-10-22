@@ -181,9 +181,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
         strcpy(set.user,config_system->user);
         strcpy(set.password,config_system->password);
 
-        *idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,qtdFuncionarios);
-        printf("%d",*idFuncionarioLogado);
-        system("pause");
+        //*idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,qtdFuncionarios);
     }
 
     return 0;
