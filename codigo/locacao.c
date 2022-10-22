@@ -20,6 +20,14 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
         scanf("%d", &idtpm);
 
         if (verificaIdFilme(dtbaseFilme, qtdFilme, idtpm) == 1) { //Verificar se o ID do filme Existe
+            //Valor Pago
+            int idCategoria = categoriaFilme(dtbaseFilme,qtdFilme, idtpm);
+            newOpc.valorPago = valorCategoria(dtbaseCategoria,qtdCategoria,idCategoria);
+
+            if (newOpc.valorPago == 0){
+                printf("\n[!] Ocorreu um problema e nao foi possivel retornar o valor do Filme\n Por Favor verifique se as categorias foram cadastradas de maneira correta.\n");
+                return newOpc;
+            }
             newOpc.CodFilme = idtpm;
             //Incrementar o valor do campo emprestados
             altQtdEmprestadaFilme(dtbaseFilme,qtdFilme,idtpm);
@@ -28,11 +36,6 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 
             //Nome Filme
             newOpc.nomeFilme = nomeFilme(dtbaseFilme,qtdFilme,idtpm);
-
-            //Valor Pago
-
-            int idCategoria = categoriaFilme(dtbaseFilme,qtdFilme, idtpm);
-            newOpc.valorPago = valorCategoria(dtbaseCategoria,qtdCategoria,idCategoria);
 
             break;
         } else {
@@ -92,6 +95,10 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
     while (1){
         operacoe  op = objetoOperacoe(dtbaseFilme,qtdFilme,dtbaseCategoria,qtdCategoria,*KEY_Controle);
 
+        if (op.valorPago == 0){
+            //Abortar Operação
+            return newObjeto;
+        }
         inserirOperacao(dtbaseOperacoe,op,qtdOperacoe,tamanhoOperacoe);
         saveOperacao(op, tipoConfig);
 
@@ -116,6 +123,7 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
 
     //TIPO PAGAMENTO
     do{
+        printf("\nValor total a ser Pago: R$ %.2f \n",newObjeto.valorPago);
         printf("\nTipo do pagamento: [1- A vista \t2 - A prazo]\n>>OPC: ");
         scanf("%d",&newObjeto.tipoPagamento);
     } while (newObjeto.tipoPagamento > 2 || newObjeto.tipoPagamento < 1);
@@ -125,21 +133,26 @@ locados objetoLocados (int *id,cliente **dtbaseCliente,int qtdcliente,filme **dt
         monetario->caixa = monetario->caixa + newObjeto.valorPago;
     }else{
         int ent = 0,qtdParcelas;
-        float valor;
+        float valorE,valorR;
         do{
-            printf("\n >>Mais Filmes ?  [ 1 - Sim \t0 - Nao ]");
+            printf("\n >>Deseja dar entrada ?  [ 1 - Sim \t0 - Nao ]");
             scanf("%d",&ent);
             if (ent == 0 || ent == 1){break;}
             else{ printf("\n>> Opc Invalida");}
         } while (1);
 
         if (ent == 1){
-            printf("\n>> Valor R$ ");
-            scanf("%f",&valor);
-            //Adc a contas
+            do {
+                printf("\n>> Valor R$ ");
+                scanf("%f", &valorE);
+                //Adc a contas
+                valorR = valorE - newObjeto.valorPago;
+            } while (valorR <= 0);
             //Dividir
-            printf("\n>> Dividir de quantas Vezes [3x Valor Maximo] ? ");
-            scanf("%d",&qtdParcelas);
+            do{
+                printf("\n>> Deseja dividir o valor R$ %2.f de quantas Vezes [3x Valor Maximo] ? ",valorR);
+                scanf("%d",&qtdParcelas);
+            } while (qtdParcelas > 3 || qtdParcelas < 0);
         }
     }
     newObjeto.TDdevolvido = 0; // 0 - Não
@@ -210,9 +223,17 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
         return 1;
     }
     else if (op == 1){
-        locados newLocados = objetoLocados(idLocados,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Controle,&monetario,tipo_config);
-        inserirLocados(dtbaseLocados,newLocados,qtdLocados,tamanhoLocados);
-        saveLocacao(newLocados,tipo_config);
+        locados newLocados = objetoLocados(idLocados,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Controle,monetario,tipo_config);
+        printf("%f",newLocados.valorPago);
+        float zero = 0;
+        if ((int)newLocados.valorPago != 0){
+            printf("%f",newLocados.valorPago);
+            inserirLocados(dtbaseLocados,newLocados,qtdLocados,tamanhoLocados);
+            saveLocacao(newLocados,tipo_config);
+        }else{
+            printf("%f",newLocados.valorPago);
+            return -1;
+        }
     }else if (op == 3){
         listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe);
         systemPause();
