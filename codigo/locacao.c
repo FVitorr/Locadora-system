@@ -158,7 +158,7 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
             do{
                 printf("\n>> Deseja dividir o valor R$ %.2f de quantas Vezes [3x Parcelas Maximas] ? ", newObjeto.valordeve);
                 scanf("%d",&qtdParcelas);
-                if (qtdParcelas > 3 || qtdParcelas < 0){ break;}
+                if (qtdParcelas < 3 && qtdParcelas > 0){ break;}
                 else{ printf("\n[!] Quantidade de Parcelas invalido\n");}
             } while (1);
 
@@ -169,9 +169,9 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
         }else{
             //Caso não seja fornecido uma  entrada
             do{
-                printf("\n>> Deseja dividir o valor R$ %2.f de quantas Vezes [3x Parcelas Maximas] ? ",newObjeto.valorTotal);
+                printf("\n>> Deseja dividir o valor R$ %.2f de quantas Vezes [3x Parcelas Maximas] ? ",newObjeto.valorTotal);
                 scanf("%d",&qtdParcelas);
-                if (qtdParcelas > 3 || qtdParcelas < 0){ break;}
+                if (qtdParcelas < 3 && qtdParcelas > 0){ break;}
                 else{ printf("\n[!] Quantidade de Parcelas invalido\n");}
             } while (1);
 
@@ -235,6 +235,7 @@ void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *IdContaC
                     *key_cliente = *key_cliente + 1;
 
                     inserirLocados(dtbaseLocados,novaLocacao,qtdLocados,tamanhoLocados);
+                    saveLocacao(novaLocacao,tipoConfig);
                     //Salvar Cliente
                 }
                 break;
@@ -371,7 +372,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
 //        }
     }else if (op == 2){
         //Devolução;
-        devolucaoFilmes(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe);
+        devolucaoFilmes(dtbaseCCliente,qtdCCliente,dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe);
     }else{
         listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe);
         system("pause");
@@ -663,7 +664,7 @@ int carregarDados_locacao(locados **dtbaseLocados, int *qtdlocados, int *tamanho
     return 0;
 }
 
-int verificaIDConta(locados **dtbaselocados, int qtdLocados, int id){ // 1 existe 0 nao existe
+int verificaIDConta(contaCliente **dtbaselocados, int qtdLocados, int id){ // 1 existe 0 nao existe
     for (int i = 0; i < qtdLocados; i++){
         if ((*dtbaselocados)[i].ID == id){
             return 1;
@@ -679,12 +680,13 @@ int retornaChave(locados **dtbaselocados, int qtdLocados, int id){ // Retorna a 
     }return 0;
 }
 
-void devolucaoFilmes(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoes, int qtdOperacao){
+void devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
+                     operacoe **dtbaseOperacoes, int qtdOperacao){
     system("cls");
     line(100,"Devolucao Filmes\0");
     printf("\nContas Disponiveis:\n");
-    for (int i = 0; i < qtdLocados; i++){
-        printf(" (ID: %d) Cliente: %s   ",(*dtbaselocados)[i].ID,(*dtbaselocados)[i].Nome);
+    for (int i = 0; i < qtdCCliente; i++){
+        printf(" (ID: %d) Cliente: %s   ",(*dtbaseCCliente)[i].ID,(*dtbaseCCliente)[i].Nome);
     }
     int IdCliente,erroID = 0,entregaCompleta;
     line(100,"-\0");
@@ -695,7 +697,7 @@ void devolucaoFilmes(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseO
         printf("\nInforme o ID do Cliente: ");
         scanf("%d",&IdCliente);
         erroID = 1;
-    } while (verificaIDConta(dtbaselocados,qtdLocados,IdCliente) == 0);
+    } while (verificaConta(dtbaseCCliente,qtdCCliente,IdCliente) == 0);
 
     int key_operator = retornaChave(dtbaselocados,qtdLocados,IdCliente);
 

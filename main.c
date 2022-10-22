@@ -29,12 +29,14 @@ int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 1;
 fornecedor *bd_fornecedor;
 int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 1;
 
+contaCliente *bd_CCliente;
+int qtdCCliente = 0, tamanhoCCliente = 1, idControleCCliente = 1, KEY_cliente = 0;
+
 locados *bd_locados;
 int qtdLocado = 0, tamanhoLocados = 1, idControleLocados = 1;
 
-
 operacoe *bd_Operacao;
-int qtdOperacao = 0, tamanhoOperacao = 1, KEY_Controle = 0;
+int qtdOperacao = 0, tamanhoOperacao = 1, KEY_operacao = 0;
 
 int IdfuncionarioLogado = -1;
 financeiro monetario;
@@ -47,7 +49,8 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
                   locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
                   locados **dtbaseLocados, int *qtd_Locados, int *tamanho_Locados, int *idLocados,
                   cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente,
-                  operacoe **dtbaseOperacoe, int *qtd_Operacoe, int *tamanho_Operacoe,int *key_controle,
+                  operacoe **dtbaseOperacoe, int *qtd_Operacoe, int *tamanho_Operacoe,int *Key_operacao,
+                  contaCliente **dtbaseCCliente, int *qtd_CCliente,int *tamanho_CCliente,int *idCCliente,int *Key_cliente,
                   fornecedor **dtbaseFornecedor, int *qtd_Fornecedor,int *tamanho_Fornecedor,int *idFornecedor){
 
 
@@ -73,7 +76,9 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
         case 1:
             while (1){
                 int t = menuLocacao(dtbaseFilme,*qtd_Filmes,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
-                                    dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,dtbaseCategoria,*qtd_Categoria,key_controle,monetario_,tipo_config);
+                                    dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,
+                                    dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,
+                                    dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,*qtd_Categoria,Key_operacao,Key_cliente,monetario_,tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -201,6 +206,7 @@ int main() {
 
     bd_locados = malloc(tamanhoLocados * sizeof(locados));
     bd_Operacao = malloc(tamanhoOperacao * sizeof(operacoe));
+    bd_CCliente = malloc(tamanhoCCliente * sizeof(contaCliente));
 
     //Verifica se os arquivos existem caso contrario criar
     //verifica_arquivos(tipoConfig);
@@ -212,7 +218,7 @@ int main() {
                       &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                       &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente,
                       &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor,
-                      &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_Controle,
+                      &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
                       &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios,&IdfuncionarioLogado);
 
 
@@ -226,7 +232,8 @@ int main() {
                           &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
                           &bd_locados,&qtdLocado,&tamanhoLocados,&idControleLocados,
                           &bd_cliente,&qtdCliente,&tamanhoCliente,&idControleCliente,
-                          &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_Controle,
+                          &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
+                          &bd_CCliente,&qtdCCliente,&tamanhoCliente,&idControleCCliente,&KEY_cliente,
                           &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor);
         if (v == 1){
             break;
@@ -238,6 +245,7 @@ int main() {
     free(bd_cliente);
     free(bd_locadora);
     free(bd_fornecedor);
+    free(bd_CCliente);
     free(bd_locados);
     free(bd_Operacao);
     bd_cat = NULL;
@@ -245,6 +253,7 @@ int main() {
     bd_funcionarios = NULL;
     bd_locadora = NULL;
     bd_cliente = NULL;
+    bd_CCliente = NULL;
     bd_locados = NULL;
     bd_Operacao = NULL;
     return 0;

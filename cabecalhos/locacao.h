@@ -89,4 +89,5 @@ void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *IdContaC
                    locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,
                    fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Operacao,financeiro *monetario,int tipoConfig);
 
-void devolucaoFilmes(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoes, int qtdOperacao);
+void devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
+                     operacoe **dtbaseOperacoes, int qtdOperacao);
