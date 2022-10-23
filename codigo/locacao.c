@@ -191,7 +191,7 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
     return newObjeto;
 }
 
-void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *IdContaCliente
+void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanhoCCliente,int *IdContaCliente
                    ,int *key_cliente,cliente **dtbaseCliente,int qtdcliente,
                    filme **dtbaseFilme,int qtdFilme,operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
                    locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,
@@ -210,7 +210,7 @@ void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *IdContaC
 
             if (confirm != 0) {
                 //Verificar se conta cliente existe
-                if (verificaConta(dtBaseCCliente, qtdcliente, idCliente) == 1) {
+                if (verificaConta(dtBaseCCliente, *qtd_CCliente, idCliente) == 1) {
                     //Conta Cliente existe
                 } else {
                     //conta Cliente nao existe
@@ -237,6 +237,8 @@ void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *IdContaC
                     inserirLocados(dtbaseLocados,novaLocacao,qtdLocados,tamanhoLocados);
                     saveLocacao(novaLocacao,tipoConfig);
                     //Salvar Cliente
+                    inserirCCliente(dtBaseCCliente,novoCliente,qtd_CCliente,tamanhoCCliente);
+                    saveContaCliente(novoCliente,tipoConfig);
                 }
                 break;
             }
@@ -257,6 +259,7 @@ contaCliente objetoCCliente(int *IdContaCliente,int key_cliente,cliente **dtbase
     novoCliente.key_cliente = key_cliente;
 
     novoCliente.Nome = nomeCliente(dtbaseCliente,qtdcliente,idCliente);
+    novoCliente.idCliente = idCliente;
 
     novoCliente.valorDeve = 0;
     novoCliente.valorPago = 0;
@@ -360,7 +363,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
     if (op == 0){
         return 1;
     }else if (op == 1){
-        emprestaFilme(dtbaseCCliente,qtdCCliente,idCCliente,KEY_Cliente,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,
+        emprestaFilme(dtbaseCCliente,qtdCCliente,tamanhoCCliente,idCCliente,KEY_Cliente,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,
                       dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseLocados,qtdLocados,tamanhoLocados,dtbaseCategoria,qtdCategoria,KEY_Operacao,monetario,tipo_config);
 
 //        if ((int)newLocados.valorPago != 0){
@@ -663,6 +666,144 @@ int carregarDados_locacao(locados **dtbaseLocados, int *qtdlocados, int *tamanho
     fileLocados = NULL;
     return 0;
 }
+int inserirCCliente(contaCliente **dtbaseCCliente,contaCliente newEntry, int *qtdCCliente, int *tamanhoCCliente){
+    //Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
+    if (*qtdCCliente == *tamanhoCCliente)
+    {
+        *tamanhoCCliente = *tamanhoCCliente + 1;
+        *dtbaseCCliente = (operacoe *) realloc(*dtbaseCCliente, *tamanhoCCliente * sizeof(operacoe));
+    }
+    if (*dtbaseCCliente == NULL)
+    {
+        printf("\n  Erro na alocação de memória!");
+        system("pause");
+        return 0;
+    }
+    // adc obj ao bd local
+    (*dtbaseCCliente)[*tamanhoCCliente - 1] = newEntry;
+    *qtdCCliente = *qtdCCliente + 1;
+
+    return 1;
+}
+
+int saveContaCliente(contaCliente objeto, int tipo_config){
+    FILE *contaclienteF = NULL;
+
+    if (tipo_config == 1){//Arquivo TXT
+        if (verifica_arquivos(tipo_config,"cpyBdContaCliente.txt\0") == 1){
+            contaclienteF = fopen("cpyBdContaCliente.txt", "a");
+        } else{
+            contaclienteF = fopen("cpyBdContaCliente.txt", "w");
+        }
+
+        if (contaclienteF == NULL){ // Se a abertura falhar
+            return 1;
+        }
+
+        fprintf(contaclienteF, "%d\n%d\n%d\n%s\n%f\n%f\n%d",
+                objeto.ID,
+                objeto.key_cliente,
+                objeto.idCliente,
+                objeto.Nome,
+                objeto.valorDeve,
+                objeto.valorPago,
+                objeto.IDlocado);
+
+    }else{ //Arquivo BINARIO
+        if (verifica_arquivos(tipo_config,"cpyBdContaCliente.bin\0") == 1){
+            contaclienteF = fopen("cpyBdContaCliente.bin", "ab");
+        } else{
+            contaclienteF = fopen("cpyBdContaCliente.bin", "wb");
+        }
+        if (contaclienteF == NULL){ // Se a abertura falhar
+            return 1;
+        }
+        fwrite(&objeto, sizeof(contaCliente), 1,contaclienteF);
+    }
+    fclose(contaclienteF);
+    contaclienteF = NULL;
+    return 0;
+}
+
+
+int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, int *tamanhoCCliente, int *idControle, int * Key_Cliente,int tipo_config) {
+    FILE *fileLocados = NULL;
+    contaCliente new;
+
+    int *qtdTemp = qtd_CCliente;
+
+    int t = 0;
+    if (tipo_config == 1){ //Arquivo TXT
+        fileLocados = fopen("cpyBdContaCliente.txt", "r");
+
+        if (fileLocados == NULL){
+            printf("\nErro na Leitura 'cpyBdContaCliente.txt' \n");
+            return 1;
+        }
+
+        while (!feof(fileLocados)){
+            if (!filelength(fileno(fileLocados))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fscanf(fileLocados, "%d\n", &new.ID);
+
+            fscanf(fileLocados, "%d\n", &new.key_cliente);
+
+            fscanf(fileLocados, "%d\n", &new.idCliente);
+
+            fscanf(fileLocados, "%f\n", &new.valorDeve);
+
+            fscanf(fileLocados, "%f\n", &new.valorPago);
+
+            fscanf(fileLocados, "%d\n", &new.IDlocado);
+
+//            if (verificaIdFilme(dtBase,*qtdLocados,new.codigo) == 0){
+//                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
+//            }
+            //printf("QTD: %d",*qtd_lo);
+            t = inserirCCliente(dtBaseCCliente,new,qtd_CCliente,tamanhoCCliente);
+            if (*idControle <= new.ID) {
+                *idControle = new.ID + 1;
+            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    else { //Arquivo BIN
+        fileLocados = fopen("cpyBdLocados.bin", "rb");
+        if (fileLocados == NULL){
+            printf("\nErro na Leitura 'cpyBdLocados.bin' \n");
+            return 1;
+        }
+        while (!feof(fileLocados)){
+            if (!filelength(fileno(fileLocados))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fread(&new,sizeof(locados),1,fileLocados);
+//            if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
+//                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
+//                if (*id <= new.codigo) {
+//                    *id = new.codigo + 1;
+//                }
+//            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    fclose(fileLocados);
+    fileLocados = NULL;
+    return 0;
+}
+
+
+
+
 
 int verificaIDConta(contaCliente **dtbaselocados, int qtdLocados, int id){ // 1 existe 0 nao existe
     for (int i = 0; i < qtdLocados; i++){
@@ -713,3 +854,4 @@ void devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtb
         printf("Informe o ID do filme que sera Devolvido: ");
     }
 }
+
