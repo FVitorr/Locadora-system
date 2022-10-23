@@ -332,6 +332,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 contaCliente **dtbaseCCliente,int *qtdCCliente,int *tamanhoCCliente,int *idCCliente,
                 fCategoria **dtbaseCategoria, int qtdCategoria,int *KEY_Operacao, int *KEY_Cliente,financeiro *monetario,int tipo_config){
 
+    carregarDados_CClientes(dtbaseCCliente,qtdCCliente,tamanhoCCliente,idCCliente,KEY_Cliente,tipo_config);
     if ( qtdCategoria == 0){
         printf("\n\n\t[!] Menu Nao disponivel, Precisamos que os dados de Categoria sejam preenchidos.\n"
                "\t\tPreencha e retorne aqui\n\n\n\n");
@@ -751,6 +752,10 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
 
             fscanf(fileLocados, "%d\n", &new.idCliente);
 
+            char nome[120];
+            fgets(nome, 120, fileLocados);
+            new.Nome = string_to_pointer(nome);
+
             fscanf(fileLocados, "%f\n", &new.valorDeve);
 
             fscanf(fileLocados, "%f\n", &new.valorPago);
@@ -764,6 +769,9 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
             t = inserirCCliente(dtBaseCCliente,new,qtd_CCliente,tamanhoCCliente);
             if (*idControle <= new.ID) {
                 *idControle = new.ID + 1;
+            }
+            if (*Key_Cliente <= new.key_cliente){
+                *Key_Cliente =  new.key_cliente + 1;
             }
 
             if (t == 0){

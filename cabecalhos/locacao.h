@@ -86,7 +86,10 @@ int inserirCCliente(contaCliente **dtbaseCCliente,contaCliente newEntry, int *qt
 
 int saveContaCliente(contaCliente objeto, int tipo_config);
 
-void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanhoCCliente,int *IdContaCliente
+int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, int *tamanhoCCliente, int *idControle, int * Key_Cliente,int tipo_config);
+
+
+    void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanhoCCliente,int *IdContaCliente
         ,int *key_cliente,cliente **dtbaseCliente,int qtdcliente,
                    filme **dtbaseFilme,int qtdFilme,operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
                    locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,
