@@ -125,7 +125,7 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
     }else{
         newObjeto.valorEntrada = 0;
         int ent = 0,qtdParcelas;
-        float valorE,valorR;
+        float valorE;
         // Valores de entrada
         do{
             printf("\n >>Deseja dar entrada ?  [ 1 - Sim \t0 - Nao ]: ");
@@ -191,7 +191,7 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
     return newObjeto;
 }
 
-void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanhoCCliente,int *IdContaCliente
+int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_CCliente,int *IdContaCliente
                    ,int *key_cliente,cliente **dtbaseCliente,int qtdcliente,
                    filme **dtbaseFilme,int qtdFilme,operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
                    locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,
@@ -212,6 +212,38 @@ void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanhoC
                 //Verificar se conta cliente existe
                 if (verificaConta(dtBaseCCliente, *qtd_CCliente, idCliente) == 1) {
                     //Conta Cliente existe
+                    printf("\nConta CLiente Existe\n");
+
+                    int indexCliente = posicaoContaArray(dtBaseCCliente,qtdcliente,idCliente);
+                    if (indexCliente == -1){
+                        return -1;
+                    }
+
+                    int *idLocado = &(*dtBaseCCliente)[indexCliente].IDlocado;
+                    int key_client = (*dtBaseCCliente)[indexCliente].key_cliente;
+
+                    locados novaLocacao = objetoLocados(idLocado,idCliente,dtbaseFilme,qtdFilme,
+                                                        dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Operacao,key_client,tipoConfig);
+
+
+                    //controle de caixa
+                    if (novaLocacao.tipoPagamento == 1){ //Pagamento a Vista
+                        (*dtBaseCCliente)[indexCliente].valorPago = (*dtBaseCCliente)[indexCliente].valorPago + novaLocacao.valorTotal; //Adicionar valor ao caixa da locadora
+                        monetario->caixa = monetario->caixa + novaLocacao.valorTotal; //Adicionar valor pago a conta cliente
+                    }else{ // pagamento a prazo
+                        (*dtBaseCCliente)[indexCliente].valorPago = (*dtBaseCCliente)[indexCliente].valorPago + novaLocacao.valorEntrada;
+                        monetario->caixa = monetario->caixa + novaLocacao.valorEntrada; //Adicionar valor pago a conta cliente
+
+                        (*dtBaseCCliente)[indexCliente].valorDeve = (*dtBaseCCliente)[indexCliente].valorDeve + novaLocacao.valordeve;
+                    }
+                    //listCCliente(dtbaseCliente, qtdcliente);
+
+
+                    inserirLocados(dtbaseLocados,novaLocacao,qtdLocados,tamanhoLocados);
+                    saveLocacao(novaLocacao,tipoConfig);
+
+                    refazDadosCCliente(dtBaseCCliente,*qtd_CCliente,tipoConfig);
+                    break;
                 } else {
                     //conta Cliente nao existe
                     contaCliente novoCliente = objetoCCliente(IdContaCliente, *key_cliente, dtbaseCliente, qtdcliente,idCliente);
@@ -237,7 +269,7 @@ void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanhoC
                     inserirLocados(dtbaseLocados,novaLocacao,qtdLocados,tamanhoLocados);
                     saveLocacao(novaLocacao,tipoConfig);
                     //Salvar Cliente
-                    inserirCCliente(dtBaseCCliente,novoCliente,qtd_CCliente,tamanhoCCliente);
+                    inserirCCliente(dtBaseCCliente,novoCliente,qtd_CCliente,tamanho_CCliente);
                     saveContaCliente(novoCliente,tipoConfig);
                 }
                 break;
@@ -329,10 +361,10 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 funcionarios **dtbaseFuncionarios, int qtdFuncionarios,int idFuncionarioLogado,
                 locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                contaCliente **dtbaseCCliente,int *qtdCCliente,int *tamanhoCCliente,int *idCCliente,
+                contaCliente **dtbaseCCliente,int *qtdCCliente,int *tamanho_CCliente,int *idCCliente,
                 fCategoria **dtbaseCategoria, int qtdCategoria,int *KEY_Operacao, int *KEY_Cliente,financeiro *monetario,int tipo_config){
 
-    carregarDados_CClientes(dtbaseCCliente,qtdCCliente,tamanhoCCliente,idCCliente,KEY_Cliente,tipo_config);
+    //carregarDados_CClientes(dtbaseCCliente,qtdCCliente,tamanhoCCliente,idCCliente,KEY_Cliente,tipo_config);
     if ( qtdCategoria == 0){
         printf("\n\n\t[!] Menu Nao disponivel, Precisamos que os dados de Categoria sejam preenchidos.\n"
                "\t\tPreencha e retorne aqui\n\n\n\n");
@@ -364,20 +396,14 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
     if (op == 0){
         return 1;
     }else if (op == 1){
-        emprestaFilme(dtbaseCCliente,qtdCCliente,tamanhoCCliente,idCCliente,KEY_Cliente,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,
+        emprestaFilme(dtbaseCCliente,qtdCCliente,tamanho_CCliente,idCCliente,KEY_Cliente,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,
                       dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseLocados,qtdLocados,tamanhoLocados,dtbaseCategoria,qtdCategoria,KEY_Operacao,monetario,tipo_config);
 
-//        if ((int)newLocados.valorPago != 0){
-//            inserirLocados(dtbaseLocados,newLocados,qtdLocados,tamanhoLocados);
-//            saveLocacao(newLocados,tipo_config);
-//        }else{
-//            printf("%f",newLocados.valorPago);
-//            return 1;
-//        }
     }else if (op == 2){
         //Devolução;
-        devolucaoFilmes(dtbaseCCliente,qtdCCliente,dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe);
-    }else{
+        devolucaoFilmes(dtbaseCCliente,*qtdCCliente,dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe);
+    }else if (op == 3){
+        listCCliente(dtbaseCCliente,*qtdCCliente);
         listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe);
         system("pause");
     }
@@ -464,6 +490,23 @@ int saveOperacao(operacoe objeto, int tipo_config){
     operacaoF = NULL;
     return 0;
 }
+
+void listCCliente(contaCliente **dtbaseCCcliente, int qtd) {
+    for (int c = 0; c < qtd; c++) {
+        printf("\n-----------------------------------------------------------------\n");
+        printf("(%d)\n"
+               "Chave Cliente: %d\n"
+               "ID Cliente: %d\n"
+               "Nome: %s\n"
+               "Valor a Receber: R$ %.2f\n"
+               "Valor Pago: R$ %.2f\n"
+               "ID Locados: %d\n", (*dtbaseCCcliente)[c].ID, (*dtbaseCCcliente)[c].key_cliente,
+               (*dtbaseCCcliente)[c].idCliente, (*dtbaseCCcliente)[c].Nome,(*dtbaseCCcliente)[c].valorDeve,(*dtbaseCCcliente)[c].valorPago,
+               (*dtbaseCCcliente)[c].IDlocado);
+    }
+    printf("\n");
+}
+
 
 int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *tamanhoOperaca, int *key_operator ,int tipo_config) {
     FILE *fOperacoe = NULL;
@@ -672,7 +715,7 @@ int inserirCCliente(contaCliente **dtbaseCCliente,contaCliente newEntry, int *qt
     if (*qtdCCliente == *tamanhoCCliente)
     {
         *tamanhoCCliente = *tamanhoCCliente + 1;
-        *dtbaseCCliente = (operacoe *) realloc(*dtbaseCCliente, *tamanhoCCliente * sizeof(operacoe));
+        *dtbaseCCliente = (contaCliente *) realloc((*dtbaseCCliente), *tamanhoCCliente * sizeof(contaCliente));
     }
     if (*dtbaseCCliente == NULL)
     {
@@ -809,9 +852,24 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
     return 0;
 }
 
-
-
-
+int refazDadosCCliente(contaCliente **dtbase, int qtdCCliente, int tipo_config){
+    FILE *p;
+    if (tipo_config== 1){
+        p = fopen("cpyBdContaCliente.txt", "w");
+        fclose(p);
+        p = NULL;
+        for (int i = 0; i < qtdCCliente; i++){
+            saveContaCliente((*dtbase)[i],tipo_config);
+        }
+    }else if (tipo_config == 0){
+        p = fopen("cpyBdContaCliente.bin", "wb");
+        fclose(p);
+        for (int i = 0; i < qtdCCliente; i++){
+            saveContaCliente((*dtbase)[i],tipo_config);
+        }
+    }
+    return 0;
+}
 
 int verificaIDConta(contaCliente **dtbaselocados, int qtdLocados, int id){ // 1 existe 0 nao existe
     for (int i = 0; i < qtdLocados; i++){

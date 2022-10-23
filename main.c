@@ -29,7 +29,7 @@ int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 1;
 fornecedor *bd_fornecedor;
 int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 1;
 
-contaCliente *bd_CCliente;
+contaCliente *bd_CCliente = NULL;
 int qtdCCliente = 0, tamanhoCCliente = 1, idControleCCliente = 1, KEY_cliente = 0;
 
 locados *bd_locados;
@@ -144,6 +144,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
                       cliente **dtBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente,
                       fornecedor **dtBaseFornecedor, int *qtd_Fornecedor, int *tamanho_Fornecedor, int *idFornecedor,
                       operacoe **dtbaseoperacoe, int *qtd_Operacao, int *tamanho_Operacao, int *key_controle,
+                      contaCliente **dtbaseCCliente, int *qtd_CCliente,int *tamanho_CCliente,int *idCCliente,int *Key_cliente,
                       funcionarios **dtBaseFuncionario, int *qtd_Funcionario, int *tamanho_Funcionario, int *idFuncionario,int *idFuncionarioLogado){
 
     int pExecute = verifica_log(config_system,tipoConfig);
@@ -155,6 +156,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
     carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
     carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
+    carregarDados_CClientes(dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,Key_cliente,*tipoConfig);
     system("cls");
     char nConfig[5];
     printf("tipoConfig: %d ",*tipoConfig);
@@ -206,7 +208,7 @@ int main() {
 
     bd_locados = malloc(tamanhoLocados * sizeof(locados));
     bd_Operacao = malloc(tamanhoOperacao * sizeof(operacoe));
-    bd_CCliente = malloc(tamanhoCCliente * sizeof(contaCliente));
+    bd_CCliente = (contaCliente *)malloc(tamanhoCCliente * sizeof(contaCliente));
 
     //Verifica se os arquivos existem caso contrario criar
     //verifica_arquivos(tipoConfig);
@@ -219,6 +221,7 @@ int main() {
                       &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente,
                       &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor,
                       &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
+                      &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,&KEY_cliente,
                       &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios,&IdfuncionarioLogado);
 
 
@@ -233,7 +236,7 @@ int main() {
                           &bd_locados,&qtdLocado,&tamanhoLocados,&idControleLocados,
                           &bd_cliente,&qtdCliente,&tamanhoCliente,&idControleCliente,
                           &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
-                          &bd_CCliente,&qtdCCliente,&tamanhoCliente,&idControleCCliente,&KEY_cliente,
+                          &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,&KEY_cliente,
                           &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor);
         if (v == 1){
             break;

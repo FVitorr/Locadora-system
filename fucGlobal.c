@@ -334,7 +334,7 @@ int creatFile(char *nameFile,int tipo_config){
     return 0;
 }
 
-int verifica_arquivos(int tipo_config,char nameFile[120]){
+int verifica_arquivos(int tipo_config,char *nameFile){
     FILE *p;
 
     //strcat(nameFile,".txt\0");

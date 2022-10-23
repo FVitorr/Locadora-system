@@ -88,9 +88,9 @@ int saveContaCliente(contaCliente objeto, int tipo_config);
 
 int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, int *tamanhoCCliente, int *idControle, int * Key_Cliente,int tipo_config);
 
+int refazDadosCCliente(contaCliente **dtbase, int qtdCCliente, int tipo_config);
 
-    void emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanhoCCliente,int *IdContaCliente
-        ,int *key_cliente,cliente **dtbaseCliente,int qtdcliente,
+int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_CCliente,int *IdContaCliente,int *key_cliente,cliente **dtbaseCliente,int qtdcliente,
                    filme **dtbaseFilme,int qtdFilme,operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
                    locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,
                    fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Operacao,financeiro *monetario,int tipoConfig);
@@ -98,3 +98,4 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
 void devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
                      operacoe **dtbaseOperacoes, int qtdOperacao);
 
+void listCCliente(contaCliente **dtbaseCCcliente, int qtd);
