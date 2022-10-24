@@ -28,6 +28,7 @@ typedef struct {
     float valordeve; // Valor que o Cliente deve
     float valorEntrada; //Para pagamentos parcelados
     int tipoPagamento; // 1 - A vista  2 - A prazo
+    data Dtpagamento;
     int qtdParcelas;
     int TDdevolvido; // 0-Não 1-SIM //Não Altera
     int ultimoIDOperacao;

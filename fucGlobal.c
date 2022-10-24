@@ -377,6 +377,12 @@ int replaceInt(int newValue, int *camp){
     *camp = newValue;
 }
 
+int replacefloat(float newValue, float *camp){
+    *camp = newValue;
+}
+
+
+
 void systemPause(){
     char a;
     printf("\nPrecione uma Tecla para continuar...");

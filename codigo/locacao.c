@@ -79,6 +79,11 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
     newObjeto.qtdFilme = 0;
     newObjeto.ultimoIDOperacao = 0;
 
+    newObjeto.Dtpagamento.dia = 0;
+    newObjeto.Dtpagamento.mes = 0;
+    newObjeto.Dtpagamento.ano = 0;
+
+
     while (1){
         operacoe  op = objetoOperacoe(dtbaseFilme,qtdFilme,dtbaseCategoria,qtdCategoria,*KEY_operacao,&newObjeto.ultimoIDOperacao);
 
@@ -121,6 +126,7 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
 //        //Adicionar valor ao caixa
 //        monetario->caixa = monetario->caixa + newObjeto.valorPago;
 //        //Adicionar valor pago a conta cliente fora da função
+        dataAtual(newObjeto.Dtpagamento);
 
     }else{
         newObjeto.valorEntrada = 0;
@@ -1049,9 +1055,12 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
             int indexConta = posicaoContaArray(dtbaseCCliente,qtdCCliente,IdCliente);
 
             if ((*dtbaselocados)[indexLocados].tipoPagamento == 2){//Pagamento a Prazo
-                (*dtbaseCCliente)[indexConta].valorPago = (*dtbaseCCliente)[indexConta].valorPago + (*dtbaselocados)[indexLocados].valordeve;
-                (*dtbaseCCliente)[indexConta].valorDeve = (*dtbaseCCliente)[indexConta].valorDeve - (*dtbaselocados)[indexLocados].valordeve;
-                (*dtbaselocados)[indexLocados].valordeve = (float)0;
+                replacefloat((*dtbaseCCliente)[indexConta].valorPago + (*dtbaselocados)[indexLocados].valordeve,&(*dtbaseCCliente)[indexConta].valorPago);
+                //(*dtbaseCCliente)[indexConta].valorPago = (*dtbaseCCliente)[indexConta].valorPago + (*dtbaselocados)[indexLocados].valordeve;
+                //(*dtbaseCCliente)[indexConta].valorDeve = (*dtbaseCCliente)[indexConta].valorDeve - (*dtbaselocados)[indexLocados].valordeve;
+                replacefloat((*dtbaseCCliente)[indexConta].valorDeve - (*dtbaselocados)[indexLocados].valordeve,&(*dtbaseCCliente)[indexConta].valorDeve);
+                replacefloat(0,&(*dtbaselocados)[indexLocados].valordeve);
+                dataAtual((dtbaselocados[indexLocados]->Dtpagamento));
             }
 
             refazDadosLocados(dtbaselocados,qtdLocados,tipoConfig);
@@ -1060,7 +1069,7 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
             int qtdDevolver;
             printf("Quantos Filmes serão devolvidos: ");
             scanf("%d",&qtdDevolver);
-            
+
         }
     } else{
         printf("\n\n\t[!] O Cliente ja devolveu todos os filmes");

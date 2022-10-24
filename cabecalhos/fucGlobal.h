@@ -27,6 +27,8 @@ int replaceInt(int newValue, int *camp);
 
 int replaceChar(char newValue[5], char *camp);
 
+int replacefloat(float newValue, float *camp);
+
 void addTab(char *str);
 
 int lenChar(char *n);
