@@ -1,7 +1,7 @@
 #include "locadora.h"
 typedef struct
 {
-    char user[120];
+    char user[50];
     char *password;
 
 } autentificacao;
@@ -57,3 +57,15 @@ int refazDadosFuncionario(funcionarios **dtbase, int *tamanhoFuncionario, int ti
  *
  */
 int verificaIdFuncionario(funcionarios **dtbase, int qtdFuncionarios, int id);
+
+
+typedef struct {
+    int id;
+    char user[120];
+    char password[17];
+}adm;
+
+
+int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios);
+
+char *nomefuncionario(funcionarios **dtbase, int qtdFuncionarios,int id);

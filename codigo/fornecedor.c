@@ -238,7 +238,6 @@ int carregarDadosFornecedores(fornecedor **dtBase, int *qtdFornecedor, int *tama
 
         if (p == NULL){
             printf("\nErro na Leitura 'cpyBdFornecedor.txt' \n");
-            system("Pause");
             return 1;
         }
 

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include  <stdlib.h>
+#include <string.h>
 
 //#include "cabecalhos/filmes.h"
 #include "cabecalhos/locadora.h"
@@ -28,23 +29,31 @@ int qtdCliente = 0, tamanhoCliente = 1, idControleCliente = 1;
 fornecedor *bd_fornecedor;
 int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 1;
 
+contaCliente *bd_CCliente = NULL;
+int qtdCCliente = 0, tamanhoCCliente = 1, idControleCCliente = 1, KEY_cliente = 0;
+
 locados *bd_locados;
 int qtdLocado = 0, tamanhoLocados = 1, idControleLocados = 1;
 
-
 operacoe *bd_Operacao;
-int qtdOperacao = 0, tamanhoOperacao = 1, KEY_Controle = 0;
+int qtdOperacao = 0, tamanhoOperacao = 1, KEY_operacao = 0;
+
+int IdfuncionarioLogado = -1;
+financeiro monetario;
 
 
-int menuprincipal(int tipo_config,
+int menuprincipal(int tipo_config,financeiro *monetario_,
                   fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,int *idCategoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
-                  funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,
+                  funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,int idFuncionarioLogado,
                   locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
                   locados **dtbaseLocados, int *qtd_Locados, int *tamanho_Locados, int *idLocados,
                   cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente,
-                  operacoe **dtbaseOperacoe, int *qtd_Operacoe, int *tamanho_Operacoe,int *key_controle,
+                  operacoe **dtbaseOperacoe, int *qtd_Operacoe, int *tamanho_Operacoe,int *Key_operacao,
+                  contaCliente **dtbaseCCliente, int *qtd_CCliente,int *tamanho_CCliente,int *idCCliente,int *Key_cliente,
                   fornecedor **dtbaseFornecedor, int *qtd_Fornecedor,int *tamanho_Fornecedor,int *idFornecedor){
+
+
 
     system("cls");
     int opc = 0, erro = 0;
@@ -66,8 +75,10 @@ int menuprincipal(int tipo_config,
             return 1;
         case 1:
             while (1){
-                int t = menuLocacao(dtbaseFilme,*qtd_Filmes,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,
-                                    dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,dtbaseCategoria,*qtd_Categoria,key_controle,tipo_config);
+                int t = menuLocacao(dtbaseFilme,*qtd_Filmes,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
+                                    dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,
+                                    dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,
+                                    dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,*qtd_Categoria,Key_operacao,Key_cliente,monetario_,tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -88,7 +99,8 @@ int menuprincipal(int tipo_config,
             }
         case 4:
             while (1){
-                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idFilme, tipo_config);
+                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,idFilme, tipo_config);
+                refazDados_Categoria(dtbaseCategoria,qtd_Categoria,tamanho_Categoria,tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -133,30 +145,58 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
                       cliente **dtBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente,
                       fornecedor **dtBaseFornecedor, int *qtd_Fornecedor, int *tamanho_Fornecedor, int *idFornecedor,
                       operacoe **dtbaseoperacoe, int *qtd_Operacao, int *tamanho_Operacao, int *key_controle,
-                      funcionarios **dtBaseFuncionario, int *qtd_Funcionario, int *tamanho_Funcionario, int *idFuncionario){
+                      contaCliente **dtbaseCCliente, int *qtd_CCliente,int *tamanho_CCliente,int *idCCliente,int *Key_cliente,
+                      funcionarios **dtBaseFuncionario, int *qtd_Funcionario, int *tamanho_Funcionario, int *idFuncionario,int *idFuncionarioLogado){
 
-    int newID = verifica_log(config_system,tipoConfig);
+    int pExecute = verifica_log(config_system,tipoConfig);
     carregarDados_filme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, idFilme, *tipoConfig);
-    //printf("\n>> Dados Filme Carregados ");
     carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
-    printf("\n>> Dados Locadora Carregados ");
     carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
-    printf("\n>> Dados Categoria Carregados ");
     carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
-    printf("\n>> Dados Clientes Carregados ");
-    carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
-    printf("\n>> Dados Fornecedores Carregados\n");
+    //carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
-    printf("\n>> Dados de Funcionarios Carregados\n");
     carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
-    printf("\n>> Dados de Locacao Carregados\n");
     carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
-    printf("\n>> Dados de Locacao Carregados\n");
+    carregarDados_CClientes(dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,Key_cliente,*tipoConfig);
+    system("cls");
+    char nConfig[5];
+    printf("tipoConfig: %d ",*tipoConfig);
+    if (*tipoConfig == 1){
+        strcpy(nConfig,".txt\0");
+    }else{
+        strcpy(nConfig,".bin\0");
+    }
+    if (*qtd_Locadora == 0){
+
+        line(100,"Informacoes da Locadora\0");
+        printf("\nOs dados estao sendo salvos no formato: %s\ne pode ser alterado no Menu de configuracao\n",nConfig);
+        printf("\nPrecisamos de algumas infomacoes para inicializar o Sistema\n");
+        line(100,"-\0");
+
+        locadora newLocadora = criarLocadora(idLocadora);
+        inserirLocadora(dtbaseLocadora,newLocadora,qtd_Locadora,tamanho_Locadora, *tipoConfig);
+        saveLocadora(newLocadora,*tipoConfig);
+
+        //Passar os parametros de Autentificação(Administrador)  para o arquivo de LOG
+        //Id 0 - Retorno de ADM
+        strcpy(config_system->user,newLocadora.user);
+        strcpy(config_system->password,newLocadora.password);
+        refazLog(config_system);
+    }
+    if (pExecute == 0){
+        adm set;
+        set.id = 0;
+        strcpy(set.user,config_system->user);
+        strcpy(set.password,config_system->password);
+
+        //*idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,qtdFuncionarios);
+    }
+
     return 0;
 }
 
 int main() {
-    int tipoConfig = 1; // 0- BIN 1 - TXT
+    int tipoConfig; // 0- BIN 1 - TXT
 
     config config_System;
 
@@ -169,6 +209,7 @@ int main() {
 
     bd_locados = malloc(tamanhoLocados * sizeof(locados));
     bd_Operacao = malloc(tamanhoOperacao * sizeof(operacoe));
+    bd_CCliente = (contaCliente *)malloc(tamanhoCCliente * sizeof(contaCliente));
 
     //Verifica se os arquivos existem caso contrario criar
     //verifica_arquivos(tipoConfig);
@@ -180,19 +221,23 @@ int main() {
                       &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                       &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente,
                       &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor,
-                      &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_Controle,
-                      &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios);
+                      &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
+                      &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,&KEY_cliente,
+                      &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios,&IdfuncionarioLogado);
+
+
 
     while (1){
         int v;
-        v = menuprincipal(tipoConfig,
+        v = menuprincipal(tipoConfig,&monetario,
                           &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
-                          &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,
+                          &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,IdfuncionarioLogado,
                           &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
                           &bd_locados,&qtdLocado,&tamanhoLocados,&idControleLocados,
                           &bd_cliente,&qtdCliente,&tamanhoCliente,&idControleCliente,
-                          &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_Controle,
+                          &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
+                          &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,&KEY_cliente,
                           &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor);
         if (v == 1){
             break;
@@ -204,6 +249,7 @@ int main() {
     free(bd_cliente);
     free(bd_locadora);
     free(bd_fornecedor);
+    free(bd_CCliente);
     free(bd_locados);
     free(bd_Operacao);
     bd_cat = NULL;
@@ -211,6 +257,7 @@ int main() {
     bd_funcionarios = NULL;
     bd_locadora = NULL;
     bd_cliente = NULL;
+    bd_CCliente = NULL;
     bd_locados = NULL;
     bd_Operacao = NULL;
     return 0;

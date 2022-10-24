@@ -5,6 +5,7 @@
 // Comentei pq essa biblioteca não existe no linux
 #include <conio.h>
 #include "cabecalhos/fucGlobal.h"
+#include <io.h>
 
 /* +++++++++++++++++ Gerenciamento de Endereço +++++++++++++++++ */
 
@@ -245,6 +246,14 @@ void limpa_final_string(char *c) {
     }
 }
 
+void remover_espaco(char *c){
+    for(int i = 0; i < strlen(c); i++){
+        if(c[i]==' '){
+            c[i]=c[i+1];
+        }
+    }
+}
+
 
 void limpa_extensao(char *c) {
     int i;
@@ -279,7 +288,7 @@ int creatFile(char *nameFile,int tipo_config){
     return 0;
 }
 
-int verifica_arquivos(int tipo_config,char nameFile[120]){
+int verifica_arquivos(int tipo_config,char *nameFile){
     FILE *p;
 
     //strcat(nameFile,".txt\0");
@@ -309,7 +318,11 @@ int verifica_arquivos(int tipo_config,char nameFile[120]){
     }
 }
 
-int tipo_configuracao(int *tipo) {
+
+int tipo_configuracao(config *set) {
+    FILE *log = NULL;
+    log = fopen("log.bin","wb");
+
     char entry;
     while (1){
         line(100, "Configuracoes de Sistema\0");
@@ -322,29 +335,50 @@ int tipo_configuracao(int *tipo) {
         system("cls");
         printf(">>Parametro Invalido");
     }
-    *tipo = ctoi(entry);
-    return 0;
+    set->tipo_configuracao = ctoi(entry);
+    fwrite(set, sizeof(config), 1,log);
+    return (ctoi(entry));
 }
 
-void set_tipoARQ_config(config *set, int *tipo_config){
-    tipo_configuracao(tipo_config);
-    (*set).tipo_configuracao = *tipo_config;
+void refazLog(config *set){
+    FILE *log = NULL;
+    log = fopen("log.bin","wb");
+    fwrite(set, sizeof(config), 1,log);
+    fclose(log);
 }
 
 int verifica_log(config *set,int *tipo_config){
     //Arquivo log.bin armazenas informaçoes do sistema
+    config setTpm;
+
     FILE *log;
-    char *nameFile = "log";
     log = fopen("log.bin","rb");
+    line(100,"Bem Vindo\0");
     if (log == NULL){
-        creatFile(nameFile,0);
-        set_tipoARQ_config(set, tipo_config);
-        return 0; // Este retorno usado para criar locadora de ID 0
+        printf("\nPrecisamos de algumas infomacoes para inicializar o Sistema\n");
+        *tipo_config = tipo_configuracao(set);
+        return 1; // Primeira Execussão do programa
+    }else{
+        do{
+            fread(&setTpm,sizeof(config),1,log);
+        }while (!feof(log));
+
+        set->tipo_configuracao = setTpm.tipo_configuracao;
+        strcpy(set->user,setTpm.user);
+        strcpy(set->password,setTpm.password);
+        *tipo_config = set->tipo_configuracao;
+
+        //system("pause");
     }
+    return 0;
+}
+
+int replaceInt(int newValue, int *camp){
+    *camp = newValue;
 }
 
 void systemPause(){
     char a;
     printf("\nPrecione uma Tecla para continuar...");
-    scanf("%c",&a);
+    scanf("%c",a);
 }

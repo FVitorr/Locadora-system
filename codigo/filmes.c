@@ -5,7 +5,8 @@
 
 // +++++++++++++++++++++++++++++++++++++++++ Subrotinas para controle dos filmes +++++++++++++++++
 
-filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria, int *id) // Bloco para receber as entradas e "compartar" na struct
+filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria, int *id,
+               int *idControleCategoria, int tipoConfig) // Bloco para receber as entradas e "compartar" na struct
 {
     filme p;
     p.codigo = *id;
@@ -29,10 +30,17 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
 
     //https://homepages.dcc.ufmg.br/~rodolfo/aedsi-2-10/printf_scanf/printfscanf.html
 
+    line(100,"Categorias\0");
+    printf(" (0)Nova Categoria");
+    for (int i = 0; i < *qtdCategoria; i++){
+        printf("   (%d)%s ",(*dtbaseCategoria)[i].codigo,(*dtbaseCategoria)[i].descricao);
+    }
+    line(100,"-\0");
+
     printf("Codigo Categoria: ");
     scanf("%d%*c", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
 
-    categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria , p.c_categoria);
+    p.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,p.c_categoria,idControleCategoria,tipoConfig);
 
     setbuf(stdin,NULL);
 
@@ -108,12 +116,12 @@ int qtdEmprestada(filme **dtbase,int qtdFilmes, int id){
 }
 
 
-void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id, int tipo_config)
+void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id,int *idControleCategoria, int tipo_config)
 {
     int qtd_emprestada = qtdEmprestada(dtbase,*qtdFilmes,id);
     for (int i = 0; i < *qtdFilmes; i++) {
         if ((*dtbase)[i].codigo == id) {
-            filme newEntrada = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,&id);
+            filme newEntrada = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,&id,idControleCategoria,tipo_config);
             newEntrada.qtdEmprestado = qtd_emprestada;
             (*dtbase)[i] = newEntrada;
             break;
@@ -122,10 +130,14 @@ void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dt
     refazDados_filme(dtbase,*qtdFilmes, tipo_config);
 }
 
-int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id) {
-    int tem = locID(dtbaseCategoria,*qtdCategoria,id),opc = 0;
+int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id,int *idControleCategoria,int tipoconfig) {
+    int opc = 0;
+    int tem = locID(dtbaseCategoria,*qtdCategoria,id);
+    if (tem == 1){
+        return id;
+    }
     //int tem = 0;cc
-    if (tem == 0) {
+    if (id == 0 || tem == 0) {
         printf("\n\t>> Categoria nao encontrada\n ");
         printf("\t>> Cadastrar [1 - Sim] [ 0 - Nao]: ");
         scanf("%d", &opc);
@@ -134,18 +146,18 @@ int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategori
         }
         else {
             printf("\n");
-            fCategoria new = objCategoria(&id,1);
-            int suc = insCategoria(dtbaseCategoria,new,qtdCategoria,tamanhoCategoria,*qtdCategoria);
+            fCategoria new = objCategoria(idControleCategoria,1);
+            int suc = insCategoria(dtbaseCategoria,new,qtdCategoria,tamanhoCategoria,tipoconfig);
             if (suc == 1) {
                 printf("\n\t>> Nova categoria adicionada");
             }
             printf("\n");
         }
     }
-    return 0;
+    return *idControleCategoria - 1;
 }
 
-int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria, int *id,int tipo_config){
+int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria,int *idControleCategoria,int *id,int tipo_config){
     int opc = 0, erro = 0, exit = 0;
 
     system("cls");
@@ -175,7 +187,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         // Cadastrar um Filme
         system("cls");
         printf(">> Novo filme     \tID: %d \n", *id);
-        filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id);
+        filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id,idControleCategoria,tipo_config);
         inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,tipo_config);
         saveFilme(new, tipo_config);
     }
@@ -187,7 +199,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         printf(">> Multiplos filme     \tID: %d \n", *id);
         while (1)
         {
-            filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id);
+            filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id,idControleCategoria,tipo_config);
             inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,tipo_config);
             saveFilme(new,tipo_config);
             printf("\n >> [1 - Mais] \t [0 - Exit]: ");
@@ -216,7 +228,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         int cod;
         printf("Editar (ID):");
         scanf("%d", &cod);
-        editaFilme(dtbase,qtdFilmes,tamanhoFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,cod,tipo_config);
+        editaFilme(dtbase,qtdFilmes,tamanhoFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,cod,idControleCategoria,tipo_config);
 
     }
     else if (opc == 5)
@@ -323,7 +335,6 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
 
         if (p == NULL){
             printf("\n[503] Erro na Leitura ou Arquivo não encontrado: 'cpyBdFilme.txt' \n");
-            system("Pause");
             return 1;
         }
 
