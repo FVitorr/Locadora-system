@@ -44,7 +44,7 @@ void obterHour(hora *n){
 void obterData(data *n){
     struct tm * DATAHORA_ATUAL;
     time_t segundos;
-        //obtendo o tempo em segundos  
+    //obtendo o tempo em segundos
     time(&segundos); 
     DATAHORA_ATUAL = localtime(&segundos); 
 
@@ -417,6 +417,10 @@ int verifica_log(config *set,int *tipo_config){
         //system("pause");
     }
     return 0;
+}
+
+int replaceInt(int newValue, int *camp){
+    *camp = newValue;
 }
 
 void systemPause(){

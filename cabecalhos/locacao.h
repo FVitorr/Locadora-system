@@ -29,7 +29,7 @@ typedef struct {
     float valorEntrada; //Para pagamentos parcelados
     int tipoPagamento; // 1 - A vista  2 - A prazo
     int qtdParcelas;
-    int TDdevolvido; // 0-Sim 1-Não //Não Altera
+    int TDdevolvido; // 0-Não 1-SIM //Não Altera
     int ultimoIDOperacao;
 }locados;
 
@@ -69,7 +69,7 @@ int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *qtdOperaca
 void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator);
 
 //Key -1 listar todas as locadas
-void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe, int qtdOpe, int key_cliente);
+int listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe, int qtdOpe, int key_cliente);
 
 int saveLocacao(locados objeto, int tipo_config);
 
@@ -82,6 +82,8 @@ int verificaConta(contaCliente **dtbaseCcliente, int qtdCcliente, int idCliente)
 int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *tamanhoOperaca, int *key_operator ,int tipo_config);
 
 int posicaoContaArray(contaCliente **dtbaseCCliente, int qtdCCliente, int idCliente);
+
+int posicaoLocadosArray(locados **dtbaseLocados, int qtdLocados, int key_cliente, int IDlocado);
 
 int inserirCCliente(contaCliente **dtbaseCCliente,contaCliente newEntry, int *qtdCCliente, int *tamanhoCCliente);
 
@@ -96,11 +98,13 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                    locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,
                    fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Operacao,financeiro *monetario,int tipoConfig);
 
-void devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
+int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
                      operacoe **dtbaseOperacoes, int qtdOperacao);
 
-int retornaChaveOperacao(locados **dtbaselocados, int qtdLocados, int key_cliente);
+int retornaChaveOperacao(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
 
 int retornaChaveCliente(contaCliente **dtbase, int qtd, int idCliente);
 
 void listCCliente(contaCliente **dtbaseCCcliente, int qtd);
+
+int verificaIDLocados(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
