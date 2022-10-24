@@ -432,7 +432,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
 
     }else if (op == 2){
         //Devolução;
-        devolucaoFilmes(dtbaseCCliente,*qtdCCliente,dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe);
+        devolucaoFilmes(dtbaseCCliente,*qtdCCliente,dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe,tipo_config);
     }else if (op == 3){
         listCCliente(dtbaseCCliente,*qtdCCliente);
         listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdCCliente,-1);
@@ -902,6 +902,54 @@ int refazDadosCCliente(contaCliente **dtbase, int qtdCCliente, int tipo_config){
     return 0;
 }
 
+
+
+int refazDadosLocados(locados **dtbase, int qtdLocados, int tipo_config){
+    FILE *p;
+    if (tipo_config== 1){
+        p = fopen("cpyBdLocados.txt", "w");
+        fclose(p);
+        p = NULL;
+        for (int i = 0; i < qtdLocados; i++){
+            saveLocacao((*dtbase)[i],tipo_config);
+        }
+    }else if (tipo_config == 0){
+        p = fopen("cpyBdLocados.bin", "wb");
+        fclose(p);
+        for (int i = 0; i < qtdLocados; i++){
+            saveLocacao((*dtbase)[i],tipo_config);
+        }
+    }
+    return 0;
+}
+
+int refazDadosOperacao(operacoe **dtbase, int qtdOperacao, int tipo_config){
+    FILE *p;
+    if (tipo_config== 1){
+        p = fopen("cpyBdOperacao.txt", "w");
+        fclose(p);
+        p = NULL;
+        for (int i = 0; i < qtdOperacao; i++){
+            saveOperacao((*dtbase)[i],tipo_config);
+        }
+    }else if (tipo_config == 0){
+        p = fopen("cpyBdOperacao.bin", "wb");
+        fclose(p);
+        for (int i = 0; i < qtdOperacao; i++){
+            saveOperacao((*dtbase)[i],tipo_config);
+        }
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
 int verificaIDLocados(locados **dtbaselocados, int qtdLocados, int id, int key_cliente){ // 1 existe 0 nao existe
     for (int i = 0; i < qtdLocados; i++){
         if ((*dtbaselocados)[i].ID == id && (*dtbaselocados)[i].key_cliente == key_cliente){
@@ -929,7 +977,7 @@ int retornaChaveCliente(contaCliente **dtbase, int qtd, int idCliente){ // Retor
 
 
 int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
-                     operacoe **dtbaseOperacoes, int qtdOperacao){
+                     operacoe **dtbaseOperacoes, int qtdOperacao,int tipoConfig){
     system("cls");
     line(100,"Devolucao Filmes\0");
     printf("\nContas Disponiveis:\n");
@@ -972,7 +1020,7 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
 
         //Precisa Selecionar a Referencia dos Locados
         //Aqueles que apresenta tudo Devolvido Não serão listado
-        //Ids de Operação não esta Funcionando
+
 
         printf("\nO cliente vai realizar a entrega completa ?  [1- Sim \t 0 - Nao]: ");
         scanf("%d",&entregaCompleta);
@@ -997,9 +1045,22 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
                 }
             }
             //Verificar Tipo Pagamento - Se a prazo o valor deve ser quitado
+            int indexLocados = posicaoLocadosArray(dtbaselocados,qtdLocados,key_cliente,IDlocados);
+            int indexConta = posicaoContaArray(dtbaseCCliente,qtdCCliente,IdCliente);
 
+            if ((*dtbaselocados)[indexLocados].tipoPagamento == 2){//Pagamento a Prazo
+                (*dtbaseCCliente)[indexConta].valorPago = (*dtbaseCCliente)[indexConta].valorPago + (*dtbaselocados)[indexLocados].valordeve;
+                (*dtbaseCCliente)[indexConta].valorDeve = (*dtbaseCCliente)[indexConta].valorDeve - (*dtbaselocados)[indexLocados].valordeve;
+                (*dtbaselocados)[indexLocados].valordeve = (float)0;
+            }
+
+            refazDadosLocados(dtbaselocados,qtdLocados,tipoConfig);
+            refazDadosOperacao(dtbaseOperacoes,qtdOperacao,tipoConfig);
         }else{
-            printf("Informe o ID do filme que sera Devolvido: ");
+            int qtdDevolver;
+            printf("Quantos Filmes serão devolvidos: ");
+            scanf("%d",&qtdDevolver);
+            
         }
     } else{
         printf("\n\n\t[!] O Cliente ja devolveu todos os filmes");

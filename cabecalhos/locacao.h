@@ -87,6 +87,10 @@ int posicaoLocadosArray(locados **dtbaseLocados, int qtdLocados, int key_cliente
 
 int inserirCCliente(contaCliente **dtbaseCCliente,contaCliente newEntry, int *qtdCCliente, int *tamanhoCCliente);
 
+int refazDadosLocados(locados **dtbase, int qtdLocados, int tipo_config);
+
+int refazDadosOperacao(operacoe **dtbase, int qtdOperacao, int tipo_config);
+
 int saveContaCliente(contaCliente objeto, int tipo_config);
 
 int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, int *tamanhoCCliente, int *idControle, int * Key_Cliente,int tipo_config);
@@ -99,7 +103,7 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                    fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Operacao,financeiro *monetario,int tipoConfig);
 
 int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
-                     operacoe **dtbaseOperacoes, int qtdOperacao);
+                     operacoe **dtbaseOperacoes, int qtdOperacao,int tipoconfig);
 
 int retornaChaveOperacao(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
 
