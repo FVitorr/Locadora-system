@@ -99,7 +99,8 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
             }
         case 4:
             while (1){
-                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idFilme, tipo_config);
+                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,idFilme, tipo_config);
+                refazDados_Categoria(dtbaseCategoria,qtd_Categoria,tamanho_Categoria,tipo_config);
                 if (t == 1){
                     return 0;
                 }

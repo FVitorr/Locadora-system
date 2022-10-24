@@ -68,7 +68,8 @@ int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *qtdOperaca
 
 void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator);
 
-void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe);
+//Key -1 listar todas as locadas
+void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe, int qtdOpe, int key_cliente);
 
 int saveLocacao(locados objeto, int tipo_config);
 
@@ -97,5 +98,9 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
 
 void devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
                      operacoe **dtbaseOperacoes, int qtdOperacao);
+
+int retornaChaveOperacao(locados **dtbaselocados, int qtdLocados, int key_cliente);
+
+int retornaChaveCliente(contaCliente **dtbase, int qtd, int idCliente);
 
 void listCCliente(contaCliente **dtbaseCCcliente, int qtd);

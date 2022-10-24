@@ -33,6 +33,7 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 
             if (newOpc.valorFilme == 0){
                 printf("\n[!] Ocorreu um problema e nao foi possivel retornar o valor do Filme\n Por Favor verifique se as categorias foram cadastradas de maneira correta.\n");
+                newOpc.valorFilme = -1;
                 return newOpc;
             }
             newOpc.CodFilme = idtpm;
@@ -83,8 +84,9 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
     while (1){
         operacoe  op = objetoOperacoe(dtbaseFilme,qtdFilme,dtbaseCategoria,qtdCategoria,*KEY_operacao,&newObjeto.ultimoIDOperacao);
 
-        if (op.valorFilme == 0){
+        if (op.valorFilme == -1){
             //Abortar Operação
+            newObjeto.qtdFilme = -1;
             return newObjeto;
         }
         inserirOperacao(dtbaseOperacoe,op,qtdOperacoe,tamanhoOperacoe);
@@ -225,25 +227,33 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                     locados novaLocacao = objetoLocados(idLocado,idCliente,dtbaseFilme,qtdFilme,
                                                         dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Operacao,key_client,tipoConfig);
 
+                    if (novaLocacao.qtdFilme != -1) {
+                        //controle de caixa
+                        if (novaLocacao.tipoPagamento == 1) { //Pagamento a Vista
+                            (*dtBaseCCliente)[indexCliente].valorPago = (*dtBaseCCliente)[indexCliente].valorPago +
+                                                                        novaLocacao.valorTotal; //Adicionar valor ao caixa da locadora
+                            monetario->caixa =
+                                    monetario->caixa + novaLocacao.valorTotal; //Adicionar valor pago a conta cliente
+                        } else { // pagamento a prazo
+                            (*dtBaseCCliente)[indexCliente].valorPago =
+                                    (*dtBaseCCliente)[indexCliente].valorPago + novaLocacao.valorEntrada;
+                            monetario->caixa =
+                                    monetario->caixa + novaLocacao.valorEntrada; //Adicionar valor pago a conta cliente
 
-                    //controle de caixa
-                    if (novaLocacao.tipoPagamento == 1){ //Pagamento a Vista
-                        (*dtBaseCCliente)[indexCliente].valorPago = (*dtBaseCCliente)[indexCliente].valorPago + novaLocacao.valorTotal; //Adicionar valor ao caixa da locadora
-                        monetario->caixa = monetario->caixa + novaLocacao.valorTotal; //Adicionar valor pago a conta cliente
-                    }else{ // pagamento a prazo
-                        (*dtBaseCCliente)[indexCliente].valorPago = (*dtBaseCCliente)[indexCliente].valorPago + novaLocacao.valorEntrada;
-                        monetario->caixa = monetario->caixa + novaLocacao.valorEntrada; //Adicionar valor pago a conta cliente
+                            (*dtBaseCCliente)[indexCliente].valorDeve =
+                                    (*dtBaseCCliente)[indexCliente].valorDeve + novaLocacao.valordeve;
+                        }
+                        //listCCliente(dtbaseCliente, qtdcliente);
 
-                        (*dtBaseCCliente)[indexCliente].valorDeve = (*dtBaseCCliente)[indexCliente].valorDeve + novaLocacao.valordeve;
+
+                        inserirLocados(dtbaseLocados, novaLocacao, qtdLocados, tamanhoLocados);
+                        saveLocacao(novaLocacao, tipoConfig);
+
+                        refazDadosCCliente(dtBaseCCliente, *qtd_CCliente, tipoConfig);
+                        break;
+                    }else{
+                        return -1;
                     }
-                    //listCCliente(dtbaseCliente, qtdcliente);
-
-
-                    inserirLocados(dtbaseLocados,novaLocacao,qtdLocados,tamanhoLocados);
-                    saveLocacao(novaLocacao,tipoConfig);
-
-                    refazDadosCCliente(dtBaseCCliente,*qtd_CCliente,tipoConfig);
-                    break;
                 } else {
                     //conta Cliente nao existe
                     contaCliente novoCliente = objetoCCliente(IdContaCliente, *key_cliente, dtbaseCliente, qtdcliente,idCliente);
@@ -252,25 +262,30 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                     locados novaLocacao = objetoLocados(&novoCliente.IDlocado,idCliente,dtbaseFilme,qtdFilme,
                                                         dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Operacao,*key_cliente,tipoConfig);
 
-                    //controle de caixa
-                    if (novaLocacao.tipoPagamento == 1){ //Pagamento a Vista
-                        novoCliente.valorPago = novoCliente.valorPago + novaLocacao.valorTotal; //Adicionar valor ao caixa da locadora
-                        monetario->caixa = monetario->caixa + novaLocacao.valorTotal; //Adicionar valor pago a conta cliente
-                    }else{ // pagamento a prazo
-                        novoCliente.valorPago = novoCliente.valorPago + novaLocacao.valorEntrada;
-                        monetario->caixa = monetario->caixa + novaLocacao.valorEntrada; //Adicionar valor pago a conta cliente
+                    if (novaLocacao.qtdFilme != -1) {
+                        //controle de caixa
+                        if (novaLocacao.tipoPagamento == 1) { //Pagamento a Vista
+                            novoCliente.valorPago = novoCliente.valorPago +
+                                                    novaLocacao.valorTotal; //Adicionar valor ao caixa da locadora
+                            monetario->caixa =
+                                    monetario->caixa + novaLocacao.valorTotal; //Adicionar valor pago a conta cliente
+                        } else { // pagamento a prazo
+                            novoCliente.valorPago = novoCliente.valorPago + novaLocacao.valorEntrada;
+                            monetario->caixa =
+                                    monetario->caixa + novaLocacao.valorEntrada; //Adicionar valor pago a conta cliente
 
-                        novoCliente.valorDeve = novoCliente.valorDeve + novaLocacao.valordeve;
+                            novoCliente.valorDeve = novoCliente.valorDeve + novaLocacao.valordeve;
+                        }
+
+                        //alterar chave cliente
+                        *key_cliente = *key_cliente + 1;
+
+                        inserirLocados(dtbaseLocados, novaLocacao, qtdLocados, tamanhoLocados);
+                        saveLocacao(novaLocacao, tipoConfig);
+                        //Salvar Cliente
+                        inserirCCliente(dtBaseCCliente, novoCliente, qtd_CCliente, tamanho_CCliente);
+                        saveContaCliente(novoCliente, tipoConfig);
                     }
-
-                    //alterar chave cliente
-                    *key_cliente = *key_cliente + 1;
-
-                    inserirLocados(dtbaseLocados,novaLocacao,qtdLocados,tamanhoLocados);
-                    saveLocacao(novaLocacao,tipoConfig);
-                    //Salvar Cliente
-                    inserirCCliente(dtBaseCCliente,novoCliente,qtd_CCliente,tamanho_CCliente);
-                    saveContaCliente(novoCliente,tipoConfig);
                 }
                 break;
             }
@@ -321,23 +336,25 @@ int verificaConta(contaCliente **dtbaseCcliente, int qtdCcliente, int idCliente)
 }
 
 
-void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe){
+void listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe, int qtdOpe, int key_cliente){
     data emprestimo,devolucao;
     for (int c = 0; c < qtdLocados; c++) {
-        for (int a = 0; a < qtdLocados; a++) {
+        for (int a = 0; a < qtdOpe; a++) {
             if ((*dtbaselocados)[c].KEY_operator == (*dtbaseOperacoe)[c].KEY_operator){
                 emprestimo = (*dtbaseOperacoe)[c].dtemprestimo;
                 devolucao = (*dtbaseOperacoe)[c].dtdevolucao;
                 break;
             }
         }
-        printf("\n-----------------------------------------------------------------\n");
-        printf("(%d)\nCodigo Cliente: %d\n"
-               "Registro da Operacao: %d\n"
-               "Data: %d/%d/%d\n"
-               "Quantidade de Filmes: %d\n"
-               "Data Devolucao: %d/%d/%d\n"
-               "Valor Total: R$ %.2f\n",(*dtbaselocados)[c].ID,(*dtbaselocados)[c].key_cliente,(*dtbaselocados)[c].KEY_operator,emprestimo.dia,emprestimo.mes,emprestimo.ano,(*dtbaselocados)[c].qtdFilme,devolucao.dia,devolucao.mes,devolucao.ano,(*dtbaselocados)[c].valorTotal);
+        if (key_cliente == (*dtbaselocados)[c].key_cliente || key_cliente == -1){
+            printf("\n-----------------------------------------------------------------\n");
+            printf("(%d)\nCodigo Cliente: %d\n"
+                   "Registro da Operacao: %d\n"
+                   "Data: %d/%d/%d\n"
+                   "Quantidade de Filmes: %d\n"
+                   "Data Devolucao: %d/%d/%d\n"
+                   "Valor Total: R$ %.2f\n",(*dtbaselocados)[c].ID,(*dtbaselocados)[c].key_cliente,(*dtbaselocados)[c].KEY_operator,emprestimo.dia,emprestimo.mes,emprestimo.ano,(*dtbaselocados)[c].qtdFilme,devolucao.dia,devolucao.mes,devolucao.ano,(*dtbaselocados)[c].valorTotal);
+        }
     }
     printf("\n");
 }
@@ -404,7 +421,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
         devolucaoFilmes(dtbaseCCliente,*qtdCCliente,dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe);
     }else if (op == 3){
         listCCliente(dtbaseCCliente,*qtdCCliente);
-        listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe);
+        listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdCCliente,-1);
         system("pause");
     }
     return 0;
@@ -879,13 +896,23 @@ int verificaIDConta(contaCliente **dtbaselocados, int qtdLocados, int id){ // 1 
     }return 0;
 }
 
-int retornaChave(locados **dtbaselocados, int qtdLocados, int id){ // Retorna a chave da operaçao
+int retornaChaveOperacao(locados **dtbaselocados, int qtdLocados, int key_cliente){ // Retorna a chave da operaçao
     for (int i = 0; i < qtdLocados; i++){
-        if ((*dtbaselocados)[i].ID == id){
+        if ((*dtbaselocados)[i].key_cliente == key_cliente){
             return (*dtbaselocados)[i].KEY_operator;
         }
-    }return 0;
+    }return -1;
 }
+int retornaChaveCliente(contaCliente **dtbase, int qtd, int idCliente){ // Retorna a chave do cliente
+    for (int i = 0; i < qtd; i++){
+        if ((*dtbase)[i].idCliente == idCliente){
+            return (*dtbase)[i].key_cliente;
+        }
+    }return -1;
+}
+
+
+
 
 void devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
                      operacoe **dtbaseOperacoes, int qtdOperacao){
@@ -906,16 +933,37 @@ void devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtb
         erroID = 1;
     } while (verificaConta(dtbaseCCliente,qtdCCliente,IdCliente) == 0);
 
-    int key_operator = retornaChave(dtbaselocados,qtdLocados,IdCliente);
+    int key_cliente =  retornaChaveCliente(dtbaseCCliente,qtdCCliente,IdCliente);
+    int key_operator = retornaChaveOperacao(dtbaselocados,qtdLocados,key_cliente);
 
-    printf("\nVerifique os Filmes Alugados: ");
+    //printf("%d %d",key_cliente,key_operator);
+
+    printf("\nDevolucoes pendentes ");
+    listLocacao(dtbaselocados,qtdLocados,dtbaseOperacoes,qtdOperacao,key_cliente);
+    printf("\nVerifique os Filmes: ");
     listOperacoes(dtbaseOperacoes,qtdOperacao,key_operator);
+
+
+    //Precisa Selecionar a Referencia dos Locados
+    //Aqueles que apresenta tudo Devolvido Não serão listado
+    //Ids de Operação não esta Funcionando
 
     printf("\nO cliente vai realizar a entrega completa ?  [1- Sim \t 0 - Nao]: ");
     scanf("%d",&entregaCompleta);
 
     if (entregaCompleta == 1){
         //Devolveu tudo
+        for (int i = 0; i< qtdLocados; i++){
+            if((*dtbaselocados)[i].key_cliente == key_cliente){
+                (*dtbaselocados)[i].TDdevolvido = 1;
+                break;
+            }
+        }
+        for (int i = 0; i< qtdOperacao; i++){
+            if((*dtbaseOperacoes)[i].KEY_operator == key_operator){
+                (*dtbaseOperacoes)[i].devolvido = 1;
+            }
+        }
     }else{
         printf("Informe o ID do filme que sera Devolvido: ");
     }
