@@ -50,7 +50,7 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
         }
     }while (1);
 
-    dataAtual(newOpc.dtemprestimo);
+    dataAtual(&newOpc.dtemprestimo);
     printf("\n>> Data do emprestimo: %d/%d/%d\n",newOpc.dtemprestimo.dia,newOpc.dtemprestimo.mes,newOpc.dtemprestimo.ano);
 
     newOpc.dtdevolucao.dia = 0;
@@ -1045,7 +1045,7 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
 
                     //Setar data de Devoluçao como HJ
                     data *dtDevolucao = &(*dtbaseOperacoes)[i].dtdevolucao;
-                    dataAtual(*dtDevolucao);
+                    dataAtual(dtDevolucao);
                     //Verificar se passou do prazo de entrega e calcular multa;
                     //printf("%d / %d / %d",dtDevolucao->dia,dtDevolucao->mes,dtDevolucao->ano);
                 }

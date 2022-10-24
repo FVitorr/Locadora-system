@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-// Comentei pq essa biblioteca não existe no linux
 #include <conio.h>
 #include "cabecalhos/fucGlobal.h"
 #include <io.h>
