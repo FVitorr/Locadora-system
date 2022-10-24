@@ -24,18 +24,15 @@ const char *nome_dia[
                          "quinta",
                          "sexta"};
 
-data dataAtual() {
+void dataAtual(data data) {
     struct tm *data_hora_atual;
     time_t segundos;
     time(&segundos);
     data_hora_atual = localtime(&segundos);
 
-    data data;
     data.dia = data_hora_atual->tm_mday;
     data.mes = data_hora_atual->tm_mon + 1;
     data.ano = data_hora_atual->tm_year + 1900;
-
-    return data;
 }
 
 void formatarData(data data) {

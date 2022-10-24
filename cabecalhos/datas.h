@@ -7,7 +7,7 @@ typedef struct {
     int ano;
 } data;
 
-data dataAtual();
+void dataAtual(data data);
 void formatarData(data data);
 int isBissexto(int ano);
 int validarData(data data);
