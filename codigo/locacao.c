@@ -42,6 +42,9 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 
             //Nome Filme
             newOpc.nomeFilme = nomeFilme(dtbaseFilme,qtdFilme,idtpm);
+            printf("\n>> Nome Filme: %s\n",newOpc.nomeFilme);
+
+            printf("\n>> Valor Filme: R$ %.2f\n",newOpc.valorFilme);
 
             break;
         } else {
@@ -53,9 +56,11 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
     dataAtual(&newOpc.dtemprestimo);
     printf("\n>> Data do emprestimo: %d/%d/%d\n",newOpc.dtemprestimo.dia,newOpc.dtemprestimo.mes,newOpc.dtemprestimo.ano);
 
-    newOpc.dtdevolucao.dia = 0;
-    newOpc.dtdevolucao.mes = 0;
-    newOpc.dtdevolucao.ano = 0;
+    newOpc.dtdevolucao = somaDataDias(newOpc.dtemprestimo,8);
+//    newOpc.dtdevolucao.dia = 0;
+//    newOpc.dtdevolucao.mes = 0;
+//    newOpc.dtdevolucao.ano = 0;
+    printf("\n>> Data da Devolucao: %d/%d/%d\n",newOpc.dtdevolucao.dia,newOpc.dtdevolucao.mes,newOpc.dtdevolucao.ano);
 
     newOpc.devolvido = 0; // 0 - Não
     return  newOpc;
@@ -70,7 +75,7 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
     locados newObjeto;
 
     newObjeto.ID = *idControleLocados; // valor guardado na struct cliente
-    *idControleLocados = *idControleLocados + 1; //Incrementar ID
+    //*idControleLocados = *idControleLocados + 1; //Incrementar ID
 
     newObjeto.KEY_operator = *KEY_operacao; // Valor unico para cada cliente mas as operacoes apresenta o mesmo valor
 
@@ -120,17 +125,19 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
         scanf("%d",&newObjeto.tipoPagamento);
     } while (newObjeto.tipoPagamento > 2 || newObjeto.tipoPagamento < 1);
 
+    replacefloat(0,&newObjeto.valorEntrada);
+
     if (newObjeto.tipoPagamento == 1){//Pagamento a vista
         newObjeto.qtdParcelas = 1;
         newObjeto.valordeve = 0; // Cliente pagou tudo
 //        //Adicionar valor ao caixa
 //        monetario->caixa = monetario->caixa + newObjeto.valorPago;
 //        //Adicionar valor pago a conta cliente fora da função
-        dataAtual(newObjeto.Dtpagamento);
+        dataAtual(&newObjeto.Dtpagamento);
 
     }else{
-        newObjeto.valorEntrada = 0;
-        int ent = 0,qtdParcelas;
+        int ent = 0;
+        float qtdParcelas;
         float valorE;
         // Valores de entrada
         do{
@@ -163,26 +170,28 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
             //Dividir o restante
             do{
                 printf("\n>> Deseja dividir o valor R$ %.2f de quantas Vezes [3x Parcelas Maximas] ? ", newObjeto.valordeve);
-                scanf("%d",&qtdParcelas);
-                if (qtdParcelas < 3 && qtdParcelas > 0){ break;}
+                scanf("%f",&qtdParcelas);
+                if (qtdParcelas <= 3 && qtdParcelas > 0){ break;}
                 else{ printf("\n[!] Quantidade de Parcelas invalido\n");}
             } while (1);
 
 
-            printf("\nA conta foi dividida em %d parcelas \n O Valor de cada parcela e: R$ %.2f",qtdParcelas,newObjeto.valordeve/qtdParcelas);
-            newObjeto.qtdParcelas = qtdParcelas;
+            float valorParcelas = newObjeto.valorTotal/qtdParcelas;
+            printf("\nA conta foi dividida em %f parcelas \n O Valor de cada parcela e: R$ %.2f\n",qtdParcelas,valorParcelas);
+            newObjeto.qtdParcelas = (int)qtdParcelas;
 
         }else{
             //Caso não seja fornecido uma  entrada
             do{
                 printf("\n>> Deseja dividir o valor R$ %.2f de quantas Vezes [3x Parcelas Maximas] ? ",newObjeto.valorTotal);
-                scanf("%d",&qtdParcelas);
-                if (qtdParcelas < 3 && qtdParcelas > 0){ break;}
+                scanf("%f",&qtdParcelas);
+                if (qtdParcelas <= 3 && qtdParcelas > 0){ break;}
                 else{ printf("\n[!] Quantidade de Parcelas invalido\n");}
             } while (1);
 
-            printf("\nA conta foi dividida em %d parcelas \n O Valor de cada parcela e: R$ %.2f",qtdParcelas,newObjeto.valordeve/qtdParcelas);
-            newObjeto.qtdParcelas = qtdParcelas;
+            float valorParcelas = newObjeto.valorTotal/qtdParcelas;
+            printf("\nA conta foi dividida em %f parcelas \n O Valor de cada parcela e: R$ %.2f",qtdParcelas,valorParcelas);
+            newObjeto.qtdParcelas = (int)qtdParcelas;
             newObjeto.valordeve = newObjeto.valorTotal;
         }
         //monetario->contasReceber = monetario->contasReceber + newObjeto.valorPago;
@@ -205,7 +214,12 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
     //Cliente
     int idCliente;
     do {
-        printf("Informe ID do Cliente: ");
+        printf("\n\nClientes Disponiveis: ");
+        for (int i = 0; i < qtdcliente; i++){
+            printf("  (%d) %s  ",(*dtbaseCliente)[i].id,(*dtbaseCliente)[i].nome);
+        }
+
+        printf("\n\nInforme ID do Cliente: ");
         scanf("%d", &idCliente);
 
         int confirm;
@@ -226,11 +240,12 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                         return -1;
                     }
 
-                    int *idLocado = &(*dtBaseCCliente)[indexCliente].IDlocado;
                     int key_client = (*dtBaseCCliente)[indexCliente].key_cliente;
 
-                    locados novaLocacao = objetoLocados(idLocado,idCliente,dtbaseFilme,qtdFilme,
-                                                        dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Operacao,key_client,tipoConfig);
+                    locados novaLocacao = objetoLocados(&(*dtBaseCCliente)[indexCliente].IDlocado,idCliente,dtbaseFilme,qtdFilme,
+                                                        dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Operacao,idCliente,tipoConfig);
+
+                    (*dtBaseCCliente)[indexCliente].IDlocado = (*dtBaseCCliente)[indexCliente].IDlocado + 1;
 
                     if (novaLocacao.qtdFilme != -1) {
                         //controle de caixa
@@ -242,11 +257,12 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                         } else { // pagamento a prazo
                             (*dtBaseCCliente)[indexCliente].valorPago =
                                     (*dtBaseCCliente)[indexCliente].valorPago + novaLocacao.valorEntrada;
-                            monetario->caixa =
-                                    monetario->caixa + novaLocacao.valorEntrada; //Adicionar valor pago a conta cliente
+                            monetario->caixa = monetario->caixa + novaLocacao.valorEntrada; //Adicionar valor pago a conta cliente
 
                             (*dtBaseCCliente)[indexCliente].valorDeve =
                                     (*dtBaseCCliente)[indexCliente].valorDeve + novaLocacao.valordeve;
+
+                            monetario->contasReceber = monetario->contasReceber + novaLocacao.valordeve;
                         }
                         //listCCliente(dtbaseCliente, qtdcliente);
 
@@ -261,11 +277,13 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                     }
                 } else {
 
-                    contaCliente novoCliente = objetoCCliente(IdContaCliente, *key_cliente, dtbaseCliente, qtdcliente,idCliente);
+                    contaCliente novoCliente = objetoCCliente(IdContaCliente, idCliente, dtbaseCliente, qtdcliente,idCliente);
                     //Salvar conta cliente;
                     //Criar objeto Locado
                     locados novaLocacao = objetoLocados(&novoCliente.IDlocado,idCliente,dtbaseFilme,qtdFilme,
-                                                        dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Operacao,*key_cliente,tipoConfig);
+                                                        dtbaseOperacoe,qtdOperacoe,tamanhoOperacoe,dtbaseCategoria,qtdCategoria,KEY_Operacao,idCliente,tipoConfig);
+
+                    novoCliente.IDlocado++;
 
                     if (novaLocacao.qtdFilme != -1) {
                         //controle de caixa
@@ -352,23 +370,31 @@ int verificaConta(contaCliente **dtbaseCcliente, int qtdCcliente, int idCliente)
 
 int listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe, int qtdOpe, int key_cliente){
     data emprestimo,devolucao;
+    char tipoPagamento[30];
     int test = 0;
     for (int c = 0; c < qtdLocados; c++) {
         for (int a = 0; a < qtdOpe; a++) {
-            if ((*dtbaselocados)[c].KEY_operator == (*dtbaseOperacoe)[c].KEY_operator){
+            if ((*dtbaselocados)[c].KEY_operator == (*dtbaseOperacoe)[a].KEY_operator){
                 emprestimo = (*dtbaseOperacoe)[c].dtemprestimo;
                 devolucao = (*dtbaseOperacoe)[c].dtdevolucao;
                 break;
             }
         }
         if ((key_cliente == (*dtbaselocados)[c].key_cliente || key_cliente == -1) && (*dtbaselocados)[c].TDdevolvido == 0){
+            if ((*dtbaselocados)[c].tipoPagamento == 1){
+                strcpy(tipoPagamento,"A Vista\0");
+            }else{
+                strcpy(tipoPagamento,"Parcelado\0");
+            }
             printf("\n-----------------------------------------------------------------\n");
-            printf("(%d)\nCodigo Cliente: %d\n"
+            printf("(%d) Codigo Cliente: %d\n"
                    "Registro da Operacao: %d\n"
-                   "Data: %d/%d/%d\n"
+                   "Data Emprestimo: %d/%d/%d\n"
                    "Quantidade de Filmes: %d\n"
-                   "Data Devolucao: %d/%d/%d\n"
-                   "Valor Total: R$ %.2f\n",(*dtbaselocados)[c].ID,(*dtbaselocados)[c].key_cliente,(*dtbaselocados)[c].KEY_operator,emprestimo.dia,emprestimo.mes,emprestimo.ano,(*dtbaselocados)[c].qtdFilme,devolucao.dia,devolucao.mes,devolucao.ano,(*dtbaselocados)[c].valorTotal);
+                   "Data Devolucao Prevista: %d/%d/%d\n"
+                   "Tipo Pagamento: %s\n"
+                   "Valor Total: R$ %.2f\n"
+                   "Data Pagamento %d/%d/%d\n",(*dtbaselocados)[c].ID,(*dtbaselocados)[c].key_cliente,(*dtbaselocados)[c].KEY_operator,emprestimo.dia,emprestimo.mes,emprestimo.ano,(*dtbaselocados)[c].qtdFilme,devolucao.dia,devolucao.mes,devolucao.ano,tipoPagamento,(*dtbaselocados)[c].valorTotal,(*dtbaselocados)[c].Dtpagamento.dia,(*dtbaselocados)[c].Dtpagamento.mes,(*dtbaselocados)[c].Dtpagamento.ano);
             test++;
         }
     }
@@ -440,7 +466,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
         //Devolução;
         devolucaoFilmes(dtbaseCCliente,*qtdCCliente,dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe,tipo_config);
     }else if (op == 3){
-        listCCliente(dtbaseCCliente,*qtdCCliente);
+        //listCCliente(dtbaseCCliente,*qtdCCliente);
         listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdCCliente,-1);
         system("pause");
     }
@@ -634,7 +660,7 @@ int saveLocacao(locados objeto, int tipo_config){
             return 1;
         }
 
-        fprintf(locadosF, "%d\n%d\n%d\n%d\n%f\n%f\n%f\n%d\n%d\n%d\n%d",
+        fprintf(locadosF, "%d\n%d\n%d\n%d\n%f\n%f\n%f\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",
                 objeto.ID,
                 objeto.KEY_operator,
                 objeto.key_cliente,
@@ -643,6 +669,9 @@ int saveLocacao(locados objeto, int tipo_config){
                 objeto.valordeve,
                 objeto.valorEntrada,
                 objeto.tipoPagamento,
+                objeto.Dtpagamento.dia,
+                objeto.Dtpagamento.mes,
+                objeto.Dtpagamento.ano,
                 objeto.qtdParcelas,
                 objeto.TDdevolvido,
                 objeto.ultimoIDOperacao);
@@ -697,6 +726,11 @@ int carregarDados_locacao(locados **dtbaseLocados, int *qtdlocados, int *tamanho
             fscanf(fileLocados, "%f\n", &new.valorEntrada);
 
             fscanf(fileLocados, "%d\n", &new.tipoPagamento);
+
+            fscanf(fileLocados, "%d\n", &new.Dtpagamento.dia);
+            fscanf(fileLocados, "%d\n", &new.Dtpagamento.mes);
+            fscanf(fileLocados, "%d\n", &new.Dtpagamento.ano);
+
 
             fscanf(fileLocados, "%d\n", &new.qtdParcelas);
 
@@ -781,7 +815,7 @@ int saveContaCliente(contaCliente objeto, int tipo_config){
             return 1;
         }
 
-        fprintf(contaclienteF, "%d\n%d\n%d\n%s\n%f\n%f\n%d",
+        fprintf(contaclienteF, "%d\n%d\n%d\n%s\n%f\n%f\n%d\n",
                 objeto.ID,
                 objeto.key_cliente,
                 objeto.idCliente,
@@ -804,6 +838,14 @@ int saveContaCliente(contaCliente objeto, int tipo_config){
     fclose(contaclienteF);
     contaclienteF = NULL;
     return 0;
+}
+
+void corrigirIdCCliente(contaCliente  **dtbase, int qtdLocados,int *codigo){
+    for (int i = 0; i < qtdLocados ; i++){
+        if((*dtbase)[i].ID == *codigo ){
+            *codigo =  (*dtbase)[i].ID + 1;
+        }
+    }
 }
 
 
@@ -846,6 +888,8 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
 //                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
 //            }
             //printf("QTD: %d",*qtd_lo);
+            corrigirIdCCliente(dtBaseCCliente,*qtd_CCliente,&new.ID);
+
             t = inserirCCliente(dtBaseCCliente,new,qtd_CCliente,tamanhoCCliente);
             if (*idControle <= new.ID) {
                 *idControle = new.ID + 1;
@@ -947,12 +991,6 @@ int refazDadosOperacao(operacoe **dtbase, int qtdOperacao, int tipo_config){
     }
     return 0;
 }
-
-
-
-
-
-
 
 
 
@@ -1060,11 +1098,12 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
                 //(*dtbaseCCliente)[indexConta].valorDeve = (*dtbaseCCliente)[indexConta].valorDeve - (*dtbaselocados)[indexLocados].valordeve;
                 replacefloat((*dtbaseCCliente)[indexConta].valorDeve - (*dtbaselocados)[indexLocados].valordeve,&(*dtbaseCCliente)[indexConta].valorDeve);
                 replacefloat(0,&(*dtbaselocados)[indexLocados].valordeve);
-                dataAtual((dtbaselocados[indexLocados]->Dtpagamento));
+                dataAtual(&(*dtbaselocados)[indexLocados].Dtpagamento);
             }
 
             refazDadosLocados(dtbaselocados,qtdLocados,tipoConfig);
             refazDadosOperacao(dtbaseOperacoes,qtdOperacao,tipoConfig);
+            refazDadosCCliente(dtbaseCCliente,qtdCCliente,tipoConfig);
         }else{
             int qtdDevolver;
             printf("Quantos Filmes serão devolvidos: ");

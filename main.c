@@ -79,6 +79,8 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
                                     dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,
                                     dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,
                                     dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,*qtd_Categoria,Key_operacao,Key_cliente,monetario_,tipo_config);
+                (*dtbaseLocadora)[0].monetario = *monetario_;
+                refazDados_Locadora(dtbaseLocadora,*qtd_Locadora,tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -137,7 +139,7 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
 
 
 
-int carregaTodosDados(int *tipoConfig, config *config_system,
+int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmonetario,
                       filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                       locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
                       locados **dtBaseLocados, int *qtd_Locados, int *tamanho_Locados, int *idLocados,
@@ -151,6 +153,9 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
     int pExecute = verifica_log(config_system,tipoConfig);
     carregarDados_filme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, idFilme, *tipoConfig);
     carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
+
+    monetario = (*dtbaseLocadora)[0].monetario ;
+
     carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
     carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
     //carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
@@ -174,7 +179,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
         line(100,"-\0");
 
         locadora newLocadora = criarLocadora(idLocadora);
-        inserirLocadora(dtbaseLocadora,newLocadora,qtd_Locadora,tamanho_Locadora, *tipoConfig);
+        inserirLocadora(dtbaseLocadora,newLocadora,qtd_Locadora,tamanho_Locadora);
         saveLocadora(newLocadora,*tipoConfig);
 
         //Passar os parametros de Autentificação(Administrador)  para o arquivo de LOG
@@ -214,7 +219,7 @@ int main() {
     //Verifica se os arquivos existem caso contrario criar
     //verifica_arquivos(tipoConfig);
     //Carrega os arquivos e Verifica se é primeira execursão
-    carregaTodosDados(&tipoConfig,&config_System,
+    carregaTodosDados(&tipoConfig,&config_System,&monetario,
                       &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                       &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
                       &bd_locados,&qtdLocado,&tamanhoLocados,&idControleLocados,

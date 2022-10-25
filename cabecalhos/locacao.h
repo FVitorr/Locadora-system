@@ -14,12 +14,6 @@ typedef struct {
 }operacoe;
 
 typedef struct {
-    float caixa;
-    float despesas;
-    float contasReceber;
-}financeiro;
-
-typedef struct {
     int ID;
     int KEY_operator;
     int key_cliente;; //Valor unico para cliente

@@ -77,10 +77,14 @@ locadora criarLocadora(int *id) {
     printf("Senha: ");
     obj.password = obterPassword(16);
 
+    obj.monetario.caixa = 0;
+    obj.monetario.despesas = 0;
+    obj.monetario.contasReceber = 0;
+
     return obj;
 }
 
-int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora, int tipo_config) {
+int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora) {
     if (*qtdLocadora == *tamanhoLocadora)
     {
         *tamanhoLocadora = *tamanhoLocadora + 1;
@@ -110,7 +114,7 @@ int removerLocadora(locadora **dtbase, int id, int *qtdLocadora, int *tamanhoLoc
             break;
         }
     }
-    refazDados_Locadora(dtbase,qtdLocadora,tamanhoLocadora,tipo_config);
+    refazDados_Locadora(dtbase,*qtdLocadora,tipo_config);
     return 0;
 }
 
@@ -153,7 +157,7 @@ void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, in
             break;
         }
     }
-    refazDados_Locadora(dtbase,qtdLocadora,tamanhoLocadora,tipo_config);
+    refazDados_Locadora(dtbase,*qtdLocadora,tipo_config);
 }
 
 int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id, int tipo_config){
@@ -187,7 +191,7 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         system("cls");
         printf(">> Nova Locadora     \tID: %d \n", *id);
         locadora newLocadora = criarLocadora(id);
-        inserirLocadora(dtbase,newLocadora,qtdLocadora,tamanhoLocadora, tipo_config);
+        inserirLocadora(dtbase,newLocadora,qtdLocadora,tamanhoLocadora);
         saveLocadora(newLocadora,tipo_config);
     }
     else if (opc == 2)
@@ -246,7 +250,7 @@ int saveLocadora(locadora objeto,int tipo_config){
             return 1;
         }
 
-        fprintf(locadoraF,"%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+        fprintf(locadoraF,"%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%f\n%f\n%f\n%s\n%s\n",
                 objeto.id,
                 objeto.nomeFantasia,
                 objeto.razaoSocial,
@@ -261,6 +265,11 @@ int saveLocadora(locadora objeto,int tipo_config){
                 objeto.email,
                 objeto.nomeResponsavel,
                 objeto.telefoneResponsavel,
+
+                objeto.monetario.caixa,
+                objeto.monetario.despesas,
+                objeto.monetario.contasReceber,
+
                 objeto.user,
                 objeto.password
 );
@@ -349,6 +358,10 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
             fgets(new.telefoneResponsavel, 15, arquivo);
             limpa_final_string(new.telefoneResponsavel);
 
+            fscanf(arquivo, "%f\n", &new.monetario.caixa);
+            fscanf(arquivo, "%f\n", &new.monetario.despesas);
+            fscanf(arquivo, "%f\n", &new.monetario.contasReceber);
+
             fgets(new.user, 30, arquivo);
             limpa_final_string(new.user);
 
@@ -358,7 +371,7 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
             //printf("New.PassWord: %s",new.password);
 
             if (verifica_IDLocadora(dtBase,*qtdLocadora,new.id) == 0){
-                t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora,tipo_config);
+                t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora);
                 if (*id <= new.id) {
                     *id = new.id + 1;
                 }
@@ -383,7 +396,7 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
                 break;
             }
             fread(&new,sizeof(locadora),1,p);
-            t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora,tipo_config);
+            t = inserirLocadora(dtBase,new,qtdLocadora,tamanhoLocadora);
             if (*id <= new.id) {
                     *id = new.id + 1;
             }
@@ -397,19 +410,19 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
     }
     return 0;
 }
-int refazDados_Locadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int tipo_configuracao){
+int refazDados_Locadora(locadora **dtbase, int qtdLocadora, int tipo_configuracao){
 
     FILE *p;
     if (tipo_configuracao == 1){
         p = fopen("cpyBdLocadora.txt", "w");
         fclose(p);
-        for (int i = 0; i < *qtdLocadora; i++){
+        for (int i = 0; i < qtdLocadora; i++){
             saveLocadora((*dtbase)[i],1);
         }
     }else if (tipo_configuracao == 0){
         p = fopen("cpyBdLocadora.bin", "wb");
         fclose(p);
-        for (int i = 0; i < *qtdLocadora; i++){
+        for (int i = 0; i < qtdLocadora; i++){
             saveLocadora((*dtbase)[i],0);
         }
     }
@@ -418,7 +431,7 @@ int refazDados_Locadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocador
 
 int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int *id){
     locadora new = criarLocadora(id);
-    inserirLocadora(dtbase,new,qtdLocadora,tamanhoLocadora,*id);
+    inserirLocadora(dtbase,new,qtdLocadora,tamanhoLocadora);
 
     strcpy(user,new.user);
     new.password = password;
