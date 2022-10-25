@@ -9,7 +9,8 @@ typedef struct {
     char *nomeFilme;
     float valorFilme;
     data dtemprestimo;
-    data dtdevolucao;
+    data dtdevolucao; // Prevista
+    data dtdevolucaoReal;
     int devolvido; // 0-Sim 1-Não //Não Altera
 }operacoe;
 

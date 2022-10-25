@@ -438,19 +438,3 @@ int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *q
 
     //SALVAR NO ARQUIVO DE LOCADORAS
 }
-
-//locadora *bd_locadora;
-//int qtdLocadora = 0, tamanhoLocadora = 1, idControleLocadora = 0;
-//
-//int main(){
-//    bd_locadora = malloc(tamanhoLocadora * sizeof(locadora));
-//    while (1)
-//    {
-//        int t = menuLocadora(&bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora);
-//        if (t == 1){
-//            break;
-//        }
-//    }
-//    free(bd_locadora);
-//    return 0;
-//}

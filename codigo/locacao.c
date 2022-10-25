@@ -56,7 +56,7 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
     dataAtual(&newOpc.dtemprestimo);
     printf("\n>> Data do emprestimo: %d/%d/%d\n",newOpc.dtemprestimo.dia,newOpc.dtemprestimo.mes,newOpc.dtemprestimo.ano);
 
-    newOpc.dtdevolucao = somaDataDias(newOpc.dtemprestimo,8);
+    newOpc.dtdevolucao = somaDataDias(newOpc.dtemprestimo,7); //prevista
 //    newOpc.dtdevolucao.dia = 0;
 //    newOpc.dtdevolucao.mes = 0;
 //    newOpc.dtdevolucao.ano = 0;
@@ -290,18 +290,18 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                         if (novaLocacao.tipoPagamento == 1) { //Pagamento a Vista
                             novoCliente.valorPago = novoCliente.valorPago +
                                                     novaLocacao.valorTotal; //Adicionar valor ao caixa da locadora
-                            monetario->caixa =
-                                    monetario->caixa + novaLocacao.valorTotal; //Adicionar valor pago a conta cliente
+                            monetario->caixa = monetario->caixa + novaLocacao.valorTotal; //Adicionar valor pago a conta cliente
                         } else { // pagamento a prazo
                             novoCliente.valorPago = novoCliente.valorPago + novaLocacao.valorEntrada;
-                            monetario->caixa =
-                                    monetario->caixa + novaLocacao.valorEntrada; //Adicionar valor pago a conta cliente
+                            monetario->caixa = monetario->caixa + novaLocacao.valorEntrada; //Adicionar valor pago a conta cliente
 
                             novoCliente.valorDeve = novoCliente.valorDeve + novaLocacao.valordeve;
+
+                            monetario->contasReceber = monetario->contasReceber + novaLocacao.valordeve;
                         }
 
                         //alterar chave cliente
-                        *key_cliente = *key_cliente + 1;
+                        //*key_cliente = *key_cliente + 1;
 
                         inserirLocados(dtbaseLocados, novaLocacao, qtdLocados, tamanhoLocados);
                         saveLocacao(novaLocacao, tipoConfig);
@@ -1082,9 +1082,20 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
                     replaceInt(1,&(*dtbaseOperacoes)[i].devolvido);
 
                     //Setar data de Devoluçao como HJ
-                    data *dtDevolucao = &(*dtbaseOperacoes)[i].dtdevolucao;
+                    data *dtDevolucao = &(*dtbaseOperacoes)[i].dtdevolucaoReal;
                     dataAtual(dtDevolucao);
                     //Verificar se passou do prazo de entrega e calcular multa;
+
+                    data hoje;
+                    dataAtual(&hoje);
+                    int t = diasEntreDatas((*dtbaseOperacoes)[i].dtdevolucao,hoje);
+
+                    if (t > 0){
+                        printf(">> MULTA APLICADA.");
+                    }
+
+                    printf("%d/%d/%d   %d/%d/%d  %d"  , (*dtbaseOperacoes)[i].dtdevolucao.dia,(*dtbaseOperacoes)[i].dtdevolucao.mes,(*dtbaseOperacoes)[i].dtdevolucao.ano,
+                           hoje.dia,hoje.mes,hoje.ano,t );
                     //printf("%d / %d / %d",dtDevolucao->dia,dtDevolucao->mes,dtDevolucao->ano);
                 }
             }
