@@ -43,7 +43,7 @@ typedef struct {
 operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
                         int KEY_operator, int *idOperacao);
 
-locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,
+locados objetoLocados (int idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,
                        operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
                        fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_operacao,int Key_Cliente,
                        int tipoConfig);
@@ -105,6 +105,8 @@ int retornaChaveOperacao(locados **dtbaselocados, int qtdLocados, int id, int ke
 
 int retornaChaveCliente(contaCliente **dtbase, int qtd, int idCliente);
 
-void listCCliente(contaCliente **dtbaseCCcliente, int qtd);
+void listCCliente(contaCliente **dtbaseCCcliente, int qtd, int key_cliente);
+
+int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbaseLocados, int qtdLocados, int tipoconfig);
 
 int verificaIDLocados(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
