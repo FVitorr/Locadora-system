@@ -429,6 +429,7 @@ int refazDados_Locadora(locadora **dtbase, int qtdLocadora, int tipo_configuraca
     return 0;
 }
 
+
 int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int *id){
     locadora new = criarLocadora(id);
     inserirLocadora(dtbase,new,qtdLocadora,tamanhoLocadora);

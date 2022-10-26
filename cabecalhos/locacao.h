@@ -40,14 +40,30 @@ typedef struct {
     int IDlocado;
 }contaCliente;
 
+typedef struct
+{
+    int ID;
+    float frete,Imposto;
+    filme *entradaFilmesCadastro; // Nem todos os campos da struct são alterados, mas ainda o codigo funciona como quero
+    //Campos Usados: Nome: (Talvez vai ter que comparar nomes) ValorCompra: E quantidade
+    int tamFilm;
+    int ultIDFilm;
+}operacaoEFilme;
+
 typedef struct 
 {
-    char nomefornecedor[120];
-    float valorFrete;
-    float imposto;
-    float valorProdutos;
-
+    int ID;
+    int IDFornecedor;
+    char *nomefornecedor;
+    char cnpj[15];
+    int key_fornecedorArray; // Id de referencia no array dtbaseFornecedor
+    operacaoEFilme *filmes;
+    int tamOp;
+    int ultIDOp; //Ultimo Id da Operacao;
 }eFilme;
+
+
+
 
 
 
@@ -66,8 +82,10 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 funcionarios **dtbaseFuncionarios, int qtdFuncionarios,int idFuncionarioLogado,
                 locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                contaCliente **dtbaseCCliente,int *qtdCCliente,int *tamanhoCCliente,int *idCCliente,
-                fCategoria **dtbaseCategoria, int qtdCategoria,int *KEY_Operacao, int *KEY_Cliente,financeiro *monetario,int tipo_config);
+                contaCliente **dtbaseCCliente,int *qtdCCliente,int *tamanho_CCliente,int *idCCliente,
+                fCategoria **dtbaseCategoria, int qtdCategoria,int *KEY_Operacao, int *KEY_Cliente,
+                fornecedor **dtbaseFornecedor, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme,
+                eFilme **dtBaseeFilme, int *tam_eFilme, int *qtd_eFilme,financeiro *monetario,int tipo_config);
 
 int inserirLocados(locados **dtbaseLocados,locados newEntry, int *qtdLocados, int *tamanhoLocados);
 
@@ -121,3 +139,15 @@ void listCCliente(contaCliente **dtbaseCCcliente, int qtd, int key_cliente);
 int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbaseLocados, int qtdLocados,financeiro *monetario,int tipoconfig);
 
 int verificaIDLocados(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
+
+eFilme  objetoefilme(int *id,fornecedor **dtbase,int qtdForncecedor,int IDFornecedor);
+
+int verificaID_eFilme(eFilme **dtbase, int qtd_eFilme, int id);
+
+int inserir_eFilme(eFilme **dtbase,eFilme novaEntrada, int *qtd_eFilme, int *tam_eFilme);
+
+int inserirop_EFIlme(operacaoEFilme **dtbase,operacaoEFilme novaEntrada,int *tam_op);
+
+operacaoEFilme objOpEfilme (int *id);
+
+int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase1, int *tam_eFilme, int *qtd_eFime);

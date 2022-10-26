@@ -15,6 +15,9 @@ typedef struct {
     int c_categoria;
     char lingua[120];
     int qtdEmprestado;
+
+    // Parte da struct preenchida na parte de entrada de Filmes
+    float valorCompra;
 } filme;
 
 typedef struct {

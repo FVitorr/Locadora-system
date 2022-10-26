@@ -23,8 +23,9 @@ fornecedor criarFornecedor(int id) {
     printf("Inscrição Estadual: ");
     scanf("%[^\n]s", obj.inscricaoEstadual);
 
+    setbuf(stdin,NULL);
     printf("CNPJ: ");
-    scanf("%d", &obj.cnpj);
+    scanf("%[^\n]s", obj.cnpj);
 
     setbuf(stdin,NULL);
     printf("Telefone: ");
@@ -55,7 +56,7 @@ fornecedor criarFornecedor(int id) {
     return obj;
 }
 
-int inserirFornecedor(fornecedor **dtbase, fornecedor novoFornecedor, int *qtdFornecedor, int *tamanhoFornecedor, int id) {
+int inserirFornecedor(fornecedor **dtbase, fornecedor novoFornecedor, int *qtdFornecedor, int *tamanhoFornecedor) {
     if (*qtdFornecedor == *tamanhoFornecedor)
     {
         *tamanhoFornecedor = *tamanhoFornecedor + 1;
@@ -88,13 +89,33 @@ int removerFornecedor(fornecedor **dtbase, int id, int *qtdFornecedor, int tipo_
     return 0;
 }
 
+char *retornarCNPJ(fornecedor **dtbase,int qtd, int id){
+    for (int i = 0; i < qtd; i++){
+        if ((*dtbase)[i].id == id){
+            return  (*dtbase)[i].cnpj;
+        }
+    }
+    return NULL;
+}
+
+int posArrayFornecedor(fornecedor **dtbase,int qtd_Locadora,int id){
+    int t;
+    for (int i = 0; i < qtd_Locadora; i++){
+        if ((*dtbase)[i].id == id){
+            return id;
+        }
+    }
+    return -1;
+}
+
+
 void listFornecedor(fornecedor **dtbase, int qtd) {
     if (qtd > 0) {
         printf("\nID \t Nome Fantasia \t Razão Social \t Inscrição Estadual \t CNPJ \t Telefone \t E-mail \t "
                " Rua \t Número \t Bairro \t Cidade \t Estado\n");
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
-            printf("(%d)\t %s\t %s\t %s\t %d\t %s\t %s\t %s\t %d\t %s\t %s\t %s \n",
+            printf("(%d)\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %d\t %s\t %s\t %s \n",
                    (*dtbase)[c].id,
                    (*dtbase)[c].nomeFantasia,
                    (*dtbase)[c].razaoSocial,
@@ -138,7 +159,7 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
         switch (escolha) {
             case 1: {
                 fornecedor newFornecedor = criarFornecedor(*idControleFornecedor);
-                inserirFornecedor(bd_fornecedor, newFornecedor, qtdFornecedor, tamanhoFornecedor, *idControleFornecedor);
+                inserirFornecedor(bd_fornecedor, newFornecedor, qtdFornecedor, tamanhoFornecedor);
                 saveFornecedor(newFornecedor, tipo_config);
                 break;
             }
@@ -220,6 +241,24 @@ int saveFornecedor(fornecedor objeto, int tipo_config){
     return 0;
 }
 
+char *nomeFornecedor(fornecedor **dtbase, int qtd, int id){
+    for (int i =0 ; i < qtd; i++){
+        if ((*dtbase)[i].id == id){
+            return (*dtbase)[i].nomeFantasia;
+        }
+    }
+    return NULL;
+}
+
+
+int retornarUltimoID_Fornecedor(fornecedor **dtBase, int qtdFornecedor){
+    int id,tId = 0;
+    id = (qtdFornecedor > 0) ? (*dtBase)[0].id : 0;
+    for (int i = 1; i < qtdFornecedor; i++){
+        tId = (id < (*dtBase)[i].id) ? id = (*dtBase)[i].id : id;
+    }
+    return tId;
+}
 int verificaIdFornecedor(fornecedor **dtbase, int qtdFornecedor, int id) {
     for (int i = 0; i < qtdFornecedor; i++) {
         if ((*dtbase)[i].id == id) {
@@ -279,7 +318,7 @@ int carregarDadosFornecedores(fornecedor **dtBase, int *qtdFornecedor, int *tama
             limpa_final_string(new.endereco.estado);
 
             if (verificaIdFornecedor(dtBase, *qtdFornecedor, new.id) == 0){
-                t = inserirFornecedor(dtBase, new, qtdFornecedor, tamanhoFornecedor, tipo_config);
+                t = inserirFornecedor(dtBase, new, qtdFornecedor, tamanhoFornecedor);
                 if (*id <= new.id) {
                     *id = new.id + 1;
                 }
@@ -304,7 +343,7 @@ int carregarDadosFornecedores(fornecedor **dtBase, int *qtdFornecedor, int *tama
             fread(&new,sizeof(fornecedor),1,p);
             printf("%s %s %s %s %s %s %s %s %s", new.nomeFantasia, new.razaoSocial, new.inscricaoEstadual, new.telefone, new.email, new.endereco.rua, new.endereco.bairro, new.endereco.cidade, new.endereco.estado);
             if (verificaIdFornecedor(dtBase, *qtdFornecedor, new.id) == 0){
-                t = inserirFornecedor(dtBase, new, qtdFornecedor, tamanhoFornecedor, tipo_config);
+                t = inserirFornecedor(dtBase, new, qtdFornecedor, tamanhoFornecedor);
                 if (*id <= new.id) {
                     *id = new.id + 1;
                 }
