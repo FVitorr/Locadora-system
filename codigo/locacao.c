@@ -466,7 +466,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
         listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdCCliente,-1);
         system("pause");
     }else if (op == 4){
-        pagarParcelas(dtbaseCCliente,*qtdCCliente,dtbaseLocados,*qtdLocados,tipo_config);
+        pagarParcelas(dtbaseCCliente,*qtdCCliente,dtbaseLocados,*qtdLocados,monetario,tipo_config);
     } else{
         return 1;
     }
@@ -955,7 +955,7 @@ int refazDadosCCliente(contaCliente **dtbase, int qtdCCliente, int tipo_config){
     return 0;
 }
 
-int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbaseLocados, int qtdLocados,int tipoconfig){
+int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbaseLocados, int qtdLocados,financeiro *monetario,int tipoconfig){
     line(100,"Pagamento Parcelas\0");
     printf("\nContas Disponiveis:\n\n");
     for (int i = 0; i < qtdCCliente; i++){
@@ -1032,11 +1032,16 @@ int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbas
         erro = 1;
     }while(qtdParcelas > (*dtbaseLocados)[indexlocados].qtdParcelas && qtdParcelas > 0);
 
+    //preco das parcelas.
     float valorParcelas = ((*dtbaseLocados)[indexlocados].valorTotal - (*dtbaseLocados)[indexlocados].valorEntrada) / (float)(*dtbaseLocados)[indexlocados].qtdParcelas;
 
+    //Valor pago Total Parcelas * ValorParcelas((float)qtdParcelas * valorParcelas);
+
+    //Setar a Data do pagamento como hj
     (*dtbaseLocados)[indexlocados].valordeve = (*dtbaseLocados)[indexlocados].valordeve - ((float)qtdParcelas * valorParcelas);
     dataAtual(&(*dtbaseLocados)[indexlocados].Dtpagamento);
 
+    //Qtd de parcelas Pagas
     float parcelasPagas = ((((*dtbaseLocados)[indexlocados].valorTotal - (*dtbaseLocados)[indexlocados].valorEntrada) - (*dtbaseLocados)[indexlocados].valordeve) / valorParcelas);
 
     printf("\nValor Pago: R$%.2f\nValor em Debito: R$%.2f\nQuantidade de Parcelas Restante : %d \n"
@@ -1048,6 +1053,9 @@ int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbas
     (*dtbaseCCliente)[indexConta].valorPago = (*dtbaseCCliente)[indexConta].valorPago + (valorParcelas * (float)qtdParcelas);
     (*dtbaseCCliente)[indexConta].valorDeve = (*dtbaseCCliente)[indexConta].valorDeve - (valorParcelas * (float)qtdParcelas);
 
+    //Enviar ao caixa da locadora 
+    monetario->caixa =  monetario->caixa  + (valorParcelas * (float)qtdParcelas);
+    monetario->contasReceber =  monetario->contasReceber -  (valorParcelas * (float)qtdParcelas);
 
     refazDadosCCliente(dtbaseCCliente,qtdCCliente,tipoconfig);
     refazDadosLocados(dtbaseLocados,qtdLocados,tipoconfig);
@@ -1230,3 +1238,18 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
     }
 }
 
+int verificaIDeFilmes(fornecedor  **dtbaseFornecedor, int qtdForncecedor, int idForncedor){
+    for (int i = 0; i < qtdForncecedor; i++){
+        if ((*dtbaseFornecedor)[i].id == idForncedor){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void entradaFilmes(fornecedor **dtbaseFornecedor, int qtdForncecedor){
+    line(100,"ID Fornecedores\0");
+    for (int i = 0; i < qtdForncecedor; i++){
+        printf(" (%d) %s ",(*dtbaseFornecedor)[i].id,(*dtbaseFornecedor)[i].nomeFantasia);
+    }
+}

@@ -1,6 +1,7 @@
 #include "filmes.h"
 #include "cliente.h"
 #include "funcionarios.h"
+#include "fornecedor.h"
 
 typedef struct {
     int ID;
@@ -38,6 +39,16 @@ typedef struct {
     float valorPago; // Valor que o Cliente deve
     int IDlocado;
 }contaCliente;
+
+typedef struct 
+{
+    char nomefornecedor[120];
+    float valorFrete;
+    float imposto;
+    float valorProdutos;
+
+}eFilme;
+
 
 
 operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
@@ -107,6 +118,6 @@ int retornaChaveCliente(contaCliente **dtbase, int qtd, int idCliente);
 
 void listCCliente(contaCliente **dtbaseCCcliente, int qtd, int key_cliente);
 
-int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbaseLocados, int qtdLocados, int tipoconfig);
+int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbaseLocados, int qtdLocados,financeiro *monetario,int tipoconfig);
 
 int verificaIDLocados(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
