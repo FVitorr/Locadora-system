@@ -199,7 +199,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmone
         strcpy(set.user,config_system->user);
         strcpy(set.password,config_system->password);
 
-        //*idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,qtdFuncionarios);
+        *idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,qtdFuncionarios);
     }
 
     return 0;
@@ -236,7 +236,6 @@ int main() {
                       &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
                       &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,&KEY_cliente,
                       &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios,&IdfuncionarioLogado);
-
 
 
     while (1){

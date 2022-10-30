@@ -472,7 +472,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
     }else if (op == 4){
         pagarParcelas(dtbaseCCliente,*qtdCCliente,dtbaseLocados,*qtdLocados,monetario,tipo_config);
     } else if (op == 5){
-        entradaFilmes(dtbaseFornecedor,qtdFornecedor,tamFornecedor,idEntradaFIlme,dtBaseeFilme,tam_eFilme,qtd_eFilme);
+        entradaFilmes(dtbaseFornecedor,qtdFornecedor,tamFornecedor,idEntradaFIlme,dtBaseeFilme,tam_eFilme,qtd_eFilme,tipo_config);
     }
     else{
         return 1;
@@ -1245,9 +1245,10 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
     }
 }
 
-int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime){
+int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime,int tipo_config){
     // ----------------------- Verifica ID Fornecedor --------------------------------
     int IDFornecedor = 0,erro = 0;
+    int idFilme = 0;
     do {
         int cadastrar;
         if (erro == 1){
@@ -1282,66 +1283,44 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
     //printf("%d",verificaID_eFilme(dtBase_eFilme,*qtd_eFime,IDFornecedor));
     int existe = verificaID_eFilme(dtBase_eFilme,*qtd_eFime,IDFornecedor);
 
-
-    if (existe > 0){
-
-    }else{
+    if (existe != -1){
         printf("Existe");
-        while (1) {
-            int idFilme = 0;
-            eFilme newEFilme = objetoefilme(&idFilme, dtbase, *qtdFornecedor, IDFornecedor);
-
-            operacaoEFilme newOp = objOpEfilme(&newEFilme.ultIDOp);
-            //newEFilme.nomefornecedor
-            inserirop_EFIlme(&newEFilme.filmes,newOp,&newEFilme.tamOp);
-            inserir_eFilme(dtBase_eFilme,newEFilme,qtd_eFime,tam_eFilme);
-            break;
-
-//            operacaoEFilme EntFIlmes;
-//            int conf;
-//            while (1){
-//
-//                EntFIlmes = (objOpEfilme(newEFilme.tamOp));
-//                newEFilme.filmes[newEFilme.tamOp - 1] = EntFIlmes;
-//                printf("Adicionar mais Notas desse Fornecedor ? [1 - Sim 0 - Não]:");
-//                scanf("%d", &conf);
-//
-//                if(conf == 0){
-//                    break;
-//                }
-//                newEFilme.tamOp ++;
-//                //newE;
-//            }
-//
-//            *idEntradaFIlme = *idEntradaFIlme + 1;
-//
-//            //Inserir no array
-//            (*dtBase1) = realloc((*dtBase1), *tam_eFilme * sizeof(eFilme));
-//
-//            (*dtBase1)[*tam_eFilme - 1] = newEFilme;
-//
-//            *tam_eFilme = *tam_eFilme + 1;
-//
-//            while (1){
-//                int conf;
-//                printf("\nAdicionar mais FIlme? [1 - Sim 0 - Não]:");
-//                scanf("%d", &conf);
-//
-//                if(conf == 0){
-//                    break;
-//                }
-//            }
+        //encontrar posiçaoi no array
+        int posArray = -1;
+        for (int i = 0; i < *qtd_eFime; i++){
+            if ((*dtBase_eFilme)[i].IDFornecedor == IDFornecedor){
+                posArray = i;
+                break;
+            }
         }
+
+        if (posArray != -1){
+            int *ultimoId = &(*dtBase_eFilme)[posArray].ultIDOp;
+            operacaoEFilme newOp = objOpEfilme(&(*dtBase_eFilme)[posArray].ultIDOp);
+            inserirop_EFIlme(&(*dtBase_eFilme)[posArray].filmes, newOp, &(*dtBase_eFilme)[posArray].tamOp);
+        }
+
         for (int i = 0; i  < *qtd_eFime; i++){
             printf("\n(%d) Nome Fornecedor: %s   CNPJ: %s\n",(*dtBase_eFilme)[i].ID,(*dtBase_eFilme)[i].nomefornecedor,(*dtBase_eFilme)[i].cnpj);
             for (int j = 0; j  < (*dtBase_eFilme)[i].tamOp - 1; j++){
                 printf("\n\n(%d) Frete: R$ %.2f    Imposto: R$ %.2f\n",(*dtBase_eFilme)[i].filmes[j].ID,(*dtBase_eFilme)[i].filmes[j].frete,(*dtBase_eFilme)[i].filmes[j].Imposto);
-                for (int k = 0; k  < (*dtBase_eFilme)[i].filmes[j].tamFilm - 1; k++){
+                for (int k = 0; k  < (*dtBase_eFilme)[i].filmes[j].tamFilm; k++){
                     printf("\n   Nome Filme: %s \n   Valor Compra: R$ %.2f \n   Quantidade: %d \n",(*dtBase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].nome,(*dtBase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].valorCompra,(*dtBase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].qtd);
                 }
             }
         }
 
+    }else{
+        while (1) {
+            eFilme newEFilme = objetoefilme(&idFilme, dtbase, *qtdFornecedor, IDFornecedor);
+
+            operacaoEFilme newOp = objOpEfilme(&newEFilme.ultIDOp);
+            //newEFilme.nomefornecedor
+            inserirop_EFIlme(&newEFilme.filmes, newOp, &newEFilme.tamOp);
+            inserir_eFilme(dtBase_eFilme, newEFilme, qtd_eFime, tam_eFilme);
+            save_eFilme(newEFilme,tipo_config);
+            break;
+        }
     }
 
 }
@@ -1353,7 +1332,7 @@ int verificaID_eFilme(eFilme **dtbase, int qtd_eFilme, int id){
             return 1;
         }
     }
-    return 0;
+    return -1;
 }
 
 int inserir_eFilme(eFilme **dtbase,eFilme novaEntrada, int *qtd_eFilme, int *tam_eFilme){
@@ -1385,7 +1364,6 @@ int inserirop_EFIlme(operacaoEFilme **dtbase,operacaoEFilme novaEntrada,int *tam
 eFilme  objetoefilme(int *id,fornecedor **dtbase,int qtdFornecedor,int IDFornecedor){
 
     int indexDtBaseLocados = posArrayFornecedor(dtbase,qtdFornecedor, IDFornecedor);
-
     eFilme objetoEfilme;
 
     objetoEfilme.ID = *id;
@@ -1397,15 +1375,15 @@ eFilme  objetoefilme(int *id,fornecedor **dtbase,int qtdFornecedor,int IDFornece
     printf("\n\nNome Fonecedor: %s ",nomeFornecedor(dtbase,qtdFornecedor,IDFornecedor));
     objetoEfilme.nomefornecedor = nomeFornecedor(dtbase,qtdFornecedor,IDFornecedor);
     //objetoEfilme.cnpj = retornarCNPJ(dtbase,qtdFornecedor,IDFornecedor);
-    //strcpy(objetoEfilme.cnpj,(*dtbase)[indexDtBaseLocados].cnpj);
+    strcpy(objetoEfilme.cnpj,(*dtbase)[indexDtBaseLocados].cnpj);
     printf("\n\nCNPJ: %s ",objetoEfilme.cnpj);
 
     objetoEfilme.key_fornecedorArray = (*dtbase)[indexDtBaseLocados].id;
     objetoEfilme.tamOp = 1;
-    //Maloc de Operaçoes se for primeira execursão
+
     objetoEfilme.ultIDOp = 0;
 
-    objetoEfilme.filmes = malloc(objetoEfilme.tamOp * sizeof (operacaoEFilme));
+    objetoEfilme.filmes = (operacaoEFilme *)malloc(objetoEfilme.tamOp * sizeof (operacaoEFilme));
 
     return objetoEfilme;
 }
@@ -1427,7 +1405,7 @@ operacaoEFilme objOpEfilme (int *id){
         printf("\t>> Imposto: R$");
         scanf("%f", &vImposto);
 
-        printf("\t>> Informacoes Corretas ? [1 - Sim 0 - Não]");
+        printf("\n\t>> Informacoes Corretas ? [1 - Sim 0 - Não]");
         scanf("%d", &test);
         if (test == 1){
             break;
@@ -1438,20 +1416,31 @@ operacaoEFilme objOpEfilme (int *id){
     newOpEfilme.Imposto = vImposto;
 
     newOpEfilme.tamFilm = 1;
-    newOpEfilme.entradaFilmesCadastro = malloc(newOpEfilme.tamFilm * sizeof (filme));
+    newOpEfilme.entradaFilmesCadastro =(filme * ) malloc(1 * sizeof (filme));
+
+    objetoEntradaFIlme(&newOpEfilme.ultIDFilm,&newOpEfilme.entradaFilmesCadastro,&newOpEfilme.tamFilm);
 
     newOpEfilme.ultIDFilm = 0;
 
-    int conf = 0;
+
+    return newOpEfilme;
+}
+
+filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm){
     while (1) {
         // realocar memoria
-        newOpEfilme.entradaFilmesCadastro = realloc(newOpEfilme.entradaFilmesCadastro,newOpEfilme.tamFilm * sizeof (filme));
+        if (*tamFilm > 1) {
+            (*dtbase) = (filme *) realloc(*dtbase,*tamFilm * sizeof(filme));
+        }
         filme novo;
+
         while (1) {
+            novo.codigo = *id;
+            *id = *id + 1;
+
             setbuf(stdin,NULL);
             printf(">>Descrição Filme:");
             scanf("%[^\n]s", novo.nome);
-            limpa_final_string(novo.nome);
 
             setbuf(stdin,NULL);
 
@@ -1461,22 +1450,79 @@ operacaoEFilme objOpEfilme (int *id){
             printf(">>Quantidade:");
             scanf("%d", &novo.qtd);
 
-            printf("Informaçoes Correta ? [1 - Sim 0 - Não] :");
-            scanf("%d", &conf);
+            int opc = 0;
+            printf("\n\t>> Informaçoes Correta ? [1 - Sim 0 - Não] :");
+            scanf("%d", &opc);
 
-            if (conf == 1) {
+            if (opc == 1) {
                 break;
             }
         }//Preencher Infos do Filme
-        newOpEfilme.entradaFilmesCadastro[newOpEfilme.tamFilm - 1] = novo; //Adicionar Infos do Filme
 
-        printf("Adicionar mais Filmes ? [1 - Sim 0 - Não] :");
-        scanf("%d", &conf);
+        (*dtbase)[*tamFilm - 1] = novo; //Adicionar Infos do Filme
 
-        if(conf == 0){
+        int opc =0;
+        printf("\n\t>> Adicionar mais Filmes ? [1 - Sim 0 - Não]: ");
+        scanf("%d", &opc);
+
+        if(opc == 0){
             break;
+        }else{
+            (*tamFilm) = (*tamFilm) + 1;
         }
-        newOpEfilme.tamFilm++; //Aumentar Tamanho - Tamanho e qtd é igual
     }
-    return newOpEfilme;
+}
+
+int save_eFilme(eFilme objeto,int tipo_config){
+    FILE *entradaFilmeF = NULL;
+
+    if (tipo_config == 1){//Arquivo TXT
+        if (verifica_arquivos(tipo_config,"cpyBdEntradaFilme.txt\0") == 1){
+            entradaFilmeF = fopen("cpyBdEntradaFilme.txt", "a");
+        } else{
+            entradaFilmeF = fopen("cpyBdEntradaFilme.txt", "w");
+        }
+
+        if (entradaFilmeF == NULL){ // Se a abertura falhar
+            return 1;
+        }
+
+        fprintf(entradaFilmeF, "%d\n%d\n%s\n%s\n%d\n%d\n%d\n",
+                objeto.ID,
+                objeto.IDFornecedor,
+                objeto.nomefornecedor,
+                objeto.cnpj,
+                objeto.key_fornecedorArray,
+                objeto.tamOp,
+                objeto.ultIDOp);
+
+            for (int i = 0; i < objeto.tamOp - 1; i++){
+                fprintf(entradaFilmeF, "%d;%f;%f;%d;%d\n",
+                        objeto.filmes[i].ID,
+                        objeto.filmes[i].frete,
+                        objeto.filmes[i].Imposto,
+                        objeto.filmes[i].tamFilm,
+                        objeto.filmes[i].ultIDFilm);
+                for (int j = 0; j < objeto.filmes[i].tamFilm; j++){
+                    fprintf(entradaFilmeF, "%d;%s;%f;%d\n",
+                            objeto.filmes[i].entradaFilmesCadastro[j].codigo,
+                            objeto.filmes[i].entradaFilmesCadastro[j].nome,
+                            objeto.filmes[i].entradaFilmesCadastro[j].valorCompra,
+                            objeto.filmes[i].entradaFilmesCadastro[j].qtd);
+                }
+            }
+    }else{ //Arquivo BINARIO
+        if (verifica_arquivos(tipo_config,"cpyBdLocados.bin\0") == 1){
+            entradaFilmeF = fopen("cpyBdLocados.bin", "ab");
+        } else{
+            entradaFilmeF = fopen("cpyBdLocados.bin", "wb");
+        }
+        if (entradaFilmeF == NULL){ // Se a abertura falhar
+            return 1;
+        }
+        fwrite(&objeto, sizeof(eFilme), 1,entradaFilmeF);
+    }
+    fclose(entradaFilmeF);
+    entradaFilmeF = NULL;
+    return 0;
 }

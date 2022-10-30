@@ -11,7 +11,7 @@ typedef struct {
     char nomeFantasia[100];
     char razaoSocial[100];
     char inscricaoEstadual[30];
-    char cnpj[15];
+    char cnpj[16];
     endereco endereco;
     char telefone[15];
     char email[50];

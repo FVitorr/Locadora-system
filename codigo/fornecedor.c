@@ -92,6 +92,7 @@ int removerFornecedor(fornecedor **dtbase, int id, int *qtdFornecedor, int tipo_
 char *retornarCNPJ(fornecedor **dtbase,int qtd, int id){
     for (int i = 0; i < qtd; i++){
         if ((*dtbase)[i].id == id){
+            printf("%s",(*dtbase)[i].cnpj);
             return  (*dtbase)[i].cnpj;
         }
     }
@@ -99,10 +100,9 @@ char *retornarCNPJ(fornecedor **dtbase,int qtd, int id){
 }
 
 int posArrayFornecedor(fornecedor **dtbase,int qtd_Locadora,int id){
-    int t;
     for (int i = 0; i < qtd_Locadora; i++){
         if ((*dtbase)[i].id == id){
-            return id;
+            return i;
         }
     }
     return -1;
@@ -211,7 +211,7 @@ int saveFornecedor(fornecedor objeto, int tipo_config){
             return 1;
         }
 
-        fprintf(fonecedoresF, "%d\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
+        fprintf(fonecedoresF, "%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n",
                 objeto.id,
                 objeto.nomeFantasia,
                 objeto.razaoSocial,
@@ -295,7 +295,9 @@ int carregarDadosFornecedores(fornecedor **dtBase, int *qtdFornecedor, int *tama
             fgets(new.inscricaoEstadual, 30, p);
             limpa_final_string(new.inscricaoEstadual);
 
-            fscanf(p, "%d\n", &new.cnpj);
+            fgets(new.cnpj,16,p);
+            limpa_final_string(new.cnpj);
+            //fscanf(p, "%d\n", &new.cnpj);
 
             fgets(new.telefone, 15, p);
             limpa_final_string(new.telefone);

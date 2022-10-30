@@ -148,6 +148,10 @@ int inserir_eFilme(eFilme **dtbase,eFilme novaEntrada, int *qtd_eFilme, int *tam
 
 int inserirop_EFIlme(operacaoEFilme **dtbase,operacaoEFilme novaEntrada,int *tam_op);
 
+int save_eFilme(eFilme objeto,int tipo_config);
+
 operacaoEFilme objOpEfilme (int *id);
 
-int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase1, int *tam_eFilme, int *qtd_eFime);
+filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm);
+
+int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime,int tipo_config);
