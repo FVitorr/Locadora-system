@@ -55,7 +55,7 @@ typedef struct
     int ID;
     int IDFornecedor;
     char *nomefornecedor;
-    char cnpj[15];
+    char cnpj[16];
     int key_fornecedorArray; // Id de referencia no array dtbaseFornecedor
     operacaoEFilme *filmes;
     int tamOp;
@@ -155,3 +155,5 @@ operacaoEFilme objOpEfilme (int *id);
 filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm);
 
 int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime,int tipo_config);
+
+int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes, int *id,int tipo_config);

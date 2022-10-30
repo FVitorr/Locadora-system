@@ -1246,6 +1246,17 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
 }
 
 int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime,int tipo_config){
+
+    carregarDados_Efilme(dtBase_eFilme, qtd_eFime, tam_eFilme, idEntradaFIlme,tipo_config);
+    for (int i = 0; i  < *qtd_eFime; i++){
+        printf("\n(%d) Nome Fornecedor: %s   CNPJ: %s\n",(*dtBase_eFilme)[i].ID,(*dtBase_eFilme)[i].nomefornecedor,(*dtBase_eFilme)[i].cnpj);
+        for (int j = 0; j  < (*dtBase_eFilme)[i].tamOp - 1; j++){
+            printf("\n\n(%d) Frete: R$ %.2f    Imposto: R$ %.2f\n",(*dtBase_eFilme)[i].filmes[j].ID,(*dtBase_eFilme)[i].filmes[j].frete,(*dtBase_eFilme)[i].filmes[j].Imposto);
+            for (int k = 0; k  < (*dtBase_eFilme)[i].filmes[j].tamFilm; k++){
+                printf("\n   Nome Filme: %s \n   Valor Compra: R$ %.2f \n   Quantidade: %d \n",(*dtBase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].nome,(*dtBase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].valorCompra,(*dtBase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].qtd);
+            }
+        }
+    }
     // ----------------------- Verifica ID Fornecedor --------------------------------
     int IDFornecedor = 0,erro = 0;
     int idFilme = 0;
@@ -1497,14 +1508,14 @@ int save_eFilme(eFilme objeto,int tipo_config){
                 objeto.ultIDOp);
 
             for (int i = 0; i < objeto.tamOp - 1; i++){
-                fprintf(entradaFilmeF, "%d;%f;%f;%d;%d\n",
+                fprintf(entradaFilmeF, "%d\n%f\n%f\n%d\n%d\n",
                         objeto.filmes[i].ID,
                         objeto.filmes[i].frete,
                         objeto.filmes[i].Imposto,
                         objeto.filmes[i].tamFilm,
                         objeto.filmes[i].ultIDFilm);
                 for (int j = 0; j < objeto.filmes[i].tamFilm; j++){
-                    fprintf(entradaFilmeF, "%d;%s;%f;%d\n",
+                    fprintf(entradaFilmeF, "%d\n%s\n%f\n%d\n",
                             objeto.filmes[i].entradaFilmesCadastro[j].codigo,
                             objeto.filmes[i].entradaFilmesCadastro[j].nome,
                             objeto.filmes[i].entradaFilmesCadastro[j].valorCompra,
@@ -1524,5 +1535,102 @@ int save_eFilme(eFilme objeto,int tipo_config){
     }
     fclose(entradaFilmeF);
     entradaFilmeF = NULL;
+    return 0;
+}
+
+
+int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes, int *id,int tipo_config) {
+    FILE *Efilmef = NULL;
+    eFilme new;
+
+    int *qtdTemp = qtdeFilmes;
+
+    int t = 0;
+    if (tipo_config == 1){ //Arquivo TXT
+        Efilmef = fopen("cpyBdEntradaFilme.txt", "r");
+
+        if (Efilmef == NULL){
+            printf("\nErro na Leitura 'cpyBdEntradaFilme.txt' \n");
+            return 1;
+        }
+
+        while (!feof(Efilmef)){
+            if (!filelength(fileno(Efilmef))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fscanf(Efilmef, "%d\n", &new.ID);
+
+            fscanf(Efilmef, "%d\n", &new.IDFornecedor);
+
+            char nomeFornecedor[120];
+            fgets(nomeFornecedor,120,Efilmef);
+            new.nomefornecedor = string_to_pointer(nomeFornecedor);
+
+            fgets(new.cnpj,15,Efilmef);
+            limpa_final_string(new.cnpj);
+
+            fscanf(Efilmef, "%d\n", &new.key_fornecedorArray);
+
+            fscanf(Efilmef, "%d\n", &new.tamOp);
+
+            fscanf(Efilmef, "%d\n", &new.ultIDOp);
+
+            new.filmes = malloc(new.tamOp * sizeof (operacaoEFilme));
+            for (int i = 0 ; i < new.tamOp - 1; i++){
+                fscanf(Efilmef, "%d\n", &new.filmes[i].ID);
+                fscanf(Efilmef, "%f\n", &new.filmes[i].frete);
+                fscanf(Efilmef, "%f\n", &new.filmes[i].Imposto);
+                fscanf(Efilmef, "%d\n", &new.filmes[i].tamFilm);
+                fscanf(Efilmef, "%d\n", &new.filmes[i].ultIDFilm);
+                new.filmes[i].entradaFilmesCadastro = malloc((new.filmes[i].tamFilm + 1) * sizeof (filme));
+                for (int j = 0 ; j < new.filmes[i].tamFilm; j++){
+                    fscanf(Efilmef, "%d\n", &new.filmes[i].entradaFilmesCadastro[j].codigo);
+
+                    fgets(new.filmes[i].entradaFilmesCadastro[j].nome,120,Efilmef);
+                    limpa_final_string(new.filmes[i].entradaFilmesCadastro[j].nome);
+
+                    fscanf(Efilmef, "%f\n", &new.filmes[i].entradaFilmesCadastro[j].valorCompra);
+                    fscanf(Efilmef, "%d\n", &new.filmes[i].entradaFilmesCadastro[j].qtd);
+
+                }
+            }
+
+            t = inserir_eFilme(dtbase,new,qtdeFilmes,tamanhoeFilmes);
+            if (*id <= new.ID) {
+                *id = new.ID + 1;
+            }
+
+            if (t != 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    else { //Arquivo BIN
+        Efilmef = fopen("cpyBdEntradaFilme.txt", "rb");
+        if (Efilmef == NULL){
+            printf("\nErro na Leitura 'cpyBdEntradaFilme.txt' \n");
+            return 1;
+        }
+        while (!feof(Efilmef)){
+            if (!filelength(fileno(Efilmef))){  /* teste para saber se o tamanho do arquivo é zero */
+                break;
+            }
+            fread(&new,sizeof(eFilme),1,Efilmef);
+//            if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
+//                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
+//                if (*id <= new.codigo) {
+//                    *id = new.codigo + 1;
+//                }
+//            }
+
+            if (t == 0){
+                printf("\nAcao Interrompida");
+                break;
+            }
+        }
+    }
+    fclose(Efilmef);
+    Efilmef = NULL;
     return 0;
 }
