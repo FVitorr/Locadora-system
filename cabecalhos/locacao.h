@@ -26,6 +26,7 @@ typedef struct {
     int tipoPagamento; // 1 - A vista  2 - A prazo
     data Dtpagamento;
     int qtdParcelas;
+    int parcelasPagas;
     int TDdevolvido; // 0-Não 1-SIM //Não Altera
     int ultimoIDOperacao;
 }locados;
@@ -48,6 +49,7 @@ typedef struct
     //Campos Usados: Nome: (Talvez vai ter que comparar nomes) ValorCompra: E quantidade
     int tamFilm;
     float fretePproduto,ImpostoPproduto;
+
     float valorTotal;
     int tipoPagamento; //1- A vista 2- A prazo
     int qtdParcelas;
@@ -55,6 +57,7 @@ typedef struct
     float valorDeve;
     data dtNota;
     data dtPagamento;
+
     int ultIDFilm;
 }operacaoEFilme;
 
