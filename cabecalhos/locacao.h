@@ -47,6 +47,14 @@ typedef struct
     filme *entradaFilmesCadastro; // Nem todos os campos da struct são alterados, mas ainda o codigo funciona como quero
     //Campos Usados: Nome: (Talvez vai ter que comparar nomes) ValorCompra: E quantidade
     int tamFilm;
+    float fretePproduto,ImpostoPproduto;
+    float valorTotal;
+    int tipoPagamento; //1- A vista 2- A prazo
+    int qtdParcelas;
+    float valorEntrada;
+    float valorDeve;
+    data dtNota;
+    data dtPagamento;
     int ultIDFilm;
 }operacaoEFilme;
 
@@ -157,3 +165,7 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm);
 int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime,int tipo_config);
 
 int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes, int *id,int tipo_config);
+
+int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime);
+
+
