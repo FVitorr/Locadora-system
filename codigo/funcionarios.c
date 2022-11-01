@@ -304,6 +304,7 @@ int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
             }
         }
     }
+    return -1;
 }
 
 
