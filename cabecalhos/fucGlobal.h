@@ -9,7 +9,7 @@ typedef struct
 
 void limpaString(char *string,int lenString);
 
-char *formatstring(int lenMax,int lenString,char *string);
+char *formatstring(int lenMax,int lenString,const char *string);
 
 typedef struct {
     int codigo;

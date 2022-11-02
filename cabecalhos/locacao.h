@@ -170,8 +170,12 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm);
 
 int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime,financeiro *monetario,int tipo_config);
 
-int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes, int *id,int tipo_config);
+int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,int tipo_config);
 
-int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime);
+int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, int tipoPagamento);
+
+int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro *monetario);
+
+int refazDadosEfIlme(eFilme **dtbase, int qtdCCliente, int tipo_config);
 
 

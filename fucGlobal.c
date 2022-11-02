@@ -386,7 +386,7 @@ void limpaString(char *string,int lenString){
     }
 }
 
-char *formatstring(int lenMax,int lenString,char *string){
+char *formatstring(int lenMax,int lenString,const char *string){
     char space = 32;
     int lenAntes = (lenMax - lenString - 1) / 2;
     char *string1 = malloc(lenMax * sizeof (char));
