@@ -486,7 +486,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
     } else if (op == 5){
         entradaFilmes(dtbaseFornecedor,qtdFornecedor,tamFornecedor,idEntradaFIlme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario,tipo_config);
     }else if (op == 6){
-        pagarParcelaEmprestaFilme(dtBaseeFilme,*qtd_eFilme,monetario);
+        pagarParcelaEmprestaFilme(dtBaseeFilme,*qtd_eFilme,monetario,tipo_config);
     }else{
         return 1;
     }
@@ -1933,7 +1933,7 @@ int verifica_OpeFilme(eFilme **dtbase_eFilme, int qtd_eFilme, int IDConta,int ID
 
 
 
-int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro *monetario){
+int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro *monetario, int tipo_config){
     line(100,"Pagamento de Parcela Fornecedor");
     for (int i = 0 ; i < qtd_eFilme; i++){
         printf("  (%d) %s  ",(*dtbase_eFilme)[i].ID,(*dtbase_eFilme)[i].nomefornecedor);
@@ -1989,7 +1989,7 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
                 if (qtdParcelas == 0){
                     return -1;
                 }
-                printf("\n\n[!] Valor em caixa insulficiente para o pagamento\n\n");
+                printf("\nValor Parcelas: R$ %.2f \t\t Quantidade Parcelas: %d \t\t Valor Total Pagamento: R$ %.2f \n[!] Valor em caixa insulficiente para o pagamento\n\n",valorParcelas,qtdParcelas,valorParcelas * (float)qtdParcelas);
                 system("pause");
                 return -1;
             }
@@ -2005,9 +2005,16 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
             }
         } while (1);
 
-
+        //Alterar Monetario
         monetario->caixa = monetario->caixa - (float) qtdParcelas * valorParcelas;
         monetario->despesas = monetario->despesas - (float) qtdParcelas * valorParcelas;
+
+        (*dtbase_eFilme)[indexArray].filmes[IDnota].valorDeve = (*dtbase_eFilme)[indexArray].filmes[IDnota].valorDeve - (float) qtdParcelas * valorParcelas;
+
+
+        refazDadosEfIlme(dtbase_eFilme,qtd_eFilme,tipo_config);
+        //Setar DtPagamento como hj
+        dataAtual(&(*dtbase_eFilme)[indexArray].filmes[IDnota].dtPagamento);
     }
     return 0;
 }
