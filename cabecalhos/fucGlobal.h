@@ -7,6 +7,10 @@ typedef struct
     int seg;
 }hora;
 
+void limpaString(char *string,int lenString);
+
+char *formatstring(int lenMax,int lenString,const char *string);
+
 typedef struct {
     int codigo;
     char nome[120];
@@ -15,6 +19,9 @@ typedef struct {
     int c_categoria;
     char lingua[120];
     int qtdEmprestado;
+
+    // Parte da struct preenchida na parte de entrada de Filmes
+    float valorCompra;
 } filme;
 
 typedef struct {
@@ -26,6 +33,8 @@ typedef struct {
 int replaceInt(int newValue, int *camp);
 
 int replaceChar(char newValue[5], char *camp);
+
+int replacefloat(float newValue, float *camp);
 
 void addTab(char *str);
 

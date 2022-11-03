@@ -29,11 +29,11 @@ void dataAtual(data *data) {
     time_t segundos;
     time(&segundos);
     data_hora_atual = localtime(&segundos);
-    printf("\n>>dentro 1: %d/%d/%d\n",data->dia,data->mes,data->ano);
+    //printf("\n>>dentro 1: %d/%d/%d\n",data->dia,data->mes,data->ano);
     data->dia = data_hora_atual->tm_mday;
     data->mes = data_hora_atual->tm_mon + 1;
     data->ano = data_hora_atual->tm_year + 1900;
-    printf("\n>>dentro 2: %d/%d/%d\n",data->dia,data->mes,data->ano);
+    //printf("\n>>dentro 2: %d/%d/%d\n",data->dia,data->mes,data->ano);
 }
 
 void formatarData(data data) {

@@ -376,6 +376,40 @@ int replaceInt(int newValue, int *camp){
     *camp = newValue;
 }
 
+int replacefloat(float newValue, float *camp){
+    *camp = newValue;
+}
+
+void limpaString(char *string,int lenString){
+    for (int i = 0; i < lenString; i++){
+        string[i] = '\0';
+    }
+}
+
+char *formatstring(int lenMax,int lenString,const char *string){
+    char space = 32;
+    int lenAntes = (lenMax - lenString - 1) / 2;
+    char *string1 = malloc(lenMax * sizeof (char));
+    int  i = 0 ;
+    while (i <= lenMax){
+        if (i < lenAntes){
+            string1[i] = space;
+            i++;
+        }else if (i == lenAntes){
+            for (int j = 0; j < lenString; j++){
+                string1[i] = string[j];
+                i++;
+            }
+        }else if (i > lenAntes){
+            string1[i] = space;
+            i++;
+        }
+    }
+    string1[lenMax] = '\0';
+    return string1;
+}
+
+
 void systemPause(){
     char a;
     printf("\nPrecione uma Tecla para continuar...");

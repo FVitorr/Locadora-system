@@ -35,6 +35,9 @@ int qtdLocado = 0, tamanhoLocados = 1, idControleLocados = 1;
 operacoe *bd_Operacao;
 int qtdOperacao = 0, tamanhoOperacao = 1, KEY_operacao = 0;
 
+eFilme *bd_eFilme = NULL;
+int tameFilme = 1,qtdeFilme = 0, idCOntroleeFIlme = 0;
+
 int IdfuncionarioLogado = -1;
 financeiro monetario;
 
@@ -48,7 +51,8 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
                   cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente,
                   operacoe **dtbaseOperacoe, int *qtd_Operacoe, int *tamanho_Operacoe,int *Key_operacao,
                   contaCliente **dtbaseCCliente, int *qtd_CCliente,int *tamanho_CCliente,int *idCCliente,int *Key_cliente,
-                  fornecedor **dtbaseFornecedor, int *qtd_Fornecedor,int *tamanho_Fornecedor,int *idFornecedor){
+                  fornecedor **dtbaseFornecedor, int *qtd_Fornecedor,int *tamanho_Fornecedor,int *idFornecedor,
+                  eFilme **dtBaseeFilme, int *tam_eFilme,int *qtd_eFilme,int *idEntradaFilme){
 
 
 
@@ -75,7 +79,10 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
                 int t = menuLocacao(dtbaseFilme,*qtd_Filmes,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
                                     dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,
                                     dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,
-                                    dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,*qtd_Categoria,Key_operacao,Key_cliente,monetario_,tipo_config);
+                                    dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,*qtd_Categoria,Key_operacao,Key_cliente,
+                                    dtbaseFornecedor,qtd_Fornecedor,tamanho_Fornecedor,idEntradaFilme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario_,tipo_config);
+                (*dtbaseLocadora)[0].monetario = *monetario_;
+                refazDados_Locadora(dtbaseLocadora,*qtd_Locadora,tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -146,7 +153,7 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
 
 
 
-int carregaTodosDados(int *tipoConfig, config *config_system,
+int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmonetario,
                       filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                       locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
                       locados **dtBaseLocados, int *qtd_Locados, int *tamanho_Locados, int *idLocados,
@@ -160,9 +167,12 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
     int pExecute = verifica_log(config_system,tipoConfig);
     carregarDados_filme(dtbaseFilme, qtd_Filmes, tamanhoFilmes, idFilme, *tipoConfig);
     carregarDados_Locadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora,*tipoConfig);
+
+    monetario = (*dtbaseLocadora)[0].monetario ;
+
     carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
     carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
-    //carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
+    carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
     carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
     carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
@@ -183,7 +193,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
         line(100,"-\0");
 
         locadora newLocadora = criarLocadora(idLocadora);
-        inserirLocadora(dtbaseLocadora,newLocadora,qtd_Locadora,tamanho_Locadora, *tipoConfig);
+        inserirLocadora(dtbaseLocadora,newLocadora,qtd_Locadora,tamanho_Locadora);
         saveLocadora(newLocadora,*tipoConfig);
 
         //Passar os parametros de Autentificação(Administrador)  para o arquivo de LOG
@@ -198,7 +208,11 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
         strcpy(set.user,config_system->user);
         strcpy(set.password,config_system->password);
 
-        //*idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,qtdFuncionarios);
+
+        //*idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,*qtd_Funcionario);
+        printf("ID: %d",*idFuncionarioLogado);
+
+        system("pause");
     }
 
     return 0;
@@ -220,10 +234,12 @@ int main() {
     bd_Operacao = malloc(tamanhoOperacao * sizeof(operacoe));
     bd_CCliente = (contaCliente *)malloc(tamanhoCCliente * sizeof(contaCliente));
 
+    bd_eFilme = malloc(tameFilme * sizeof(eFilme));
+
     //Verifica se os arquivos existem caso contrario criar
     //verifica_arquivos(tipoConfig);
     //Carrega os arquivos e Verifica se é primeira execursão
-    carregaTodosDados(&tipoConfig,&config_System,
+    carregaTodosDados(&tipoConfig,&config_System,&monetario,
                       &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                       &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
                       &bd_locados,&qtdLocado,&tamanhoLocados,&idControleLocados,
@@ -233,7 +249,6 @@ int main() {
                       &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
                       &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,&KEY_cliente,
                       &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios,&IdfuncionarioLogado);
-
 
 
     while (1){
@@ -247,7 +262,8 @@ int main() {
                           &bd_cliente,&qtdCliente,&tamanhoCliente,&idControleCliente,
                           &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
                           &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,&KEY_cliente,
-                          &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor);
+                          &bd_fornecedor,&qtdFornecedor,&tamanhoFornecedor,&idControleFornecedor,
+                          &bd_eFilme,&tameFilme,&qtdeFilme,&idCOntroleeFIlme);
         if (v == 1){
             break;
         }

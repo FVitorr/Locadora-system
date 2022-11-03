@@ -15,6 +15,12 @@ typedef struct
 
 } endereco;
 
+typedef struct {
+    float caixa;
+    float despesas;
+    float contasReceber;
+}financeiro;
+
 typedef struct
 {
     int id;
@@ -28,13 +34,15 @@ typedef struct
     char nomeResponsavel[50];
     char telefoneResponsavel[15];
 
+    financeiro monetario;
+
     char user[30];
     char *password;
 } locadora;
 
 locadora criarLocadora(int *id);
 
-int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora, int tipo_config);
+int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora);
 
 int removerLocadora(locadora **dtbase, int id, int *qtdLocadora, int *tamanhoLocadora, int tipo_config);
 
@@ -48,9 +56,11 @@ int saveLocadora(locadora objeto,int tipo_config);
 
 int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLocadora, int *id,int tipo_config);
 
-int refazDados_Locadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int tipo_configuracao);
+int refazDados_Locadora(locadora **dtbase, int qtdLocadora, int tipo_configuracao);
 
 int verifica_IDLocadora(locadora **dtbase,int qtd_Locadora,int id);
+
+int posArrayLocadora(locadora **dtbase,int qtd_Locadora,int id);
 
 int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int *id);
 

@@ -1,6 +1,10 @@
 #include "filmes.h"
 #include "cliente.h"
 #include "funcionarios.h"
+#include "fornecedor.h"
+
+
+//int PRIMEIRAEXECUCAO = 0; //0 NÃO
 
 typedef struct {
     int ID;
@@ -9,15 +13,10 @@ typedef struct {
     char *nomeFilme;
     float valorFilme;
     data dtemprestimo;
-    data dtdevolucao;
+    data dtdevolucao; // Prevista
+    data dtdevolucaoReal;
     int devolvido; // 0-Sim 1-Não //Não Altera
 }operacoe;
-
-typedef struct {
-    float caixa;
-    float despesas;
-    float contasReceber;
-}financeiro;
 
 typedef struct {
     int ID;
@@ -28,7 +27,9 @@ typedef struct {
     float valordeve; // Valor que o Cliente deve
     float valorEntrada; //Para pagamentos parcelados
     int tipoPagamento; // 1 - A vista  2 - A prazo
+    data Dtpagamento;
     int qtdParcelas;
+    int parcelasPagas;
     int TDdevolvido; // 0-Não 1-SIM //Não Altera
     int ultimoIDOperacao;
 }locados;
@@ -43,11 +44,47 @@ typedef struct {
     int IDlocado;
 }contaCliente;
 
+typedef struct
+{
+    int ID;
+    float frete,Imposto;
+    filme *entradaFilmesCadastro; // Nem todos os campos da struct são alterados, mas ainda o codigo funciona como quero
+    //Campos Usados: Nome: (Talvez vai ter que comparar nomes) ValorCompra: E quantidade
+    int tamFilm;
+    float fretePproduto,ImpostoPproduto;
+
+    float valorTotal;
+    int tipoPagamento; //1- A vista 2- A prazo
+    int qtdParcelas;
+    float valorEntrada;
+    float valorDeve;
+    data dtNota;
+    data dtPagamento;
+
+    int ultIDFilm;
+}operacaoEFilme;
+
+typedef struct 
+{
+    int ID;
+    int IDFornecedor;
+    char *nomefornecedor;
+    char cnpj[16];
+    int key_fornecedorArray; // Id de referencia no array dtbaseFornecedor
+    operacaoEFilme *filmes;
+    int tamOp;
+    int ultIDOp; //Ultimo Id da Operacao;
+}eFilme;
+
+
+
+
+
 
 operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
                         int KEY_operator, int *idOperacao);
 
-locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,
+locados objetoLocados (int idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,
                        operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
                        fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_operacao,int Key_Cliente,
                        int tipoConfig);
@@ -59,8 +96,10 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 funcionarios **dtbaseFuncionarios, int qtdFuncionarios,int idFuncionarioLogado,
                 locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *idLocados,
                 operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                contaCliente **dtbaseCCliente,int *qtdCCliente,int *tamanhoCCliente,int *idCCliente,
-                fCategoria **dtbaseCategoria, int qtdCategoria,int *KEY_Operacao, int *KEY_Cliente,financeiro *monetario,int tipo_config);
+                contaCliente **dtbaseCCliente,int *qtdCCliente,int *tamanho_CCliente,int *idCCliente,
+                fCategoria **dtbaseCategoria, int qtdCategoria,int *KEY_Operacao, int *KEY_Cliente,
+                fornecedor **dtbaseFornecedor, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme,
+                eFilme **dtBaseeFilme, int *tam_eFilme, int *qtd_eFilme,financeiro *monetario,int tipo_config);
 
 int inserirLocados(locados **dtbaseLocados,locados newEntry, int *qtdLocados, int *tamanhoLocados);
 
@@ -87,6 +126,10 @@ int posicaoLocadosArray(locados **dtbaseLocados, int qtdLocados, int key_cliente
 
 int inserirCCliente(contaCliente **dtbaseCCliente,contaCliente newEntry, int *qtdCCliente, int *tamanhoCCliente);
 
+int refazDadosLocados(locados **dtbase, int qtdLocados, int tipo_config);
+
+int refazDadosOperacao(operacoe **dtbase, int qtdOperacao, int tipo_config);
+
 int saveContaCliente(contaCliente objeto, int tipo_config);
 
 int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, int *tamanhoCCliente, int *idControle, int * Key_Cliente,int tipo_config);
@@ -99,12 +142,40 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                    fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Operacao,financeiro *monetario,int tipoConfig);
 
 int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
-                     operacoe **dtbaseOperacoes, int qtdOperacao);
+                     operacoe **dtbaseOperacoes, int qtdOperacao,int tipoconfig);
 
 int retornaChaveOperacao(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
 
 int retornaChaveCliente(contaCliente **dtbase, int qtd, int idCliente);
 
-void listCCliente(contaCliente **dtbaseCCcliente, int qtd);
+void listCCliente(contaCliente **dtbaseCCcliente, int qtd, int key_cliente);
+
+int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbaseLocados, int qtdLocados,financeiro *monetario,int tipoconfig);
 
 int verificaIDLocados(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
+
+eFilme  objetoefilme(int *id,fornecedor **dtbase,int qtdForncecedor,int IDFornecedor);
+
+int verificaID_eFilme(eFilme **dtbase, int qtd_eFilme, int id);
+
+int inserir_eFilme(eFilme **dtbase,eFilme novaEntrada, int *qtd_eFilme, int *tam_eFilme);
+
+int inserirop_EFIlme(operacaoEFilme **dtbase,operacaoEFilme novaEntrada,int *tam_op);
+
+int save_eFilme(eFilme objeto,int tipo_config);
+
+operacaoEFilme objOpEfilme (int *id,financeiro *monetario);
+
+filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm);
+
+int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime,financeiro *monetario,int tipo_config);
+
+int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,int tipo_config);
+
+int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, int tipoPagamento);
+
+int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro *monetario, int tipo_config);
+
+int refazDadosEfIlme(eFilme **dtbase, int qtdCCliente, int tipo_config);
+
+

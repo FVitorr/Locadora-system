@@ -11,7 +11,7 @@ typedef struct {
     char nomeFantasia[100];
     char razaoSocial[100];
     char inscricaoEstadual[30];
-    int cnpj;
+    char cnpj[16];
     endereco endereco;
     char telefone[15];
     char email[50];
@@ -19,7 +19,7 @@ typedef struct {
 
 fornecedor criarFornecedor(int id);
 
-int inserirFornecedor(fornecedor **dtbase, fornecedor novoFornecedor, int *qtdFornecedor, int *tamanhoFornecedor, int id);
+int inserirFornecedor(fornecedor **dtbase, fornecedor novoFornecedor, int *qtdFornecedor, int *tamanhoFornecedor);
 
 int removerFornecedor(fornecedor **dtbase, int id, int *qtdFornecedor, int tipo_config);
 
@@ -36,5 +36,13 @@ int verificaIdFornecedor(fornecedor **dtbase, int qtdFornecedor, int id);
 int carregarDadosFornecedores(fornecedor **dtBase, int *qtdFornecedor, int *tamanhoFornecedor, int *id, int tipo_config);
 
 int refazDadosFornecedor(fornecedor **dtbase, int *tamanhoFornecedor, int tipo_config);
+
+int retornarUltimoID_Fornecedor(fornecedor **dtBase, int qtdFornecedor);
+
+char *retornarCNPJ(fornecedor **dtbase,int qtd, int id);
+
+char *nomeFornecedor(fornecedor **dtbase, int qtd, int id);
+
+int posArrayFornecedor(fornecedor **dtbase,int qtd_Locadora,int id);
 
 #endif //LOCADORA_SYSTEM_FORNECEDOR_H
