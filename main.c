@@ -2,12 +2,9 @@
 #include  <stdlib.h>
 #include <string.h>
 
-//#include "cabecalhos/filmes.h"
 #include "cabecalhos/locadora.h"
-//#include "cabecalhos/cliente.h"
-//#include "cabecalhos/funcionarios.h"
 #include "cabecalhos/fornecedor.h"
-#include "cabecalhos/locacao.h"
+#include "cabecalhos/feedback.h"
 
 /*Arrays Dinamicos*/
 
@@ -58,7 +55,7 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
     system("cls");
     int opc = 0, erro = 0;
     line(60,"Menu principal \0");
-    printf("\t 1 - Locacao \t\t 2 - Clientes \n\t 3 - Categoria \t\t 4 - Filmes\n\t 5 - Funcionarios\t 6 - Fornecedor\n\t 7 - Locadora\t\t 8 - Exportar/Importar\n\t 0 - Exit");
+    printf("\t 1 - Locacao \t\t 2 - Clientes \n\t 3 - Categoria \t\t 4 - Filmes\n\t 5 - Funcionarios\t 6 - Fornecedor\n\t 7 - Locadora\t\t 8 - Exportar/Importar\n\t 9 - FeedBack\t\t 0 - Exit");
     line(60,"s\0");
     do {
         if (erro == 1) {
@@ -123,6 +120,18 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
         case 7:
             while (1){
                 int t = menuLocadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora, tipo_config);
+                if (t == 1){
+                    return 0;
+                }
+            }
+        case 8:
+            while (1){
+                printf("Exportar/Importar");
+                return 0;
+            }
+        case 9:
+            while (1){
+                int t = menuFeedback(dtbaseCliente, qtd_Cliente);
                 if (t == 1){
                     return 0;
                 }
@@ -196,7 +205,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
 }
 
 int main() {
-    int tipoConfig; // 0- BIN 1 - TXT
+    int tipoConfig = 1; // 0- BIN 1 - TXT
 
     config config_System;
 
