@@ -15,6 +15,8 @@ add_executable(Locadora_system
         cabecalhos/funcionarios.h
         cabecalhos/fornecedor.h
         cabecalhos/fucGlobal.h
+        cabecalhos/datas.h
+        cabecalhos/feedback.h
         codigo/categoriaF.c
         codigo/filmes.c
         codigo/locadora.c
@@ -22,5 +24,7 @@ add_executable(Locadora_system
         codigo/cliente.c
         codigo/funcionarios.c
         codigo/fornecedor.c
+        codigo/datas.c
+        codigo/feedback.c
         fucGlobal.c
-        main.c codigo/datas.c cabecalhos/datas.h)
+        main.c )
