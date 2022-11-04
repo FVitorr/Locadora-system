@@ -138,8 +138,9 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
             }
         case 9:
             while (1){
-                int t = menuFeedback(dtbaseCliente, qtd_Cliente);
-                if (t == 1){
+                int t = menuFeedback(dtbaseCliente, qtd_Cliente,
+                                     dtbaseFilme, qtd_Filmes);
+                if (t == 1) {
                     return 0;
                 }
             }
@@ -219,7 +220,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmone
 }
 
 int main() {
-    int tipoConfig = 1; // 0- BIN 1 - TXT
+    int tipoConfig; // 0- BIN 1 - TXT
 
     config config_System;
 
