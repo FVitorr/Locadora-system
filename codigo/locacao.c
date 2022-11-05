@@ -238,7 +238,7 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                     //Conta Cliente existe
                     printf("\nConta CLiente Existe\n");
 
-                    int indexCliente = posicaoContaArray(dtBaseCCliente,qtdcliente,idCliente);
+                    int indexCliente = posicaoContaArray(dtBaseCCliente,*qtd_CCliente,idCliente);
 
                     if (indexCliente == -1){
                         return -1;
@@ -275,9 +275,8 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
 
                         refazDadosCCliente(dtBaseCCliente, *qtd_CCliente, tipoConfig);
                         break;
-                    }else{
-                        return -1;
                     }
+                    return 1;
                 } else {
 
                     contaCliente novoCliente = objetoCCliente(IdContaCliente, idCliente, dtbaseCliente, qtdcliente,idCliente);
@@ -435,7 +434,7 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 eFilme **dtBaseeFilme, int *tam_eFilme, int *qtd_eFilme,financeiro *monetario,int tipo_config){
 
     if (primeiraexecute == 0){
-        carregarDados_CClientes(dtbaseCCliente,qtdCCliente,tamanho_CCliente,idCCliente,KEY_Cliente,tipo_config);
+        //carregarDados_CClientes(dtbaseCCliente,qtdCCliente,tamanho_CCliente,idCCliente,KEY_Cliente,tipo_config);
         carregarDados_Efilme(dtBaseeFilme, qtd_eFilme, tam_eFilme,tipo_config);
         primeiraexecute = 1;
     }
@@ -716,7 +715,8 @@ int saveLocacao(locados objeto, int tipo_config){
     return 0;
 }
 
-int carregarDados_locacao(locados **dtbaseLocados, int *qtdlocados, int *tamanhoLocados, int *id,int tipo_config) {
+int
+carregarDados_locacao(locados **dtbaseLocados, int *qtdlocados, int *tamanhoLocados, int *id,int tipo_config) {
     FILE *fileLocados = NULL;
     locados new;
 
@@ -960,21 +960,30 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
 }
 
 int refazDadosCCliente(contaCliente **dtbase, int qtdCCliente, int tipo_config){
-    FILE *p;
+    FILE *p = NULL;
     if (tipo_config== 1){
         p = fopen("cpyBdContaCliente.txt", "w");
-        fclose(p);
-        p = NULL;
         for (int i = 0; i < qtdCCliente; i++){
-            saveContaCliente((*dtbase)[i],tipo_config);
+            //saveContaCliente((*dtbase)[i],tipo_config);
+
+            fprintf(p, "%d\n%d\n%d\n%s\n%f\n%f\n%d\n",
+                    (*dtbase)[i].ID,
+                    (*dtbase)[i].key_cliente,
+                    (*dtbase)[i].idCliente,
+                    (*dtbase)[i].Nome,
+                    (*dtbase)[i].valorDeve,
+                    (*dtbase)[i].valorPago,
+                    (*dtbase)[i].IDlocado);
         }
+
     }else if (tipo_config == 0){
         p = fopen("cpyBdContaCliente.bin", "wb");
-        fclose(p);
         for (int i = 0; i < qtdCCliente; i++){
             saveContaCliente((*dtbase)[i],tipo_config);
         }
     }
+
+    fclose(p);
     return 0;
 }
 
@@ -1486,14 +1495,18 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario){
 
     replacefloat(0,&newOpEfilme.valorEntrada);
 
+    newOpEfilme.parcelasPagas = 0;
+
     int pagouaVista = -1; // 0 Não
     while (newOpEfilme.tipoPagamento == 1){//Pagamento a vista
         int opc = 0;
         if (newOpEfilme.valorTotal > monetario->caixa){
+            newOpEfilme.tipoPagamento = 2;
             pagouaVista = 0;
             break;
         }else{
             newOpEfilme.qtdParcelas = 1;
+            newOpEfilme.parcelasPagas = 1;
             newOpEfilme.valorDeve = 0; // Locadora pagou tudo
             //Tirar valor do caixa
 
@@ -1655,7 +1668,7 @@ int save_eFilme(eFilme objeto,int tipo_config){
                 objeto.ultIDOp);
 
             for (int i = 0; i < objeto.tamOp - 1; i++){
-                fprintf(entradaFilmeF, "%d\n%f\n%f\n%d\n%d\n%f\n%f\n%f\n%d\n%d\n%f\n%f\n%d\n%d\n%d\n%d\n%d\n%d\n",
+                fprintf(entradaFilmeF, "%d\n%f\n%f\n%d\n%d\n%f\n%f\n%f\n%d\n%d\n%d\n%f\n%f\n%d\n%d\n%d\n%d\n%d\n%d\n",
                         objeto.filmes[i].ID,
                         objeto.filmes[i].frete,
                         objeto.filmes[i].Imposto,
@@ -1667,6 +1680,7 @@ int save_eFilme(eFilme objeto,int tipo_config){
                         objeto.filmes[i].valorTotal,
                         objeto.filmes[i].tipoPagamento,
                         objeto.filmes[i].qtdParcelas,
+                        objeto.filmes[i].parcelasPagas,
                         objeto.filmes[i].valorEntrada,
                         objeto.filmes[i].valorDeve,
                         objeto.filmes[i].dtNota.dia,
@@ -1750,6 +1764,7 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
                 fscanf(Efilmef, "%f\n", &new.filmes[i].valorTotal);
                 fscanf(Efilmef, "%d\n", &new.filmes[i].tipoPagamento);
                 fscanf(Efilmef, "%d\n", &new.filmes[i].qtdParcelas);
+                fscanf(Efilmef, "%d\n", &new.filmes[i].parcelasPagas);
                 fscanf(Efilmef, "%f\n", &new.filmes[i].valorEntrada);
                 fscanf(Efilmef, "%f\n", &new.filmes[i].valorDeve);
                 fscanf(Efilmef, "%d\n", &new.filmes[i].dtNota.dia);
@@ -1809,14 +1824,14 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
     Efilmef = NULL;
     return 0;
 }
-
-int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, int tipoPagamento){
+ 
+int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, int tipoPagamento, int filtrarPagos){ // filtrarPagos 0 - Retorna tudo       1 - Retorna os que não foram Pagos
     for (int i = 0; i  < qtd_eFime; i++){
         if ((*dtBase_eFilme)[i].ID == IDconta || IDconta == -1){
             printf("| ID Conta: (%d)  \t Fornecedor:  %s  \t\tCNPJ: %s", (*dtBase_eFilme)[i].ID,
                    (*dtBase_eFilme)[i].nomefornecedor, (*dtBase_eFilme)[i].cnpj);
             for (int j = 0; j < (*dtBase_eFilme)[i].tamOp - 1; j++) {
-               if (((*dtBase_eFilme)[i].filmes[j].tipoPagamento == tipoPagamento || tipoPagamento == -1) && ((*dtBase_eFilme)[i].filmes[j].ID == IDnota || IDnota == -1)) {
+               if (((*dtBase_eFilme)[i].filmes[j].tipoPagamento == tipoPagamento || tipoPagamento == -1) && ((*dtBase_eFilme)[i].filmes[j].ID == IDnota || IDnota == -1) && ((*dtBase_eFilme)[i].filmes[j].parcelasPagas < (*dtBase_eFilme)[i].filmes[j].qtdParcelas || filtrarPagos == 0)) {
                     printf("\n\n| (%d) Data da Nota: %d/%d/%d  ", (*dtBase_eFilme)[i].filmes[j].ID,
                            (*dtBase_eFilme)[i].filmes[j].dtNota.dia, (*dtBase_eFilme)[i].filmes[j].dtNota.mes,
                            (*dtBase_eFilme)[i].filmes[j].dtNota.ano);
@@ -1948,7 +1963,7 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
 
     int IDnota;
     if (indexArray != -1){
-        list_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,-1,2);
+        list_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,-1,2,0);
 
 
         do{
@@ -1957,7 +1972,7 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
         } while (verifica_OpeFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,IDnota) == -1);
 
 
-        list_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,IDnota,2);
+        list_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,IDnota,2,1);
 
         int qtdParcelas = 0;
         float valorParcelas = ((*dtbase_eFilme)[indexArray].filmes[IDnota].valorTotal -
@@ -1969,17 +1984,21 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
 
     int erro = 0;
         do {
-            printf("\n>> Valor em Caixa: %.2f\n", monetario->caixa);
+            printf("\n\n>> Parcelas Pagas: %d/3\n", (*dtbase_eFilme)[indexArray].filmes[IDnota].parcelasPagas);
+            printf(">> Valor em Caixa: %.2f\n", monetario->caixa);
             printf(">> Valor Parcelas: %.2f\n\n", valorParcelas);
             do {
                 if (erro >= 1){
-                    printf("[!] Valor Invalido\n Informe um valor valido para quantidade de parcelas ou 0 para sair");
+                    printf("[!] Valor Invalido\n Informe um valor valido para quantidade de parcelas ou 0 para sair\n");
                 }
                 printf(">> Deseja pagar quantas parcelas: [Max: %d]: ",
                        (*dtbase_eFilme)[indexArray].filmes[IDnota].qtdParcelas);
                 scanf("%d", &qtdParcelas);
                 if (qtdParcelas <= (*dtbase_eFilme)[indexArray].filmes[IDnota].qtdParcelas - (int)parcelasPagas && qtdParcelas > 0){
                     break;
+                }
+                if (qtdParcelas == 0){
+                    return -1;
                 }
                 erro++;
             } while (1);
@@ -1994,11 +2013,11 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
                 return -1;
             }
 
-            printf("Valor Pago: R$ %.2f", (float) qtdParcelas * valorParcelas);
+            printf("\nValor Pago: R$ %.2f\n", (float) qtdParcelas * valorParcelas);
 
             int confirm = 0;
             printf("Correto [1- SIM  0- NAO]: ");
-            scanf("%d", confirm);
+            scanf("%d", &confirm);
 
             if (confirm == 1) {
                 break;
@@ -2011,6 +2030,7 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
 
         (*dtbase_eFilme)[indexArray].filmes[IDnota].valorDeve = (*dtbase_eFilme)[indexArray].filmes[IDnota].valorDeve - (float) qtdParcelas * valorParcelas;
 
+        (*dtbase_eFilme)[indexArray].filmes[IDnota].parcelasPagas = qtdParcelas;
 
         refazDadosEfIlme(dtbase_eFilme,qtd_eFilme,tipo_config);
         //Setar DtPagamento como hj

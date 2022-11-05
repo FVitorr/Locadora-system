@@ -56,6 +56,7 @@ typedef struct
     float valorTotal;
     int tipoPagamento; //1- A vista 2- A prazo
     int qtdParcelas;
+    int parcelasPagas;
     float valorEntrada;
     float valorDeve;
     data dtNota;
@@ -172,7 +173,7 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
 
 int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,int tipo_config);
 
-int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, int tipoPagamento);
+int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, int tipoPagamento, int filtrarPagos);
 
 int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro *monetario, int tipo_config);
 
