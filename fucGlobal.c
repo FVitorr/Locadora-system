@@ -1,10 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include <conio.h>
 #include "cabecalhos/fucGlobal.h"
-#include <io.h>
 
 /* +++++++++++++++++ Gerenciamento de Endereço +++++++++++++++++ */
 
@@ -33,9 +31,9 @@ int lenChar(char *n){
 }
 
 void line(int max, char *t){
-    int qtd_a = (max - strlen(t)) / 2;
+    int qtd_a = (max - (int)strlen(t)) / 2;
     int par = qtd_a % 2 == 0 ? 0 : 1;
-    char a = 205;
+    char a = (char)205;
     printf("\n");
 
     for (int i = 0; i < max;)

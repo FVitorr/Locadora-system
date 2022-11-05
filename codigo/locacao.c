@@ -454,20 +454,23 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
     }
 
 
-
-    int op = 0;
     printf("Funcionario: %s",nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado));
     line(100,"Locacao\0");
     printf("\t 1- Emprestar \n\t 2- Devolver \n\t 3- Vizualizar Operacoes \n\t 4- Pagamento Cliente"
            "\n\t 5- Entrada de Filme"
            "\n\t 6- Pagamento Fornecedor"
+           "\n\t 7- Vizualizar Entrada Filme"
            "\n\t 0- Sair");
     line(100,"1\0");
 
+    int op;
+    char opc[2];
     do {
         printf(">>OPC: ");
-        scanf("%d", &op);
-    } while (op < 0 || op > 6);
+        scanf("%s", opc);
+
+        op = strtol(opc,NULL,10);
+    } while (op < 0 || op > 7);
 
     if (op == 1){
         emprestaFilme(dtbaseCCliente,qtdCCliente,tamanho_CCliente,idCCliente,KEY_Cliente,dtbaseCliente,qtdcliente,dtbaseFilme,qtdFilme,
@@ -486,7 +489,12 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
         entradaFilmes(dtbaseFornecedor,qtdFornecedor,tamFornecedor,idEntradaFIlme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario,tipo_config);
     }else if (op == 6){
         pagarParcelaEmprestaFilme(dtBaseeFilme,*qtd_eFilme,monetario,tipo_config);
-    }else{
+    }else if (op == 7){
+        list_eFilme(dtBaseeFilme,*qtd_eFilme,-1,-1,-1,0);
+        printf("\n\n");
+        system("pause");
+    }
+    else{
         return 1;
     }
     return 0;
@@ -1481,15 +1489,14 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario){
     //Calcular Valor Total
     for (int i =0; i < newOpEfilme.tamFilm;i++){
         newOpEfilme.valorTotal = newOpEfilme.valorTotal + (newOpEfilme.entradaFilmesCadastro[i].valorCompra + newOpEfilme.fretePproduto + newOpEfilme.ImpostoPproduto) * (float)newOpEfilme.entradaFilmesCadastro[i].qtd;
-        printf(" %f ",newOpEfilme.valorTotal);
     }
 
-    printf("\nFrete: R$ %.2f  Imposto : R$ %.2f Qtd: %d\n",newOpEfilme.fretePproduto,newOpEfilme.ImpostoPproduto,qtdTotalFilme);
+    printf("\n  >> Frete (Und. Produto): R$ %.2f\n  >> Imposto (Und. Produto): R$ %.2f \n  >> Quantidade Produtos: %d\n",newOpEfilme.fretePproduto,newOpEfilme.ImpostoPproduto,qtdTotalFilme);
 
-    printf("\n\nValor total a ser Pago: R$ %.2f \n",newOpEfilme.valorTotal);
+    printf("\n[!] Valor total a ser Pago: R$ %.2f \n",newOpEfilme.valorTotal);
     //TIPO PAGAMENTO
     do{
-        printf("\nTipo do pagamento: [1- A vista \t2 - A prazo]: ");
+        printf("\n>>Tipo do pagamento: [1- A vista \t2 - A prazo]: ");
         scanf("%d",&newOpEfilme.tipoPagamento);
     } while (newOpEfilme.tipoPagamento > 2 || newOpEfilme.tipoPagamento < 1);
 
@@ -1826,12 +1833,13 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
 }
  
 int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, int tipoPagamento, int filtrarPagos){ // filtrarPagos 0 - Retorna tudo       1 - Retorna os que não foram Pagos
+    int controle = 0;
     for (int i = 0; i  < qtd_eFime; i++){
-        if ((*dtBase_eFilme)[i].ID == IDconta || IDconta == -1){
+        if (((*dtBase_eFilme)[i].ID == IDconta) || (IDconta == -1)){
             printf("| ID Conta: (%d)  \t Fornecedor:  %s  \t\tCNPJ: %s", (*dtBase_eFilme)[i].ID,
                    (*dtBase_eFilme)[i].nomefornecedor, (*dtBase_eFilme)[i].cnpj);
             for (int j = 0; j < (*dtBase_eFilme)[i].tamOp - 1; j++) {
-               if (((*dtBase_eFilme)[i].filmes[j].tipoPagamento == tipoPagamento || tipoPagamento == -1) && ((*dtBase_eFilme)[i].filmes[j].ID == IDnota || IDnota == -1) && ((*dtBase_eFilme)[i].filmes[j].parcelasPagas < (*dtBase_eFilme)[i].filmes[j].qtdParcelas || filtrarPagos == 0)) {
+               if (((*dtBase_eFilme)[i].filmes[j].tipoPagamento == tipoPagamento || tipoPagamento == -1) && ((*dtBase_eFilme)[i].filmes[j].ID == IDnota || IDnota == -1) && ((*dtBase_eFilme)[i].filmes[j].parcelasPagas < (*dtBase_eFilme)[i].filmes[j].qtdParcelas || (int)(*dtBase_eFilme)[i].filmes[j].valorDeve > 0 || filtrarPagos == 0)) {
                     printf("\n\n| (%d) Data da Nota: %d/%d/%d  ", (*dtBase_eFilme)[i].filmes[j].ID,
                            (*dtBase_eFilme)[i].filmes[j].dtNota.dia, (*dtBase_eFilme)[i].filmes[j].dtNota.mes,
                            (*dtBase_eFilme)[i].filmes[j].dtNota.ano);
@@ -1901,15 +1909,18 @@ int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, i
                                (*dtBase_eFilme)[i].filmes[j].dtPagamento.mes,
                                (*dtBase_eFilme)[i].filmes[j].dtPagamento.ano, formatstring(17, 1, " \0"));
                     } else {
-                        printf("\n|%s|  Valor Total : R$ %.2f \t\t Quantidade Parcelas: %d  ",
+                        printf("\n|%s|  Valor Total : R$ %.2f \t\t  | Qtd Parcelas Pagas: %d de %d ",
                                formatstring(30, (int) strlen("Tipo Pagamento: Parcelado\0"),
                                             "Tipo Parcelado: Parcelado\0"),
-                               (*dtBase_eFilme)[i].filmes[j].valorDeve, (*dtBase_eFilme)[i].filmes[j].qtdParcelas);
+                               (*dtBase_eFilme)[i].filmes[j].valorDeve,(*dtBase_eFilme)[i].filmes[j].parcelasPagas ,(*dtBase_eFilme)[i].filmes[j].qtdParcelas);
                     }
-
+                    controle++;
                 }
             }
         }
+    }
+    if (controle == 0){
+        return -1;
     }
     return 0;
 }
@@ -1932,11 +1943,11 @@ int possArray_eFilme(eFilme **dtbase_eFilme, int qtd_eFilme, int id){
     return -1;
 }
 
-int verifica_OpeFilme(eFilme **dtbase_eFilme, int qtd_eFilme, int IDConta,int IDnota){
+int verifica_OpeFilme(eFilme **dtbase_eFilme, int qtd_eFilme, int IDConta,int IDnota, int tipoPagamento, int filtrarPagos){
     for (int i = 0 ; i < qtd_eFilme; i++){
         if ((*dtbase_eFilme)[i].ID == IDConta){
             for (int j = 0; j < (*dtbase_eFilme)[i].tamOp; j++){
-                if ((*dtbase_eFilme)[i].filmes[j].ID == IDnota && (*dtbase_eFilme)[i].filmes[j].tipoPagamento == 2){
+                if ((*dtbase_eFilme)[i].filmes[j].ID == IDnota && (*dtbase_eFilme)[i].filmes[j].tipoPagamento == tipoPagamento && ((*dtbase_eFilme)[i].filmes[j].parcelasPagas < (*dtbase_eFilme)[i].filmes[j].qtdParcelas || (int)(*dtbase_eFilme)[i].filmes[j].valorDeve > 0 || filtrarPagos == 0)){
                     return j;
                 }
             }
@@ -1950,26 +1961,64 @@ int verifica_OpeFilme(eFilme **dtbase_eFilme, int qtd_eFilme, int IDConta,int ID
 
 int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro *monetario, int tipo_config){
     line(100,"Pagamento de Parcela Fornecedor");
-    for (int i = 0 ; i < qtd_eFilme; i++){
-        printf("  (%d) %s  ",(*dtbase_eFilme)[i].ID,(*dtbase_eFilme)[i].nomefornecedor);
+    printf("ID disponiveis: \n");
+    printf("(-1) Sair  ");
+    int i;
+    for (i = 0 ; i < qtd_eFilme; i++){
+        printf("(%d) %s  ",(*dtbase_eFilme)[i].ID,(*dtbase_eFilme)[i].nomefornecedor);
     }
+    char tempId[4];
     int IDfornecedor = -1;
+    if (qtd_eFilme == 0){
+        printf("\n\t [!] Nada para Mostrar Aqui ...\n\n");
+        system("pause");
+        system("cls");
+        return -1;
+    }
+    int er = 0 ;
     do {
-        printf("\nID Fornecedor: ");
-        scanf("%d", &IDfornecedor);
+        if (er == 1){
+            printf("\n [!] ID Invalido \n Informe um ID valido ou -1 para sair\n");
+        }
+        printf("\n\nID Fornecedor: ");
+        scanf("%s", tempId);
+
+        IDfornecedor = strtol(tempId,NULL,10);
+        if (IDfornecedor == -1){
+            return -1;
+        }
+        er++;
     }while (verifica_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor) == 0);
     //IDfornecedor ja verificado
     int indexArray = possArray_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor);
 
     int IDnota;
     if (indexArray != -1){
-        list_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,-1,2,0);
+        int t = list_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,-1,2,1);
 
+        if (t == 0){
+            printf("\n\n  [!] Não tem Contas a prazo para Este Fornecedor ");
+            int cf = 0;
+            do{
+                printf("\n\n >> Deseja ver as Notas: [1 - Sim 0 - Nao]:");
+                scanf("%d",&cf);
+            } while (cf != 1 && cf != 0);
+
+            if (cf == 1){
+                printf("\n\n ");
+                list_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,-1,-1,0);
+                printf("\n ");
+                system("pause");
+            }
+
+
+            return -1;
+        }
 
         do{
             printf("\n\nID Nota: ");
             scanf("%d",&IDnota);
-        } while (verifica_OpeFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,IDnota) == -1);
+        } while (verifica_OpeFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,IDnota,2,1) == -1);
 
 
         list_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,IDnota,2,1);
@@ -1992,23 +2041,22 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
                     printf("[!] Valor Invalido\n Informe um valor valido para quantidade de parcelas ou 0 para sair\n");
                 }
                 printf(">> Deseja pagar quantas parcelas: [Max: %d]: ",
-                       (*dtbase_eFilme)[indexArray].filmes[IDnota].qtdParcelas);
+                       (*dtbase_eFilme)[indexArray].filmes[IDnota].qtdParcelas - (int)parcelasPagas);
                 scanf("%d", &qtdParcelas);
-                if (qtdParcelas <= (*dtbase_eFilme)[indexArray].filmes[IDnota].qtdParcelas - (int)parcelasPagas && qtdParcelas > 0){
+                if (qtdParcelas <= (*dtbase_eFilme)[indexArray].filmes[IDnota].qtdParcelas - (int)parcelasPagas || qtdParcelas == 0){
                     break;
-                }
-                if (qtdParcelas == 0){
-                    return -1;
                 }
                 erro++;
             } while (1);
+
+            (*dtbase_eFilme)[indexArray].filmes[IDnota].parcelasPagas = (*dtbase_eFilme)[indexArray].filmes[IDnota].parcelasPagas + qtdParcelas;
 
             //qtdParcelas > (*dtbaseLocados)[indexlocados].qtdParcelas - (*dtbaseLocados)[indexlocados].parcelasPagas && qtdParcelas > 0
             if (monetario->caixa < (float) qtdParcelas * valorParcelas || qtdParcelas == 0){
                 if (qtdParcelas == 0){
                     return -1;
                 }
-                printf("\nValor Parcelas: R$ %.2f \t\t Quantidade Parcelas: %d \t\t Valor Total Pagamento: R$ %.2f \n[!] Valor em caixa insulficiente para o pagamento\n\n",valorParcelas,qtdParcelas,valorParcelas * (float)qtdParcelas);
+                printf("\n\nValor Parcelas: R$ %.2f \t Quantidade Parcelas: %d \t Valor Total Pagamento: R$ %.2f \n[!] Valor em caixa insulficiente para o pagamento\n\n",valorParcelas,qtdParcelas,valorParcelas * (float)qtdParcelas);
                 system("pause");
                 return -1;
             }
@@ -2028,13 +2076,12 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
         monetario->caixa = monetario->caixa - (float) qtdParcelas * valorParcelas;
         monetario->despesas = monetario->despesas - (float) qtdParcelas * valorParcelas;
 
-        (*dtbase_eFilme)[indexArray].filmes[IDnota].valorDeve = (*dtbase_eFilme)[indexArray].filmes[IDnota].valorDeve - (float) qtdParcelas * valorParcelas;
+        (*dtbase_eFilme)[indexArray].filmes[IDnota].valorDeve = (*dtbase_eFilme)[indexArray].filmes[IDnota].valorDeve - ((float) qtdParcelas * valorParcelas);
 
-        (*dtbase_eFilme)[indexArray].filmes[IDnota].parcelasPagas = qtdParcelas;
-
-        refazDadosEfIlme(dtbase_eFilme,qtd_eFilme,tipo_config);
         //Setar DtPagamento como hj
         dataAtual(&(*dtbase_eFilme)[indexArray].filmes[IDnota].dtPagamento);
+
+        refazDadosEfIlme(dtbase_eFilme,qtd_eFilme,tipo_config);
     }
     return 0;
 }
