@@ -664,7 +664,10 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
             fscanf(fileLocados, "%d\n", &new.tamLocados);
             fscanf(fileLocados, "%d\n", &new.IDlocado);
 
+            new.dEmprestimo = malloc(new.tamLocados * sizeof (locados));
+
             for (int i = 0; i < new.tamLocados - 1; i++){
+                char ID[4];
                 fscanf(fileLocados, "%d\n", &new.dEmprestimo[i].ID);
                 fscanf(fileLocados, "%d\n", &new.dEmprestimo[i].qtdFilme);
                 fscanf(fileLocados, "%f\n", &new.dEmprestimo[i].valorTotal);
@@ -679,6 +682,12 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
                 fscanf(fileLocados, "%d\n", &new.dEmprestimo[i].TDdevolvido);
                 fscanf(fileLocados, "%d\n", &new.dEmprestimo[i].ultimoIDOperacao);
 
+                new.dEmprestimo[i].dFilme = malloc(new.dEmprestimo[i].qtdFilme * sizeof (operacoe));
+
+                if (new.dEmprestimo[i].dFilme == NULL){
+                    printf("Erro na Alocaocao de Memoria -> Operaçoes de Empresta Filme");
+                    exit(1);
+                }
                 for (int j = 0; j < new.dEmprestimo[i].qtdFilme - 1; j++){
 
                     fscanf(fileLocados, "%d\n", &new.dEmprestimo[i].dFilme[j].ID);
@@ -976,6 +985,54 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
             printf("Quantos Filmes serão devolvidos: ");
             scanf("%d",&qtdDevolver);
 
+            for (int l = 0; l < qtdDevolver; l++) {
+                for (int i = 0; i < qtdCCliente; i++) {
+                    if ((*dtbaseCCliente)[i].idCliente == IdCliente) {
+                        for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados; j++) {
+                            if ((*dtbaseCCliente)[i].dEmprestimo[j].ID == IDlocados) {
+                                (*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido = 1;
+
+                                int IDfilme,IDvalido = 0;
+                                printf("\nInforme o ID: ");
+                                scanf("%d",&IDfilme);
+
+                                for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme; k++) {
+                                    if ((*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].ID == IDfilme){
+
+                                        (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].devolvido = 1;
+
+                                        data *dtDevolucao = &(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal;
+                                        dataAtual(dtDevolucao);
+                                        //Verificar se passou do prazo de entrega e calcular multa;
+
+                                        data hoje;
+                                        dataAtual(&hoje);
+
+                                        //Calcular Diferenca entre datas
+                                        int t = diasEntreDatas((*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao,
+                                                               hoje);
+
+                                        if (t > 0) {
+                                            printf(">> MULTA APLICADA.");
+                                            //Adicionar Valor ao campo deve
+                                        }
+
+                                        printf("%d/%d/%d menos %d/%d/%d = %d Dias\n",
+                                               (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,
+                                               (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,
+                                               (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
+                                               hoje.dia, hoje.mes, hoje.ano, t);
+                                        //printf("%d / %d / %d",dtDevolucao->dia,dtDevolucao->mes,dtDevolucao->ano);
+                                        IDvalido++;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
         }
     } else{
         printf("\n\n\t[!] O Cliente ja devolveu todos os filmes");
