@@ -101,7 +101,7 @@ int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *tamanhoOpe
 void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator);
 
 //Key -1 listar todas as locadas
-int listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDlocado);
+int listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDlocado, int mostraDevolvidos);
 
 int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *id,int tipo_config);
 
@@ -130,8 +130,7 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                    locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados,
                    fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_Operacao,financeiro *monetario,int tipoConfig);
 
-int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
-                     operacoe **dtbaseOperacoes, int qtdOperacao,int tipoconfig);
+int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,int tipoConfig);
 
 int retornaChaveOperacao(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
 

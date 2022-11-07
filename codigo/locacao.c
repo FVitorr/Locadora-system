@@ -54,9 +54,9 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
     printf("\n>> Data do emprestimo: %d/%d/%d\n",newOpc.dtemprestimo.dia,newOpc.dtemprestimo.mes,newOpc.dtemprestimo.ano);
 
     newOpc.dtdevolucao = somaDataDias(newOpc.dtemprestimo,7); //prevista
-//    newOpc.dtdevolucao.dia = 0;
-//    newOpc.dtdevolucao.mes = 0;
-//    newOpc.dtdevolucao.ano = 0;
+    newOpc.dtdevolucaoReal.dia = 0;
+    newOpc.dtdevolucaoReal.mes = 0;
+    newOpc.dtdevolucaoReal.ano = 0;
     printf("\n>> Data da Devolucao: %d/%d/%d\n",newOpc.dtdevolucao.dia,newOpc.dtdevolucao.mes,newOpc.dtdevolucao.ano);
 
     newOpc.devolvido = 0; // 0 - Não
@@ -362,7 +362,7 @@ int verificaConta(contaCliente **dtbaseCcliente, int qtdCcliente, int idCliente)
 }
 
 
-int listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDlocado){
+int listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDlocado, int mostraDevolvidos){ //0 - não 1- sim
     int temFilme = 0;
     for (int i = 0; i  < qtdCliente; i++){
         if (((*dtbase)[i].idCliente == IDcliente) || (IDcliente == -1)){
@@ -371,49 +371,52 @@ int listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDloca
                    "Valor Pago: R$ %f\n"
                    "Valor a Receber: R$ %f\n",(*dtbase)[i].ID,(*dtbase)[i].Nome,(*dtbase)[i].valorPago,(*dtbase)[i].valorDeve);
 
-            for (int j = 0; j < (*dtbase)[i].tamLocados; j++){
+            for (int j = 0; j < (*dtbase)[i].tamLocados - 1 ; j++){
                 if ((*dtbase)[i].dEmprestimo[j].ID == IDlocado || IDlocado == -1) {
-                    printf(" (%d)", (*dtbase)[i].dEmprestimo[j].ID);
+                    printf("\nID Nota (%d)\n", (*dtbase)[i].dEmprestimo[j].ID);
 
-                    for (int k = 0; k < (*dtbase)[i].dEmprestimo[j].qtdFilme; k++) {
+                    for (int k = 0; k < (*dtbase)[i].dEmprestimo[j].qtdFilme - 1; k++) {
                         char devolvido[4];
-                        if ((*dtbase)[i].dEmprestimo[j].dFilme[k].devolvido == 0) {
+                        if ((*dtbase)[i].dEmprestimo[j].dFilme[k].devolvido == 1) {
                             strcpy(devolvido, "Sim\0");
                         } else {
                             strcpy(devolvido, "Nao\0");
                         }
-                        printf("  (%d) Codigo Filme: %d\n  Descricao Filme: %s\n  Valor Emprestimo: R$ %.2f\n"
-                               "  Data Emprestimo: %d/%d/%d\n"
-                               "  Data Devolucao Prevista: %d/%d/%d\n"
-                               "  Data Devolucao Real: %d/%d/%d\n"
-                               "  Tudo Devolvido: %s",
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].ID,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].CodFilme,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].nomeFilme,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].valorFilme,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].dtemprestimo.dia,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].dtemprestimo.mes,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].dtemprestimo.ano,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal.dia,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal.mes,
-                               (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal.ano,
-                               devolvido);
-                        temFilme++;
+                        if ((*dtbase)[i].dEmprestimo[j].dFilme[k].devolvido == 0 || mostraDevolvidos == 1){
+
+                            printf("\n  (%d) Codigo Filme: %d\n  Descricao Filme: %s\n  Valor Emprestimo: R$ %.2f\n"
+                                   "  Data Emprestimo: %d/%d/%d\t"
+                                   "  Data Devolucao Prevista: %d/%d/%d\t"
+                                   "  Data Devolucao Real: %d/%d/%d\n"
+                                   "  Devolvido: %s\n",
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].ID,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].CodFilme,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].nomeFilme,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].valorFilme,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].dtemprestimo.dia,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].dtemprestimo.mes,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].dtemprestimo.ano,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal.dia,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal.mes,
+                                   (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal.ano,
+                                   devolvido);
+                            temFilme++;
+                        }
                     }
-                    printf(" Quantidade Filme: %d \n"
-                           "Valor Total: R$ %.2f\t", (*dtbase)[i].dEmprestimo[j].qtdFilme,
+                    printf("\nQuantidade Filme: %d \t"
+                           "Valor Total: R$ %.2f\t", (*dtbase)[i].dEmprestimo[j].qtdFilme - 1,
                            (*dtbase)[i].dEmprestimo[j].valorTotal);
                     if ((*dtbase)[i].dEmprestimo[j].tipoPagamento == 2) {
                         printf("Valor em Debito: %.2f \tValor entrada: R$ %.2f\n"
-                               "Qtd Parcelas: %d de %d", (*dtbase)[i].dEmprestimo[j].valordeve,
+                               "Qtd Parcelas: %d de %d\t", (*dtbase)[i].dEmprestimo[j].valordeve,
                                (*dtbase)[i].dEmprestimo[j].valorEntrada,
                                (*dtbase)[i].dEmprestimo[j].parcelasPagas, (*dtbase)[i].dEmprestimo[j].qtdParcelas);
                     }
                     //Mais para frente talvez usar lista Dinamica para Data do pagamento
-                    printf("\nData Pagamento: %d/%d/%d \n", (*dtbase)[i].dEmprestimo[j].Dtpagamento.dia,
+                    printf("Data Pagamento: %d/%d/%d \n\n", (*dtbase)[i].dEmprestimo[j].Dtpagamento.dia,
                            (*dtbase)[i].dEmprestimo[j].Dtpagamento.mes, (*dtbase)[i].dEmprestimo[j].Dtpagamento.ano);
                 }
             }
@@ -478,8 +481,9 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
 
     }else if (op == 2){
         //Devolução;
-        //devolucaoFilmes(dtbaseCCliente,*qtdCCliente,dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdOperacoe,tipo_config);
+        devolucaoFilmes(dtbaseCCliente,*qtdCCliente,tipo_config);
     }else if (op == 3){
+        listLocacao(dtbaseCCliente, *qtdCCliente, -1,-1,0);
         //listCCliente(dtbaseCCliente,*qtdCCliente);
         //listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdCCliente,-1);
         system("pause");
@@ -666,6 +670,12 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
 
             new.dEmprestimo = malloc(new.tamLocados * sizeof (locados));
 
+            if (new.dEmprestimo == NULL){
+                printf("Erro na Alocaocao de Memoria -> new.dEmprestimo");
+                system("pause");
+                exit(1);
+            }
+
             for (int i = 0; i < new.tamLocados - 1; i++){
                 char ID[4];
                 fscanf(fileLocados, "%d\n", &new.dEmprestimo[i].ID);
@@ -685,7 +695,8 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
                 new.dEmprestimo[i].dFilme = malloc(new.dEmprestimo[i].qtdFilme * sizeof (operacoe));
 
                 if (new.dEmprestimo[i].dFilme == NULL){
-                    printf("Erro na Alocaocao de Memoria -> Operaçoes de Empresta Filme");
+                    printf("Erro na Alocaocao de Memoria -> new.dEmprestimo[i].dFilme");
+                    system("pause");
                     exit(1);
                 }
                 for (int j = 0; j < new.dEmprestimo[i].qtdFilme - 1; j++){
@@ -716,6 +727,10 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
             if (t == 0){
                 printf("\nAcao Interrompida");
                 break;
+            }
+
+            if (*idControle >= new.ID){
+                *idControle = new.ID + 1;
             }
         }
     }
@@ -891,8 +906,7 @@ int verificaIDLocados(contaCliente **dtbaseCCliente, int qtdCCliente, int idClie
     return 0;
 }
 
-int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtbaselocados, int qtdLocados,
-                     operacoe **dtbaseOperacoes, int qtdOperacao,int tipoConfig){
+int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,int tipoConfig){
     system("cls");
     line(100,"Devolucao Filmes\0");
     printf("\nContas Disponiveis:\n");
@@ -915,14 +929,14 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
 
     //printf("%d %d",key_cliente,key_operator);
 
-    printf("\nDevolucoes pendentes ");
-    int temDevolver = listLocacao(dtbaseCCliente,qtdCCliente,IdCliente,-1);
+    printf("\nDevolucoes pendentes:\n ");
+    int temDevolver = listLocacao(dtbaseCCliente,qtdCCliente,IdCliente,-1,0);
 
-    if (temDevolver == 1){//tem algo para devolver
+    if (temDevolver >= 1){//tem algo para devolver
         int IDlocados,erro = 0;
         do {
             if (erro == 1){ printf("\n[!] ID Invalido\n");}
-            printf("Informe o ID Para a Devolucao: ");
+            printf("Informe o ID da Nota para a Devolucao: ");
             scanf("%d", &IDlocados);
             erro = 1;
         }while(verificaIDLocados(dtbaseCCliente,qtdCCliente,IdCliente,IDlocados) == 0);
@@ -930,9 +944,9 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
         //int key_operator = retornaChaveOperacao(dtbaselocados,qtdLocados,IDlocados,key_cliente);
 
 
-        printf("\nVerifique os Filmes: ");
+        printf("\nVerifique os Filmes:\n ");
 
-        int temoperacao = listLocacao(dtbaseCCliente,qtdCCliente,IdCliente,IDlocados);
+        int temoperacao = listLocacao(dtbaseCCliente,qtdCCliente,IdCliente,IDlocados,0);
 
 
         //Precisa Selecionar a Referencia dos Locados
@@ -946,11 +960,15 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
             //Devolveu tudo
             for (int i = 0; i< qtdCCliente; i++){
                 if((*dtbaseCCliente)[i].idCliente == IdCliente){
-                    for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados; j++){
+                    for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados - 1; j++){
                         if((*dtbaseCCliente)[i].dEmprestimo[j].ID == IDlocados){
-                            (*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido = 1;
+                            if ((*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido == 1){
+                                break;
+                            }else{
+                                (*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido = 1;
+                            }
 
-                            for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme; k++){
+                            for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme - 1; k++){
                                 (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].devolvido = 1;
 
                                 data *dtDevolucao = &(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal;
@@ -982,22 +1000,24 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
             refazDadosCCliente(dtbaseCCliente,qtdCCliente,tipoConfig);
         }else{
             int qtdDevolver;
-            printf("Quantos Filmes serão devolvidos: ");
+            printf("Quantos Filmes serao devolvidos: ");
             scanf("%d",&qtdDevolver);
 
-            for (int l = 0; l < qtdDevolver; l++) {
-                for (int i = 0; i < qtdCCliente; i++) {
-                    if ((*dtbaseCCliente)[i].idCliente == IdCliente) {
-                        for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados; j++) {
-                            if ((*dtbaseCCliente)[i].dEmprestimo[j].ID == IDlocados) {
-                                (*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido = 1;
 
+            for (int i = 0; i < qtdCCliente; i++) {
+                if ((*dtbaseCCliente)[i].idCliente == IdCliente) {
+
+                    for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados; j++) {
+
+                        if ((*dtbaseCCliente)[i].dEmprestimo[j].ID == IDlocados) {
+
+                            for (int l = 0; l < qtdDevolver; l++){
                                 int IDfilme,IDvalido = 0;
                                 printf("\nInforme o ID: ");
                                 scanf("%d",&IDfilme);
 
                                 for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme; k++) {
-                                    if ((*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].ID == IDfilme){
+                                    if ((*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].ID == IDfilme) {
 
                                         (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].devolvido = 1;
 
@@ -1009,10 +1029,10 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
                                         dataAtual(&hoje);
 
                                         //Calcular Diferenca entre datas
-                                        int t = diasEntreDatas((*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao,
-                                                               hoje);
+                                        int t = diasEntreDatas(hoje,
+                                                (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao);
 
-                                        if (t > 0) {
+                                        if (t < 0) {
                                             printf(">> MULTA APLICADA.");
                                             //Adicionar Valor ao campo deve
                                         }
@@ -1025,16 +1045,28 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,locados **dtba
                                         //printf("%d / %d / %d",dtDevolucao->dia,dtDevolucao->mes,dtDevolucao->ano);
                                         IDvalido++;
                                     }
-                                    break;
+                                }
+                                if (IDvalido == 0){
+                                    printf("[!]ID Invalido");
+                                    qtdDevolver ++;
                                 }
                             }
+                            (*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido = 1;
+                            //Verificar valor de tudo devolvido
+                            for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme; k++){
+                                if ((*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].devolvido == 0){
+                                    (*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido = 2;
+                            }
+
                         }
                         break;
                     }
+                    break;
                 }
             }
+            refazDadosCCliente(dtbaseCCliente,qtdCCliente,tipoConfig);
         }
-    } else{
+    }}else{
         printf("\n\n\t[!] O Cliente ja devolveu todos os filmes");
         system("pause");
         return 0;
