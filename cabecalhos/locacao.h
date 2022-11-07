@@ -5,23 +5,20 @@
 
 
 //int PRIMEIRAEXECUCAO = 0; //0 NÃO
-
 typedef struct {
     int ID;
-    int KEY_operator;
     int CodFilme;
     char *nomeFilme;
     float valorFilme;
     data dtemprestimo;
     data dtdevolucao; // Prevista
     data dtdevolucaoReal;
-    int devolvido; // 0-Sim 1-Não //Não Altera
+    int devolvido; // 0-Nao 1-Sim //Não Altera
 }operacoe;
 
 typedef struct {
     int ID;
-    int KEY_operator;
-    int key_cliente;; //Valor unico para cliente
+    operacoe *dFilme;
     int qtdFilme;
     float valorTotal; // Valor total da Locacao
     float valordeve; // Valor que o Cliente deve
@@ -30,17 +27,18 @@ typedef struct {
     data Dtpagamento;
     int qtdParcelas;
     int parcelasPagas;
-    int TDdevolvido; // 0-Não 1-SIM //Não Altera
+    int TDdevolvido; // 0-Não 1-SIM 2-Alguns //Não Altera
     int ultimoIDOperacao;
 }locados;
 
 typedef struct {
     int ID;
-    int key_cliente;
     int idCliente;
     char *Nome;
     float valorDeve; // Valor que o Cliente deve
-    float valorPago; // Valor que o Cliente deve
+    float valorPago; // Valor que o Cliente paogu
+    locados *dEmprestimo;
+    int tamLocados;
     int IDlocado;
 }contaCliente;
 
@@ -79,16 +77,10 @@ typedef struct
 
 
 
+operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,int *idOperacao);
 
-
-
-operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,
-                        int KEY_operator, int *idOperacao);
-
-locados objetoLocados (int idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,
-                       operacoe **dtbaseOperacoe, int *qtdOperacoe, int *tamanhoOperacoe,
-                       fCategoria **dtbaseCategoria, int qtdCategoria, int *KEY_operacao,int Key_Cliente,
-                       int tipoConfig);
+locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,
+                       fCategoria **dtbaseCategoria, int qtdCategoria);
 
 contaCliente objetoCCliente(int *IdContaCliente,int key_cliente,cliente **dtbaseCliente,int qtdcliente,int idCliente);
 
@@ -102,18 +94,14 @@ int menuLocacao(filme **dtbaseFilme,int qtdFilme,
                 fornecedor **dtbaseFornecedor, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme,
                 eFilme **dtBaseeFilme, int *tam_eFilme, int *qtd_eFilme,financeiro *monetario,int tipo_config);
 
-int inserirLocados(locados **dtbaseLocados,locados newEntry, int *qtdLocados, int *tamanhoLocados);
+int inserirLocados(locados **dtbaseLocados,locados newEntry,int *tamanhoLocados);
 
-int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *qtdOperacao, int *tamanhoOperacao);
+int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *tamanhoOperacao);
 
 void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator);
 
 //Key -1 listar todas as locadas
-int listLocacao(locados **dtbaselocados, int qtdLocados, operacoe **dtbaseOperacoe, int qtdOpe, int key_cliente);
-
-int saveLocacao(locados objeto, int tipo_config);
-
-int saveOperacao(operacoe objeto, int tipo_config);
+int listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDlocado);
 
 int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *id,int tipo_config);
 
@@ -153,7 +141,7 @@ void listCCliente(contaCliente **dtbaseCCcliente, int qtd, int key_cliente);
 
 int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbaseLocados, int qtdLocados,financeiro *monetario,int tipoconfig);
 
-int verificaIDLocados(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
+int verificaIDLocados(contaCliente **dtbaseCCliente, int qtdCCliente, int idCliente,int idLocado);
 
 eFilme  objetoefilme(int *id,fornecedor **dtbase,int qtdForncecedor,int IDFornecedor);
 
