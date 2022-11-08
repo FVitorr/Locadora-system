@@ -769,6 +769,22 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
 }
 
 int refazDadosCCliente(contaCliente **dtbase, int qtdCCliente, int tipo_config){
+
+    FILE *p;
+    if (tipo_config== 1){
+        p = fopen("cpyLocacao.txt", "w");
+        fclose(p);
+        p = NULL;
+        for (int i = 0; i < qtdCCliente; i++){
+            saveContaCliente((*dtbase)[i],1);
+        }
+    }else if (tipo_config == 0){
+        p = fopen("cpyLocacao.bin", "wb");
+        fclose(p);
+        for (int i = 0; i < qtdCCliente; i++){
+            saveContaCliente((*dtbase)[i],0);
+        }
+    }
     return 0;
 }
 
@@ -841,56 +857,52 @@ int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente, locados **dtbas
 
     //   int indexlocados = posicaoLocadosArray(dtbaseLocados, qtdLocados, key_cliente, IDlocados);
 
-        int qtdParcelas = 0;
-        erro = 0;
-        do {
-            if (erro == 1) { printf("\n[!]Quantidade de parcelas Invalidas\n\n"); }
-            printf("\n>>Quantidade de parcelas que deseja pagar  [MAX: %d]: ",
-                   (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].qtdParcelas - (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].parcelasPagas);
-            scanf("%d", &qtdParcelas);
-            erro = 1;
-        } while (qtdParcelas > (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].qtdParcelas - (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].parcelasPagas && qtdParcelas > 0);
+    int qtdParcelas = 0;
+    erro = 0;
+    do {
+        if (erro == 1) { printf("\n[!]Quantidade de parcelas Invalidas\n\n"); }
+        printf("\n>>Quantidade de parcelas que deseja pagar  [MAX: %d]: ",
+               (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].qtdParcelas - (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].parcelasPagas);
+        scanf("%d", &qtdParcelas);
+        erro = 1;
+    } while (qtdParcelas > (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].qtdParcelas - (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].parcelasPagas && qtdParcelas > 0);
 
-        (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].parcelasPagas = (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].parcelasPagas + qtdParcelas;
-        //preco das parcelas.
-        float valorParcelas =
-                ((*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valorTotal - (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valorEntrada) /
-                (float) (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].qtdParcelas;
+    (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].parcelasPagas = (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].parcelasPagas + qtdParcelas;
+    //preco das parcelas.
+    float valorParcelas =
+            ((*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valorTotal - (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valorEntrada) /
+            (float) (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].qtdParcelas;
 
-        //Valor pago Total Parcelas * ValorParcelas((float)qtdParcelas * valorParcelas);
+    //Valor pago Total Parcelas * ValorParcelas((float)qtdParcelas * valorParcelas);
 
 
-        (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valordeve = (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valordeve - (valorParcelas * (float) qtdParcelas );
+    (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valordeve = (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valordeve - (valorParcelas * (float) qtdParcelas );
 
-        //Setar a Data do pagamento como hj
-        dataAtual(&(*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].Dtpagamento);
+    //Setar a Data do pagamento como hj
+    dataAtual(&(*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].Dtpagamento);
 
-        //Qtd de parcelas Pagas
-        float parcelasPagas = (
-                (((*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valorTotal - (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valorEntrada) -
-                (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valordeve ) / valorParcelas);
+    //Qtd de parcelas Pagas
+    float parcelasPagas = (
+            (((*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valorTotal - (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valorEntrada) -
+            (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valordeve ) / valorParcelas);
 
-        printf("\nValor Pago: R$%.2f\nValor em Debito: R$%.2f\nQuantidade de Parcelas Restante : %d \n"
-               "Data pagamento: %d/%d/%d\n\n", valorParcelas * (float) qtdParcelas,
-               (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valordeve,
-               (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].qtdParcelas - (int) parcelasPagas,
-               (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].Dtpagamento.dia, (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].Dtpagamento.mes,
-               (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].Dtpagamento.ano);
+    printf("\nValor Pago: R$%.2f\nValor em Debito: R$%.2f\nQuantidade de Parcelas Restante : %d \n"
+           "Data pagamento: %d/%d/%d\n\n", valorParcelas * (float) qtdParcelas,
+           (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].valordeve,
+           (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].qtdParcelas - (int) parcelasPagas,
+           (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].Dtpagamento.dia, (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].Dtpagamento.mes,
+           (*dtbaseCCliente)[indexCliente].dEmprestimo[IDlocados].Dtpagamento.ano);
 
-//        int indexConta = posicaoContaArray(dtbaseCCliente, qtdCCliente, IdCliente);
-//
-//        (*dtbaseCCliente)[indexConta].valorPago =
-//                (*dtbaseCCliente)[indexConta].valorPago + (valorParcelas * (float) qtdParcelas);
-//        (*dtbaseCCliente)[indexConta].valorDeve =
-//                (*dtbaseCCliente)[indexConta].valorDeve - (valorParcelas * (float) qtdParcelas);
-//
-//        //Enviar ao caixa da locadora
-//        monetario->caixa = monetario->caixa + (valorParcelas * (float) qtdParcelas);
-//        monetario->contasReceber = monetario->contasReceber - (valorParcelas * (float) qtdParcelas);
-//
-//        refazDadosCCliente(dtbaseCCliente, qtdCCliente, tipoconfig);
-////        refazDadosLocados(dtbaseLocados, qtdLocados, tipoconfig);
-////        return 0;
+    (*dtbaseCCliente)[indexCliente].valorPago =
+            (*dtbaseCCliente)[indexCliente].valorPago + (valorParcelas * (float) qtdParcelas);
+    (*dtbaseCCliente)[indexCliente].valorDeve =
+            (*dtbaseCCliente)[indexCliente].valorDeve - (valorParcelas * (float) qtdParcelas);
+
+    //Enviar ao caixa da locadora
+    monetario->caixa = monetario->caixa + (valorParcelas * (float) qtdParcelas);
+    monetario->contasReceber = monetario->contasReceber - (valorParcelas * (float) qtdParcelas);
+
+    refazDadosCCliente(dtbaseCCliente, qtdCCliente, tipoconfig);
     return 0;
 }
 
