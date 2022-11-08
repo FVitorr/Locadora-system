@@ -51,6 +51,8 @@ typedef struct
     int tamFilm;
     float fretePproduto,ImpostoPproduto;
 
+    //Adicionar chave estrangeria com dtBase Filme
+
     float valorTotal;
     int tipoPagamento; //1- A vista 2- A prazo
     int qtdParcelas;
@@ -70,7 +72,7 @@ typedef struct
     char *nomefornecedor;
     char cnpj[16];
     int key_fornecedorArray; // Id de referencia no array dtbaseFornecedor
-    operacaoEFilme *filmes;
+    operacaoEFilme *filmes; //
     int tamOp;
     int ultIDOp; //Ultimo Id da Operacao;
 }eFilme;

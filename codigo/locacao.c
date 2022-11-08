@@ -1000,8 +1000,23 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,int tipoConfig
             refazDadosCCliente(dtbaseCCliente,qtdCCliente,tipoConfig);
         }else{
             int qtdDevolver;
-            printf("Quantos Filmes serao devolvidos: ");
-            scanf("%d",&qtdDevolver);
+            //Verificar se a quantidade de filme é menor que a quantidade emprestada e
+            //maior q 0
+            int qtdTotal;
+
+            for (int i = 0; i < qtdCCliente; i++) {
+                if ((*dtbaseCCliente)[i].idCliente == IdCliente) {
+                    for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados; j++) {
+                        if ((*dtbaseCCliente)[i].dEmprestimo[j].ID == IDlocados) {
+                            qtdTotal= (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme;
+                        }
+                    }
+                }
+            }
+            do{
+                printf("Quantos Filmes serao devolvidos: ");
+                scanf("%d", &qtdDevolver);
+            } while (qtdDevolver > qtdTotal || qtdDevolver < 0);
 
 
             for (int i = 0; i < qtdCCliente; i++) {
@@ -1033,8 +1048,22 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,int tipoConfig
                                                 (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao);
 
                                         if (t < 0) {
+                                            float multapDia = (float)2.5;
                                             printf(">> MULTA APLICADA.");
                                             //Adicionar Valor ao campo deve
+                                            printf("\n\n Data Prevista de Entrega: %d/%d/%d \t Data Real de Entrega: %d%d%d \t Diferença (em Dias): %d",
+                                                   (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,
+                                                   (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,
+                                                   (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
+                                                   hoje.dia, hoje.mes, hoje.ano,t);
+
+                                            printf("Multa por Dia:  R$ %f \nValor Multa:  R$ %f",multapDia,multapDia * (float)t);
+                                            char pag[4];
+                                            int pagInt;
+                                            printf("Pagamento Realizado ?");
+                                            scanf("%s",pag);
+
+                                            pagInt = strtol(pag,NULL,10);
                                         }
 
                                         printf("%d/%d/%d menos %d/%d/%d = %d Dias\n",
@@ -1047,7 +1076,7 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,int tipoConfig
                                     }
                                 }
                                 if (IDvalido == 0){
-                                    printf("[!]ID Invalido");
+                                    printf("[!]ID Invalido\n");
                                     qtdDevolver ++;
                                 }
                             }
@@ -1542,6 +1571,11 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
             fscanf(Efilmef, "%d\n", &new.ultIDOp);
 
             new.filmes = malloc(new.tamOp * sizeof (operacaoEFilme));
+            if (new.filmes == NULL){
+                printf("Erro na Alocaçao Dinamica");
+                system("pause");
+                exit(1);
+            }
             for (int i = 0 ; i < new.tamOp - 1; i++){
                 fscanf(Efilmef, "%d\n", &new.filmes[i].ID);
                 fscanf(Efilmef, "%f\n", &new.filmes[i].frete);
@@ -1566,6 +1600,11 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
 
 
                 new.filmes[i].entradaFilmesCadastro = malloc((new.filmes[i].tamFilm + 1) * sizeof (filme));
+                if (new.filmes[i].entradaFilmesCadastro == NULL){
+                    printf("Erro na Alocaçao Dinamica");
+                    system("pause");
+                    exit(1);
+                }
                 for (int j = 0 ; j < new.filmes[i].tamFilm; j++){
                     fscanf(Efilmef, "%d\n", &new.filmes[i].entradaFilmesCadastro[j].codigo);
 
@@ -1779,7 +1818,7 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
     if (indexArray != -1){
         int t = list_eFilme(dtbase_eFilme,qtd_eFilme,IDfornecedor,-1,2,1);
 
-        if (t == 0){
+        if (t == -1){
             printf("\n\n  [!] Não tem Contas a prazo para Este Fornecedor ");
             int cf = 0;
             do{
