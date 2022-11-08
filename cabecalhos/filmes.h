@@ -37,6 +37,8 @@ extern "C" {
 
     int altQtdEmprestadaFilme(filme **dtbase,int qtd_filme,int id);
 
+    int demQtdEmprestadaFilme(filme **dtbase,int qtd_filme,int id);
+
     char *nomeFilme(filme **dtbase,int qtd_filme, int ID);
 
 #ifdef __cplusplus

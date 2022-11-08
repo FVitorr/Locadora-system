@@ -47,6 +47,8 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
     printf("Lingua: ");
     scanf("%[^\n]s", p.lingua);
 
+    p.qtdEmprestado = 0;
+
     return p;
 }
 
@@ -110,7 +112,7 @@ int qtdEmprestada(filme **dtbase,int qtdFilmes, int id){
     for (int i = 0; i < qtdFilmes; i++) {
         if ((*dtbase)[i].codigo == id) {
             return (*dtbase)[i].qtdEmprestado;
-        }
+        }\
     }
     return 0;
 }
@@ -323,6 +325,14 @@ int altQtdEmprestadaFilme(filme **dtbase,int qtd_filme,int id) {
     return 0;
 }
 
+int demQtdEmprestadaFilme(filme **dtbase,int qtd_filme,int id){
+    for (int i = 0; i < qtd_filme; i++) {
+        if ((*dtbase)[i].codigo == id) {
+            (*dtbase)[i].qtdEmprestado = (*dtbase)[i].qtdEmprestado - 1;
+        }
+    }
+    return 0;
+}
 
 
 

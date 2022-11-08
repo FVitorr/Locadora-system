@@ -55,7 +55,7 @@ void line(int max, char *t){
 }
 
 void abortOp(void){
-    printf("\n\t[ERRO404] Operação Abortada:\n");
+    printf("\n\t[!] Operação Abortada:\n");
 }
 
 void info_cancela(void){
