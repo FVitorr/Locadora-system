@@ -72,6 +72,18 @@ void stringLower(char *string){
     }
 }
 
+void removeSpace(char *string){
+    int i = 0;
+    while (string[i] != '\0' || i == strlen(string)){
+        if (string[i] == ' '){
+            for (int j = i + 1;j < string[i] != '\0';j++){
+                string[i] = string[j];
+            }
+        }
+        i++;
+    }
+}
+
 int confirm_remover(int cod){
     int op;
     printf("Tem certeza que deseja remover (ID): %d \n 1- SIM \t 0-Não", cod);

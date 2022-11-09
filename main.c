@@ -59,9 +59,12 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
     system("cls");
     int opc = 0, erro = 0;
 
-    char test[10]="TEST\0";
+    char test[10]="TEST tt\0";
     stringLower(test);
     printf("Minusculo: %s", test);
+
+    removeSpace(test);
+    printf("Sem espaço: %s", test);
 
     line(60,"Menu principal \0");
     printf("\t 1 - Locacao \t\t 2 - Clientes \n\t 3 - Categoria \t\t 4 - Filmes\n\t 5 - Funcionarios\t 6 - Fornecedor\n\t 7 - Locadora\t\t 8 - Exportar/Importar\n\t 9 - FeedBack\t\t 0 - Exit");

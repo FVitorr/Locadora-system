@@ -34,6 +34,8 @@ int replaceInt(int newValue, int *camp);
 
 int replaceChar(char newValue[5], char *camp);
 
+void removeSpace(char *string);
+
 int replacefloat(float newValue, float *camp);
 
 void addTab(char *str);

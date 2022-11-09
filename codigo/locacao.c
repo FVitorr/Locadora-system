@@ -355,15 +355,6 @@ contaCliente objetoCCliente(int *IdContaCliente,int key_cliente,cliente **dtbase
 }
 
 
-int posicaoContaArray(contaCliente **dtbaseCCliente, int qtdCCliente, int idCliente){
-    for (int c = 0; c < qtdCCliente; c++) {
-        if ((*dtbaseCCliente)[c].idCliente == idCliente ){
-            return c;
-        }
-    }
-    return 0;
-}
-
 
 int verificaConta(contaCliente **dtbaseCcliente, int qtdCcliente, int idCliente){ // Verifica se o cliente ja realizou uma Locação antes
     for (int c = 0; c < qtdCcliente; c++) {
@@ -1985,4 +1976,12 @@ int refazDadosEfIlme(eFilme **dtbase, int qtdCCliente, int tipo_config) {
         }
     }
     return 0;
+}
+
+int transportaDados(const char *namefilme,filme **dtbaseFilme, int qtdFilme){
+    char tpmName[120];
+    for (int i = 0; i < qtdFilme; i++)
+    {
+        (*dtbaseFilme)[i].nome;
+    }
 }
