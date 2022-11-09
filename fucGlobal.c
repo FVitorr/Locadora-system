@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include <conio.h>
 #include "cabecalhos/fucGlobal.h"
 
@@ -61,6 +62,14 @@ void abortOp(void){
 void info_cancela(void){
     printf("\n\t>>Operação Cancelada\n");
     system("Pause");
+}
+
+void stringLower(char *string){
+    int i = 0;
+    while (string[i] != '\0' || i == strlen(string)){
+        string[i] = (char)tolower(string[i]);
+        i++;
+    }
 }
 
 int confirm_remover(int cod){

@@ -52,6 +52,8 @@ char *retorna_password_file (char password[16]);
 
 char *string_to_pointer (char entry[120]);
 
+void stringLower(char *string);
+
 /*
    Função para converter char em Int
    retorna o numero inteiro ou -1 se a operação falhar
