@@ -1531,6 +1531,14 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilm
                 p.codigo = *IDdtBasefilme;
 
                 *IDdtBasefilme = *IDdtBasefilme + 1;
+
+                //Realizar a copia do nome filme
+                strcpy(p.nome,novo.nome);
+                //Copia de quantidade
+                p.qtd = novo.qtd;
+
+
+                *IDdtBasefilme = *IDdtBasefilme + 1;
             }
         }
     }
