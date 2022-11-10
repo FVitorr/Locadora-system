@@ -85,7 +85,7 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
         case 1:
             while (1){
                 int t = menuLocacao(dtbaseFilme,*qtd_Filmes,idFilme,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
-                                    dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,*qtd_Categoria,
+                                    dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,
                                     dtbaseFornecedor,qtd_Fornecedor,tamanho_Fornecedor,idEntradaFilme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario_,tipo_config);
                 (*dtbaseLocadora)[0].monetario = *monetario_;
                 refazDados_Locadora(dtbaseLocadora,*qtd_Locadora,tipo_config);
