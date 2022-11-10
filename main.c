@@ -56,7 +56,7 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
 
 
 
-    system("cls");
+    //system("cls");
     int opc = 0, erro = 0;
 
     char test[10]="TEST tt\0";
@@ -84,10 +84,8 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
             return 1;
         case 1:
             while (1){
-                int t = menuLocacao(dtbaseFilme,*qtd_Filmes,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
-                                    dtbaseLocados,qtd_Locados,tamanho_Locados,idLocados,
-                                    dtbaseOperacoe,qtd_Operacoe,tamanho_Operacoe,
-                                    dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,*qtd_Categoria,Key_operacao,Key_cliente,
+                int t = menuLocacao(dtbaseFilme,*qtd_Filmes,idFilme,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
+                                    dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,*qtd_Categoria,
                                     dtbaseFornecedor,qtd_Fornecedor,tamanho_Fornecedor,idEntradaFilme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario_,tipo_config);
                 (*dtbaseLocadora)[0].monetario = *monetario_;
                 refazDados_Locadora(dtbaseLocadora,*qtd_Locadora,tipo_config);

@@ -76,7 +76,7 @@ void removeSpace(char *string){
     int i = 0;
     while (string[i] != '\0' || i == strlen(string)){
         if (string[i] == ' '){
-            for (int j = i + 1;j < string[i] != '\0';j++){
+            for (int j = i + 1;string[j] != '\0';j++){
                 string[i] = string[j];
             }
         }

@@ -13,6 +13,7 @@ char *formatstring(int lenMax,int lenString,const char *string);
 
 typedef struct {
     int codigo;
+
     char nome[120];
     char descricao[120];
     int qtd;            // quantidade de mídias existentes na locadora
@@ -21,6 +22,7 @@ typedef struct {
     int qtdEmprestado;
 
     // Parte da struct preenchida na parte de entrada de Filmes
+    int IDDTbaseFIlme;
     float valorCompra;
 } filme;
 
