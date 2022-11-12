@@ -77,14 +77,14 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
         scanf("%d", &opc);
         erro = 1;
     } while (opc < 0 || opc > 9);
-    system("cls");
+    //system("cls");
     switch (opc) {
         case 0:
             printf(">> Exit \n");
             return 1;
         case 1:
             while (1){
-                int t = menuLocacao(dtbaseFilme,*qtd_Filmes,idFilme,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
+                int t = menuLocacao(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
                                     dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,
                                     dtbaseFornecedor,qtd_Fornecedor,tamanho_Fornecedor,idEntradaFilme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario_,tipo_config);
                 (*dtbaseLocadora)[0].monetario = *monetario_;

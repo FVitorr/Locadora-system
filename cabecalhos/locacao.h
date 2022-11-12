@@ -91,14 +91,13 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
 
 contaCliente objetoCCliente(int *IdContaCliente,int key_cliente,cliente **dtbaseCliente,int qtdcliente,int idCliente);
 
-int menuLocacao(filme **dtbaseFilme,int qtdFilme,int *iddtbasefilme,
+int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtbasefilme,
                 cliente **dtbaseCliente,int qtdcliente,
                 funcionarios **dtbaseFuncionarios, int qtdFuncionarios,int idFuncionarioLogado,
                 contaCliente **dtbaseCCliente,int *qtdCCliente,int *tamanho_CCliente,int *idCCliente,
                 fCategoria **dtbaseCategoria, int *qtdCategoria,int *tamanhoCategoria,int *idControleCategoria,
                 fornecedor **dtbaseFornecedor, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme,
                 eFilme **dtBaseeFilme, int *tam_eFilme, int *qtd_eFilme,financeiro *monetario,int tipo_config);
-
 int inserirLocados(locados **dtbaseLocados,locados newEntry,int *tamanhoLocados);
 
 int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *tamanhoOperacao);
@@ -156,8 +155,7 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
 
 filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilme,int qtdDBFilme,fCategoria **dtbaseCategoria,int *qtdCategoria ,int *tamanhoCategoria, int *idControleCategoria, int tipoConfig);
 
-int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime,filme **dtbaseFilme,int qtdFilme,int *iddtbasefilme,fCategoria **dtbaseCategoria, int *qtdCategoria,int *tamanhoCategoria,int *idControleCategoria,financeiro *monetario,int tipo_config);
-
+int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime,filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme,int *iddtbasefilme,fCategoria **dtbaseCategoria, int *qtdCategoria,int *tamanhoCategoria,int *idControleCategoria,financeiro *monetario,int tipo_config);
 int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,int tipo_config);
 
 int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, int tipoPagamento, int filtrarPagos);
