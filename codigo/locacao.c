@@ -1343,7 +1343,7 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
 
 
     int qtdTotalFilme = 0;
-    for (int i = 0; i < newOpEfilme.tamFilm;i++){
+    for (int i = 0; i < newOpEfilme.tamFilm - 1;i++){
         qtdTotalFilme = qtdTotalFilme + newOpEfilme.entradaFilmesCadastro[i].qtd;
     }
     //Calcular Frete por produto
@@ -1471,7 +1471,7 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
     return newOpEfilme;
 }
 
-filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilme,int *qtdDBFilme,fCategoria **dtbaseCategoria,int *qtdCategoria ,int *tamanhoCategoria, int *idControleCategoria, int tipoConfig){
+filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilme,int qtdDBFilme,fCategoria **dtbaseCategoria,int *qtdCategoria ,int *tamanhoCategoria, int *idControleCategoria, int tipoConfig){
     filme novo;
     int qtdCadastro = 0;
     int *cadastrarID = malloc((qtdCadastro + 1) * sizeof(int));
@@ -1489,7 +1489,6 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilm
             printf(">>Descrição Filme:");
             scanf("%[^\n]s", novo.nome);
 
-            setbuf(stdin,NULL);
 
             printf(">>Valor Compra(UNIDADE):");
             scanf("%f", &novo.valorCompra);
@@ -1505,11 +1504,11 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilm
                 break;
             }
         }//Preencher Infos do Filme
-        if (filme_in_dtbase(novo.nome,dtbaseFilme,*qtdDBFilme,&novo.IDDTbaseFIlme,novo.qtd)== 0){
-                qtdCadastro ++;
-                cadastrarID[qtdCadastro -1] = novo.codigo;
-                cadastrarID = (int *)realloc(cadastrarID,qtdCadastro + 1 * sizeof(int));
-        }
+//        if (filme_in_dtbase(novo.nome,dtbaseFilme,qtdDBFilme,&novo.IDDTbaseFIlme,novo.qtd)== 0){
+//                qtdCadastro ++;
+//                cadastrarID[qtdCadastro -1] = novo.codigo;
+//                cadastrarID = (int *)realloc(cadastrarID,(qtdCadastro + 1) * sizeof(int));
+//        }
         (*dtbase)[*tamFilm - 1] = novo; //Adicionar Infos do Filme
 
         int opc =0;
@@ -1522,53 +1521,12 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilm
             (*tamFilm) = (*tamFilm) + 1;
         }
     }
-    //Quando ocore a entrada do filme e ele não existe é preciso criar no dtbase Filme
-    for (int i = 0; i < qtdCadastro; i++){
-        filme p;
-        if (i == 0){
-            printf("\n\nAlguns Filmes não foram encontrados no Banco de Dados, precisamos de mais algumas informaçoes para cadastra-los\n Informação Filme: \n");
-        }
-
-        for (int j = 0; j < *tamFilm -1; j++){
-            if((*dtbase)[j].codigo == cadastrarID[i]){
-                p.codigo = *idControleCategoria;
-
-                *idControleCategoria = *idControleCategoria + 1;
-
-                //Realizar a copia do nome filme
-                strcpy(p.nome,novo.nome);
-                //Copia de quantidade
-                p.qtd = novo.qtd;
-                printf("\n\n(%d) Nome: %s\nQuantidade: %d\n",p.codigo,p.nome,p.qtd);
-
-                printf(">>Informe um ID para a a categoria do filme ou 0 para criar uma nova categoria:\n");
-                printf(" (0) Nova Categoria");
-                for (int k = 0; k < *qtdCategoria; k++){
-                    printf("   (%d)%s ",(*dtbaseCategoria)[k].codigo,(*dtbaseCategoria)[k].descricao);
-                }
-
-                printf("Codigo Categoria: ");
-                scanf("%d%*c", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
-
-                p.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,p.c_categoria,idControleCategoria,tipoConfig);
-
-                setbuf(stdin,NULL);
-
-                printf("Lingua: ");
-                scanf("%[^\n]s", p.lingua);
-
-                p.qtdEmprestado = 0;
-
-                inserirFilme(dtbaseFilme,p,qtdDBFilme,tamFilm,tipoConfig)
-
-            }
-        }
-    }
 
     return novo;
 }
 
 int save_eFilme(eFilme objeto,int tipo_config){
+
     FILE *entradaFilmeF = NULL;
 
     if (tipo_config == 1){//Arquivo TXT
