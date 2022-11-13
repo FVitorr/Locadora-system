@@ -35,8 +35,9 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 
             if (qtdFilmeDisponivel <= 0){
                 newOpc.valorFilme = -1;
-                printf("\nValores em estoque para esse filme é insulficiente");
+                printf("\nValores em estoque para esse filme é insulficiente\n\n");
                 system("pause");
+                return newOpc;
                 break;
             }
 

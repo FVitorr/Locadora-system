@@ -55,28 +55,25 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
                   eFilme **dtBaseeFilme, int *tam_eFilme,int *qtd_eFilme,int *idEntradaFilme){
 
 
-
-    //system("cls");
+    fflush (stdin);
+    system("cls");
     int opc = 0, erro = 0;
 
-    char test[10]="TEST tt\0";
-    stringLower(test);
-    printf("Minusculo: %s", test);
-
-    removeSpace(test);
-    printf("Sem espaço: %s", test);
-
     line(60,"Menu principal \0");
-    printf("\t 1 - Locacao \t\t 2 - Clientes \n\t 3 - Categoria \t\t 4 - Filmes\n\t 5 - Funcionarios\t 6 - Fornecedor\n\t 7 - Locadora\t\t 8 - Exportar/Importar\n\t 9 - FeedBack\t\t 0 - Exit");
+    printf("\t 1 - Locacao \t\t 2 - Clientes \n\t 3 - Categoria \t\t 4 - Filmes\n\t 5 - Funcionarios\t 6 - Fornecedor\n\t 7 - Locadora\t\t 8 - Exportar/Importar\n\t 9 - FeedBack\t\t 10 - Configuracoe/Ajuda\n\t 0 - Sair");
     line(60,"s\0");
+
+    char opcTm[10];
     do {
         if (erro == 1) {
             printf(">> Parametro Invalido:\n");
         }
         printf(">> Opc: ");
-        scanf("%d", &opc);
+        scanf("%s", opcTm);
+
+        opc = strtol(opcTm,NULL,10);
         erro = 1;
-    } while (opc < 0 || opc > 9);
+    } while (opc < 0 || opc > 10);
     //system("cls");
     switch (opc) {
         case 0:
@@ -139,7 +136,7 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
             }
         case 8:
             while (1){
-                printf("Exportar/Importar");
+                printf("Exportar / Importar");
                 return 0;
             }
         case 9:
@@ -150,6 +147,9 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
                     return 0;
                 }
             }
+        case 10:
+            printf("Menu Configuração e Ajuda");
+            break;
         default: {
             printf("Esta não é uma opção válida, favor selecionar novamente.\n");
             break;
