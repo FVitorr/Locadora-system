@@ -20,8 +20,8 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
 
     setbuf(stdin,NULL);
 
-    printf("Descricao: ");
-    scanf("%[^\n]s", p.descricao);
+//    printf("Descricao: ");
+//    scanf("%[^\n]s", p.descricao);
 
     setbuf(stdin,NULL);
 
@@ -53,7 +53,7 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
 }
 
 
-int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes, int tipo_config){
+int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes){
     //Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
     if (*qtdFilmes == *tamanhoFilmes)
     {
@@ -92,15 +92,32 @@ int removerFilme(filme **dtbase, int id, int *qtdFilmes, int *tamanhoFilmes,int 
 
 void listFilme(filme **dtbase, int qtd){
     if (qtd > 0) {
-        printf("\nID \t Nome \t Descrição \t Quant. Exemplares \t ID categoria \t Lingua\n");
+        printf("\n|%s|%s|%s|%s|%s|\n",
+        formatstring(4, strlen("ID\0"),"ID\0"),
+        formatstring(30, strlen("Nome\0"),"Nome\0"),
+        formatstring(30, strlen("Quantidade Exemplares\0"),"Quantidade Exemplares\0"),
+        formatstring(20, strlen("Codigo Categoria\0"),"Codigo Categoria\0"),
+        formatstring(15, strlen("Lingua\0"),"Lingua\0"));
+
         for (int c = 0; c < qtd; c++) {
-            printf("---------------------------------------------------------------------------------\n");
-            printf("(%d)\t %s\t %s\t\t\t %d\t\t %d\t\t %s\n", (*dtbase)[c].codigo,
-                   (*dtbase)[c].nome,
-                   (*dtbase)[c].descricao,
-                   (*dtbase)[c].qtd,
-                   (*dtbase)[c].c_categoria,
-                   (*dtbase)[c].lingua);
+            char codigo[10];
+            char qtdChar[10];
+            char codCategoria[10];
+            sprintf(codigo,"%d",(*dtbase)[c].codigo);
+            sprintf(qtdChar,"%d",(*dtbase)[c].qtd);
+            sprintf(codCategoria,"%d",(*dtbase)[c].c_categoria);
+
+            printf("---------------------------------------------------------------------------------------------------------\n");
+            printf("|%s|%s|%s|%s|%s|\n", formatstring(4, (int)strlen(codigo),codigo),
+                   formatstring(30, (int)strlen((*dtbase)[c].nome),(*dtbase)[c].nome),
+                   formatstring(30, (int)strlen(qtdChar),qtdChar),
+                   formatstring(20, (int)strlen(codCategoria),codCategoria),
+                   formatstring(15, (int)strlen((*dtbase)[c].lingua),(*dtbase)[c].lingua));
+//                   (*dtbase)[c].codigo,
+//                   (*dtbase)[c].nome,
+//                   (*dtbase)[c].qtd,
+//                   (*dtbase)[c].c_categoria,
+//                   (*dtbase)[c].lingua);
         }
     }
     else{
@@ -118,10 +135,10 @@ int qtdEmprestada(filme **dtbase,int qtdFilmes, int id){
 }
 
 
-void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id,int *idControleCategoria, int tipo_config)
+void editaFilme(filme **dtbase,int qtdFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id,int *idControleCategoria, int tipo_config)
 {
-    int qtd_emprestada = qtdEmprestada(dtbase,*qtdFilmes,id);
-    for (int i = 0; i < *qtdFilmes; i++) {
+    int qtd_emprestada = qtdEmprestada(dtbase,qtdFilmes,id);
+    for (int i = 0; i < qtdFilmes; i++) {
         if ((*dtbase)[i].codigo == id) {
             filme newEntrada = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,&id,idControleCategoria,tipo_config);
             newEntrada.qtdEmprestado = qtd_emprestada;
@@ -129,7 +146,7 @@ void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dt
             break;
         }
     }
-    refazDados_filme(dtbase,*qtdFilmes, tipo_config);
+    refazDados_filme(dtbase,qtdFilmes, tipo_config);
 }
 
 int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id,int *idControleCategoria,int tipoconfig) {
@@ -190,7 +207,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         system("cls");
         printf(">> Novo filme     \tID: %d \n", *id);
         filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id,idControleCategoria,tipo_config);
-        inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,tipo_config);
+        inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes);
         saveFilme(new, tipo_config);
     }
     else if (opc == 2)
@@ -202,7 +219,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         while (1)
         {
             filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id,idControleCategoria,tipo_config);
-            inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes,tipo_config);
+            inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes);
             saveFilme(new,tipo_config);
             printf("\n >> [1 - Mais] \t [0 - Exit]: ");
             scanf("%d", &op);
@@ -230,7 +247,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         int cod;
         printf("Editar (ID):");
         scanf("%d", &cod);
-        editaFilme(dtbase,qtdFilmes,tamanhoFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,cod,idControleCategoria,tipo_config);
+        editaFilme(dtbase,*qtdFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,cod,idControleCategoria,tipo_config);
 
     }
     else if (opc == 5)
@@ -261,10 +278,9 @@ int saveFilme(filme objeto, int tipo_config){
             return 1;
         }
 
-        fprintf(filmeF, "%d\n%s\n%s\n%d\n%d\n%s\n%d\n",
+        fprintf(filmeF, "%d\n%s\n%d\n%d\n%s\n%d\n",
                 objeto.codigo,
                 objeto.nome,
-                objeto.descricao,
                 objeto.qtd,
                 objeto.c_categoria,
                 objeto.lingua,
@@ -357,8 +373,8 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
             fgets(new.nome, 120, p);
             limpa_final_string(new.nome);
 
-            fgets(new.descricao, 120, p);
-            limpa_final_string(new.descricao);
+//            fgets(new.descricao, 120, p);
+//            limpa_final_string(new.descricao);
 
             fscanf(p, "%d\n", &new.qtd);
 
@@ -370,7 +386,7 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
             fscanf(p, "%d\n", &new.qtdEmprestado);
 
             if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
-                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
+                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme);
                 if (*id <= new.codigo) {
                     *id = new.codigo + 1;
                 }
@@ -394,9 +410,8 @@ int carregarDados_filme(filme **dtBase, int *qtdFilme, int *tamanhoFilme, int *i
                 break;
             }
             fread(&new,sizeof(filme),1,p);
-            printf("%s %s",new.nome,new.descricao);
             if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
-                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
+                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme);
                 if (*id <= new.codigo) {
                     *id = new.codigo + 1;
                 }

@@ -1122,11 +1122,11 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
 
                                         }
 
-                                        printf("%d/%d/%d menos %d/%d/%d = %d Dias\n",
-                                               (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,
-                                               (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,
-                                               (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
-                                               hoje.dia, hoje.mes, hoje.ano, t);
+//                                        printf("%d/%d/%d menos %d/%d/%d = %d Dias\n",
+//                                               (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,
+//                                               (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,
+//                                               (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
+//                                               hoje.dia, hoje.mes, hoje.ano, t);
                                         //printf("%d / %d / %d",dtDevolucao->dia,dtDevolucao->mes,dtDevolucao->ano);
                                         IDvalido++;
                                     }
@@ -1208,7 +1208,7 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
 
     if (existe != -1){
         printf("Existe");
-        //encontrar posiçaoi no array
+        //encontrar posiçao no array
         int posArray = -1;
         for (int i = 0; i < *qtd_eFime; i++){
             if ((*dtBase_eFilme)[i].IDFornecedor == IDFornecedor){
@@ -1253,8 +1253,13 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
 
                     novoFilme.qtdEmprestado = 0;
 
-                   inserirFilme(dtbaseFilme,novoFilme,qtdFilme,tamanhoFilme,tipo_config);
+                   inserirFilme(dtbaseFilme,novoFilme,qtdFilme,tamanhoFilme);
+
+                   //Salvar as Alteraçoes nos arquivos
+                   refazDados_Categoria(dtbaseCategoria,qtdCategoria,tamanhoCategoria,tipo_config);
+                   refazDados_filme(dtbaseFilme,*qtdFilme,tipo_config);
                 }
+
             }
 
             //Preencher Infos do Filme
@@ -1314,7 +1319,7 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
 
                     novoFilme.qtdEmprestado = 0;
 
-                    inserirFilme(dtbaseFilme,novoFilme,qtdFilme,tamanhoFilme,tipo_config);
+                    inserirFilme(dtbaseFilme,novoFilme,qtdFilme,tamanhoFilme);
                 }
             }
 

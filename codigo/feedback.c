@@ -157,9 +157,8 @@ int relatorioListagemFilmes(filme **dtBaseFilme, int qtdFilme) {
                 system("cls");
                 printf("----------------------------------------------------------------------------------------------------------------------------------\n");
                 system("cls");
-                printf("(%d)\t %s\t %s\t\t\t %d\t\t %d\t\t %s\n", (*dtBaseFilme)[c].codigo,
+                printf("(%d)\t %s\t\t\t\t %d\t\t %d\t\t %s\n", (*dtBaseFilme)[c].codigo,
                        (*dtBaseFilme)[c].nome,
-                       (*dtBaseFilme)[c].descricao,
                        (*dtBaseFilme)[c].qtd,
                        (*dtBaseFilme)[c].c_categoria,
                        (*dtBaseFilme)[c].lingua);

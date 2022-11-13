@@ -13,14 +13,14 @@ extern "C" {
     filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria, int *id,
                int *idControleCategoria, int tipoConfig);
 
-    int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes,int tipo_config);
+    int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes);
 
     int removerFilme(filme **dtbase, int id, int *qtdFilmes, int *tamanhoFilmes,int tipo_config);
 
     void listFilme(filme **dtbase, int qtd);
 
-    void editaFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id,int *idControleCategoria, int tipo_config);
-    //Verificar se a categoria Existe, se não permite a criação
+    void editaFilme(filme **dtbase,int qtdFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id,int *idControleCategoria, int tipo_config);//Verificar se a categoria Existe, se não permite a criação
+
     int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id,int *idControleCategoria,int tipoconfig);
 
     int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria,int *idControleCategoria,int *id,int tipo_config);

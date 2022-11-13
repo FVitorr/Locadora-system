@@ -15,7 +15,7 @@ typedef struct {
     int codigo;
 
     char nome[120];
-    char descricao[120];
+    //char descricao[120];
     int qtd;            // quantidade de mídias existentes na locadora
     int c_categoria;
     char lingua[120];
