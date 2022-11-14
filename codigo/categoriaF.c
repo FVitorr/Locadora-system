@@ -15,8 +15,8 @@ fCategoria objCategoria (int *id,int tab){
     strcpy(msg[1],"Valor Locacao: \0");
 
      if (tab == 1){
-         addTab(msg[0]);
-         addTab(msg[1]);
+         strcpy(msg[0],"\tDescricao Categoria: \0");
+         strcpy(msg[1],"\tValor Locacao: \0");
      }
 
     obj.codigo = *id;
@@ -135,13 +135,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
                 listCategorias(dtbase,*qtdCategoria);
                 printf(">>Editar:");
                 scanf("%d", &cod);
-                int t = editaCategoria(dtbase,qtdCategoria,tamanhoCategoria,cod,tipo_config);
-                if (t == 1){
-                    printf("\n\t>> ID não encontrado");
-                    abortOp();
-                }else{
-                    sucess();
-                }
+                editaCategoria(dtbase,qtdCategoria,tamanhoCategoria,cod,tipo_config);
                 break;
             }
             case 4: {

@@ -55,8 +55,7 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
                   eFilme **dtBaseeFilme, int *tam_eFilme,int *qtd_eFilme,int *idEntradaFilme){
 
 
-    fflush (stdin);
-    system("cls");
+
     int opc = 0, erro = 0;
 
     line(60,"Menu principal \0");
@@ -186,7 +185,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmone
     carregarDados_CClientes(dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,Key_cliente,*tipoConfig);
     system("cls");
     char nConfig[5];
-    printf("tipoConfig: %d ",*tipoConfig);
+    printf("Tipo Configuracao: %d ",*tipoConfig);
     if (*tipoConfig == 1){
         strcpy(nConfig,".txt\0");
     }else{
@@ -219,7 +218,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmone
         //*idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,*qtd_Funcionario);
         printf("ID: %d",*idFuncionarioLogado);
 
-        system("pause");
+        //system("pause");
     }
 
     return 0;

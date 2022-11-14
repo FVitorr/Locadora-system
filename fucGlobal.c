@@ -10,8 +10,8 @@
 void addTab(char *str){
     int i;
     char temp[35];
-    //printf("%s",str);
-    temp[0] = '\t';
+    printf("%s",str);
+    temp[0] = (char)9;
     for (i = 0; i < 35; i++){
         temp[i+1] = str[i];
         if (str[i] == '\0'){

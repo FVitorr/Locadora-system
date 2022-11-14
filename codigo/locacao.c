@@ -372,8 +372,8 @@ int  listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDloc
         if (((*dtbase)[i].idCliente == IDcliente) || (IDcliente == -1)){
 
             printf("(%d) Nome Cliente: %s \n"
-                   "Valor Pago: R$ %f\n"
-                   "Valor a Receber: R$ %f\n",(*dtbase)[i].ID,(*dtbase)[i].Nome,(*dtbase)[i].valorPago,(*dtbase)[i].valorDeve);
+                   "Valor Pago: R$ %.2f\n"
+                   "Valor a Receber: R$ %.2f\n",(*dtbase)[i].ID,(*dtbase)[i].Nome,(*dtbase)[i].valorPago,(*dtbase)[i].valorDeve);
 
             for (int j = 0; j < (*dtbase)[i].tamLocados - 1 ; j++){
                 if ((((*dtbase)[i].dEmprestimo[j].ID == IDlocado || IDlocado == -1) && mostrarNotas == 1)&&
@@ -452,7 +452,9 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
         return 1;
     }
 
-    if ( qtdFilme == 0){
+
+
+    if (*qtdFilme == 0){
         printf("\n\n\t[!] Menu Nao disponivel, Precisamos que os dados de FIlme sejam preenchidos.\n"
                "\t\tPreencha e retorne aqui\n\n\n\n");
         system("pause");
@@ -494,6 +496,7 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
         pagarParcelas(dtbaseCCliente,*qtdCCliente,monetario,tipo_config);
     } else if (op == 5){
         entradaFilmes(dtbaseFornecedor,qtdFornecedor,tamFornecedor,idEntradaFIlme,dtBaseeFilme,tam_eFilme,qtd_eFilme,dtbaseFilme,qtdFilme,tamanhoFilme,iddtbasefilme,dtbaseCategoria,qtdCategoria,tamanhoCategoria,idControleCategoria,monetario,tipo_config);
+
     }else if (op == 6){
         pagarParcelaEmprestaFilme(dtBaseeFilme,*qtd_eFilme,monetario,tipo_config);
     }else if (op == 7){
@@ -1172,7 +1175,7 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
         int cadastrar;
         if (erro == 1){
             do{
-                printf("\n[!] ID Invalido\n\t>>Deseja Cadastrar [ 1 - Sim 0 - Não ]");
+                printf("\n[!] ID Invalido\n\t>>Deseja Cadastrar [ 1 - Sim 0 - Não ]: ");
                 scanf("%d",&cadastrar);
             } while (cadastrar != 0 & cadastrar != 1);
             if (cadastrar == 1) {
@@ -1181,17 +1184,21 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
                 fornecedor novoFornecedor = criarFornecedor(IDFornecedor);
                 inserirFornecedor(dtbase, novoFornecedor, qtdFornecedor, tamFornecedor);
                 //Salvar Fornecedor
+                saveFornecedor(novoFornecedor,tipo_config);
+                printf("\t>>Sucesso \n");
             }else{
                 return 1;
             }
 
         }
-        if (qtdFornecedor > 0) {
+        if (*qtdFornecedor > 0) {
             line(100, "ID Fornecedores\0");
             for (int i = 0; i < *qtdFornecedor; i++) { //Listar Fornecedores disponiveis
                 printf(" (%d) %s ", (*dtbase)[i].id, (*dtbase)[i].nomeFantasia);
             }
             line(100, "-\0");
+        }else{
+            printf("\n[!] Nenhum fornecedor cadastrado.\nInforme qualquer ID para cadastrar.\n");
         }
 
 
@@ -1227,22 +1234,24 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
                    //Filme não encontrado no array dtbase filme preencher campos restantes e inserir no array dtbase filme
                     filme novoFilme;
 
-                    printf("Alguns filmes Cadastrados não esta presente nos dados de filmes precisamos de algumas informaçoes para completar o cadastro\n\n");
+                    system("cls");
+
+                    printf("Alguns filmes informado na nota, nao esta presente nos dados de filmes.\nPrecisamos de algumas informacoes para completar o cadastro\n\n");
                     novoFilme.codigo = *iddtbasefilme;
                     *iddtbasefilme = *iddtbasefilme + 1;
                     strcpy(novoFilme.nome,newOp.entradaFilmesCadastro[i].nome);
                     novoFilme.qtd = newOp.entradaFilmesCadastro[i].qtd;
 
 
-                    printf("\n(%d) Nome Filme : %s\nQuantidade: %d",novoFilme.codigo,novoFilme.nome,novoFilme.qtd);
+                    printf("\n(%d) Nome Filme : %s\nQuantidade: %d\n",novoFilme.codigo,novoFilme.nome,novoFilme.qtd);
                     //line(100,"Categorias\0");
                     printf(">> Selecione uma categoria: (0)Nova Categoria");
                     for (int j = 0; j < *qtdCategoria; j++){
                         printf("   (%d)%s ",(*dtbaseCategoria)[j].codigo,(*dtbaseCategoria)[j].descricao);
                     }
-                    line(100,"-\0");
 
-                    printf("Codigo Categoria: ");
+
+                    printf("\nCodigo Categoria: ");
                     scanf("%d%*c", &novoFilme.c_categoria); //Possivelmente este campo precisa ser comparado ...
 
                     novoFilme.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,novoFilme.c_categoria,idControleCategoria,tipo_config);
@@ -1255,21 +1264,9 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
                     novoFilme.qtdEmprestado = 0;
 
                    inserirFilme(dtbaseFilme,novoFilme,qtdFilme,tamanhoFilme);
-
-                   //Salvar as Alteraçoes nos arquivos
-                   refazDados_Categoria(dtbaseCategoria,qtdCategoria,tamanhoCategoria,tipo_config);
-                   refazDados_filme(dtbaseFilme,*qtdFilme,tipo_config);
                 }
 
             }
-
-            //Preencher Infos do Filme
-//        if (filme_in_dtbase(novo.nome,dtbaseFilme,qtdDBFilme,&novo.IDDTbaseFIlme,novo.qtd)== 0){
-//                qtdCadastro ++;
-//                cadastrarID[qtdCadastro -1] = novo.codigo;
-//                cadastrarID = (int *)realloc(cadastrarID,(qtdCadastro + 1) * sizeof(int));
-//        }
-
             inserirop_EFIlme(&(*dtBase_eFilme)[posArray].filmes, newOp, &(*dtBase_eFilme)[posArray].tamOp);
         }
         //Refaz Arquivos
@@ -1293,7 +1290,9 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
                     //Filme não encontrado no array dtbase filme preencher campos restantes e inserir no array dtbase filme
                     filme novoFilme;
 
-                    printf("Alguns filmes informado na nota, nao esta presente nos dados de filmes.\n Precisamos de algumas informacoes para completar o cadastro\n\n");
+                    system("cls");
+
+                    printf("Alguns filmes informado na nota, nao esta presente nos dados de filmes.\nPrecisamos de algumas informacoes para completar o cadastro\n\n");
                     novoFilme.codigo = *iddtbasefilme;
                     *iddtbasefilme = *iddtbasefilme + 1;
                     strcpy(novoFilme.nome,newOp.entradaFilmesCadastro[i].nome);
@@ -1306,9 +1305,9 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
                     for (int j = 0; j < *qtdCategoria; j++){
                         printf("   (%d)%s ",(*dtbaseCategoria)[j].codigo,(*dtbaseCategoria)[j].descricao);
                     }
-                    line(100,"-\0");
 
-                    printf("Codigo Categoria: ");
+
+                    printf("\nCodigo Categoria: ");
                     scanf("%d%*c", &novoFilme.c_categoria); //Possivelmente este campo precisa ser comparado ...
 
                     novoFilme.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,novoFilme.c_categoria,idControleCategoria,tipo_config);
@@ -1330,6 +1329,9 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
             break;
         }
     }
+    //Salvar as Alteraçoes nos arquivos
+    refazDados_Categoria(dtbaseCategoria,qtdCategoria,tamanhoCategoria,tipo_config);
+    refazDados_filme(dtbaseFilme,*qtdFilme,tipo_config);
     return 0;
 }
 
@@ -1407,7 +1409,7 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
     float vFrete, vImposto;
     int test = 0;
     do {
-        printf("\t>> Frete: R$");
+        printf("\n\t>> Frete: R$");
         scanf("%f", &vFrete);
 
         printf("\t>> Imposto: R$");
@@ -1429,9 +1431,6 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
     newOpEfilme.ultIDFilm = 0;
 
     objetoEntradaFIlme(&newOpEfilme.ultIDFilm,&newOpEfilme.entradaFilmesCadastro,&newOpEfilme.tamFilm,dtbaseFilme,qtdDBFilme,dtbaseCategoria,qtdCategoria,tamanhoCategoria,idControleCategoria,tipoConfig);
-
-
-    dataAtual(&newOpEfilme.dtNota);
 
 
     int qtdTotalFilme = 0;
@@ -1500,13 +1499,11 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
             else { printf("\n>> Opc Invalida"); }
         } while (1);
 
-
-
         int valorInvalido = 0;
         if (ent == 1) {
             do {
                 if (valorInvalido == 1) {
-                    printf("\n[!]Valor Invalido\nPagar: R$ %.2f\nCaixa: R$ %.2f",
+                    printf("\n[!]Valor Invalido\nPagar: R$ %.2f\nCaixa: R$ %.2f\n",
                            newOpEfilme.valorTotal,monetario->caixa);
                 }
                 //Valor de entrada
@@ -1538,7 +1535,7 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
             newOpEfilme.qtdParcelas = (int) qtdParcelas;
 
         } else {
-            //Caso não seja fornecido uma  entrada
+            //Caso não seja fornecido uma entrada
             do {
                 printf("\n>> Deseja dividir o valor R$ %.2f de quantas Vezes [3x Parcelas Maximas] ? ",
                        newOpEfilme.valorTotal);
@@ -1552,13 +1549,16 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
                    valorParcelas);
             newOpEfilme.qtdParcelas = (int) qtdParcelas;
             newOpEfilme.valorDeve = newOpEfilme.valorTotal;
+
+            monetario->despesas = monetario->despesas + newOpEfilme.valorDeve;
         }
     }
     newOpEfilme.dtPagamento.dia = 0;
     newOpEfilme.dtPagamento.mes = 0;
     newOpEfilme.dtPagamento.ano = 0;
 
-    newOpEfilme.ultIDFilm = 0;
+    dataAtual(&newOpEfilme.dtNota);
+
     system("pause");
     return newOpEfilme;
 }
