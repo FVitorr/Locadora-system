@@ -463,6 +463,12 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
 
 
     printf("Funcionario: %s",nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado));
+    if(nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado) == NULL && idFuncionarioLogado != 0){
+        printf("\nPrecisa da autentificacao para acessar esse menu ...\n\n");
+        system("pause");
+        return 1;
+    }
+
     line(100,"Locacao\0");
     printf("\t 1- Emprestar \n\t 2- Devolver \n\t 3- Vizualizar Operacoes \n\t 4- Pagamento Cliente"
            "\n\t 5- Entrada de Filme"
