@@ -106,11 +106,11 @@ char  *obterPassword(int max){
     char *senha = (char *)malloc(sizeof(char) * max + 1);
     int i = 0;
 
-    char ch = getch();
-    while (ch != 13 && i < max) {
+    char ch = (char)getch();
+    while (ch != (char)13 && i < max) {
         senha[i] = ch;
         putchar(36);
-        ch = getch();
+        ch = (char)getch();
         i++;
     }
     senha[i] = '\0';
@@ -281,29 +281,6 @@ void limpa_extensao(char *c) {
             break;
         }
     }
-}
-
-int creatFile(char *nameFile,int tipo_config){
-    char name_file[100];
-    char txt[5] = {'.','t','x','t','\0'};
-    char bin[5] = {'.','b','i','n','\0'};
-
-    FILE *newFile;
-    // Formar nome do arquivo
-    strcpy(name_file, nameFile);
-    if (tipo_config == 1){ // Se a extensao for TXT
-        strcat(name_file,txt);
-        newFile = fopen(name_file, "w");
-    }else if (tipo_config == 0){// Se a extensao for BIN
-        strcat(name_file,bin);
-        newFile = fopen(name_file, "wb");
-    }
-
-    if (newFile == NULL){ // Se a criação do arquivo falhar
-        return 1;
-    }
-    fclose (newFile);
-    return 0;
 }
 
 int verifica_arquivos(int tipo_config,char *nameFile){

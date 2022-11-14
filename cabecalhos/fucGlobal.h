@@ -91,7 +91,7 @@ int validaCNPJ(char *CNPJ);
  * \tParametros: Nome do Arquivo , tipo_configuracao 1 txt;
  * \tRetorno: Inteiro 0 - Sucesso.  1 - Erro.
  * */
-int creatFile(char nameFile[30],int tipo_configuracao);
+
 
 /*Substitui o caracter \n por \0 na string
 * \tParametros: "String";

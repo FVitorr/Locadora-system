@@ -261,7 +261,7 @@ char *nomefuncionario(funcionarios **dtbase, int qtdFuncionarios,int id){
 
 int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
     while (1) {
-        if (qtdFuncionarios == 0){
+        if (qtdFuncionarios == 0 && set->id != 0){
             break;
             //Primeiro Acesso ou Funcionarios não existe funcionarios
         }
@@ -280,7 +280,18 @@ int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
         printf("\n[!]Nao e possivel apagar os caracteres informados na Senha\n\n Senha: ");
 
         password = obterPassword(16);
+        printf("%s",password);
         //Criar Opção para recuperar senha
+        if (qtdFuncionarios == 0){
+            if (strcmp(set->password, password) == 0 && strcmp(set->user, user) == 0){
+                //Informa que o ADM esta Logado.
+                return 0;
+            }else {
+                printf("\n[Erro 401] Usuario ou senha errado.\n");
+                system("Pause");
+            }
+        }
+
         for (int i = 0; i < qtdFuncionarios; i++) {
             if (strcmp((*dtBase)[i].login.user, user) == 0 || strcmp(set->user, user) == 0) {
                 if (strcmp((*dtBase)[i].login.password, password) == 0 || strcmp(set->password, password) == 0) {
