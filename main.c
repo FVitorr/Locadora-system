@@ -218,7 +218,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmone
         *idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,*qtd_Funcionario);
         printf("ID: %d",*idFuncionarioLogado);
 
-        //system("pause");
+        system("cls");
     }
 
     return 0;

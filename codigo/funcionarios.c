@@ -269,7 +269,7 @@ int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
         char user[120], *password;
         line(100, "Login\0");
 
-        printf("Usuario: ");
+        printf(">> Usuario: ");
 
         scanf("%[^\n]s", user);
         limpa_final_string(user);
@@ -277,7 +277,7 @@ int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
 
         setbuf(stdin, NULL);
 
-        printf("\n[!]Nao e possivel apagar os caracteres informados na Senha\n\n Senha: ");
+        printf("\n[!]Nao e possivel apagar os caracteres informados na Senha\n\n>> Senha: ");
 
         password = obterPassword(16);
         //printf("%s",password);
@@ -296,7 +296,7 @@ int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
             if ((strcmp((*dtBase)[i].login.user, user) == 0 &&  strcmp((*dtBase)[i].login.password, password) == 0 ) ||
                     (strcmp(set->user, user) == 0 && strcmp(set->password, password) == 0 )) {
 
-                    printf("\n>> Sucess\n");
+                    printf("\n\n>> Sucess\n\n");
                     system("Pause");
 
                     if (strcmp(set->password, password) == 0 && strcmp(set->user, user) == 0){
