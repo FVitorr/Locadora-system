@@ -28,8 +28,8 @@ int locacoesRestantes(filme **dtBaseFilme, int qtdFilme, eFilme **dtBaseEFilme, 
 int listarLocacoes(contaCliente **bdContaCliente, int *qtdContaCliente);
 int listarContasAReceber(contaCliente **bdContaCliente, int qtdContaCliente);
 filtroData *obterFaixaDatas();
-int listarContasAPagar();
-int listarMovimentacaoCaixa();
+int listarContasAPagar(eFilme **bdEFilme, int qtdEFilme);
+int listarMovimentacaoCaixa(eFilme **bdEFilme, int qtdEFilme, contaCliente **bdContaCliente, int qtdContaCliente);
 int vendaTipoPagamento(contaCliente **bdContaCliente, int qtdContaCliente, int tipoPagamento);
 
 #endif //LOCADORA_SYSTEM_FEEDBACK_H
