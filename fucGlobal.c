@@ -390,11 +390,14 @@ void limpaString(char *string,int lenString){
 }
 
 char *formatstring(int lenMax,int lenString,const char *string){
-    char space = 32;
+    fflush (stdin);
+    char space = (char)32;
     int lenAntes = (lenMax - lenString - 1) / 2;
-    char *string1 = malloc(lenMax * sizeof (char));
+    char *string1 = NULL;
+    string1 = (char *)calloc(lenMax * 2, sizeof (char));
     int  i = 0 ;
     while (i <= lenMax){
+        //string1 = realloc(string1,(i + 5) * sizeof (char));
         if (i < lenAntes){
             string1[i] = space;
             i++;
@@ -409,6 +412,7 @@ char *formatstring(int lenMax,int lenString,const char *string){
         }
     }
     string1[lenMax] = '\0';
+
     return string1;
 }
 
@@ -454,7 +458,7 @@ int menuConfiguracao(config *set,int *tipoConfig){
         }
     } while (numOpc != 1);
 
-    printf(" 0 - TXT \t 1 - BIN \t 2 - Memoria");
+    printf(" 0 - BIN \t 1 - TXT \t 2 - Memoria");
 
     int tipoConfig_ = 2;
     do{

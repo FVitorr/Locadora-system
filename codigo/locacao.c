@@ -759,13 +759,13 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
             }
             fread(&new,sizeof(contaCliente),1,fileLocados);
 
-            new.dEmprestimo = (locados *)malloc(new.tamLocados * sizeof (locados));
+            new.dEmprestimo = (locados *)calloc(new.tamLocados - 1 , sizeof (locados));
 
             locados newlocados;
             for (int i = 0; i < new.tamLocados - 1; i++){
 
                 fread(&newlocados, sizeof(locados), 1,fileLocados);
-                newlocados.dFilme = (operacoe *) calloc(newlocados.qtdFilme , sizeof (operacoe));
+                newlocados.dFilme = (operacoe *) calloc(newlocados.qtdFilme - 1 , sizeof (operacoe));
 
                 if (newlocados.dFilme == NULL){
                     printf("Erro Na alocacao de memoria");
@@ -823,6 +823,7 @@ void refazNameCCliente(contaCliente *objeto,filme **dtbaseFIlme,int qtdfilme,cli
 }
 
 void refazNomeFornecedor(eFilme *objeto, fornecedor **dtbaseFornecedor, int qtdfornecedor){
+    (*objeto).nomefornecedor = NULL;
     for (int i = 0 ; i < qtdfornecedor; i++){
         if ((*dtbaseFornecedor)[i].id == (*objeto).IDFornecedor){
             (*objeto).nomefornecedor = (*dtbaseFornecedor)[i].nomeFantasia;
@@ -1662,6 +1663,12 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilm
             printf("\n\t>> Informaçoes Correta ? [1 - Sim 0 - Não] :");
             scanf("%d", &opc);
 
+            novo.c_categoria = -1;
+            strcpy(novo.lingua,"\0");
+            novo.qtdEmprestado = 0;
+            novo.IDDTbaseFIlme = -1;
+
+
             if (opc == 1) {
                 break;
             }
@@ -1752,13 +1759,19 @@ int save_eFilme(eFilme objeto,int tipo_config){
         if (entradaFilmeF == NULL){ // Se a abertura falhar
             return 1;
         }
+
+
         fwrite(&objeto, sizeof(eFilme), 1,entradaFilmeF);
         for (int i = 0; i < objeto.tamOp - 1; i++){
             fwrite(&objeto.filmes[i], sizeof(operacaoEFilme), 1,entradaFilmeF);
-            for (int j =0 ; j < objeto.filmes[i].tamFilm; j++){
-                fwrite(&objeto.filmes[i].entradaFilmesCadastro[j], sizeof(filme), 1,entradaFilmeF);
+
+            //fwrite(&objeto.filmes[i].entradaFilmesCadastro, sizeof(filme), objeto.filmes[i].tamFilm,entradaFilmeF);
+            for (int j = 0 ; j < objeto.filmes[i].tamFilm; j++){
+                filme *newFilme = &objeto.filmes[i].entradaFilmesCadastro[j];
+                fwrite(newFilme, sizeof(filme), 1,entradaFilmeF);
             }
         }
+
     }
     fclose(entradaFilmeF);
     entradaFilmeF = NULL;
@@ -1872,7 +1885,7 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,f
             }
             fread(&new,sizeof(eFilme),1,Efilmef);
             new.filmes = NULL;
-            new.filmes = calloc(new.tamOp,sizeof (operacaoEFilme));
+            new.filmes = calloc(new.tamOp - 1,sizeof (operacaoEFilme));
 
             operacaoEFilme newOp;
             for (int i = 0; i < new.tamOp - 1 ; i++){
@@ -1882,18 +1895,20 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,f
 
                 filme newFIlme;
                 for (int j = 0; j < newOp.tamFilm ; j++){
-                    fread(&newFIlme,sizeof(operacaoEFilme),1,Efilmef);
-                    newOp.entradaFilmesCadastro[i] = newFIlme;
+                    fread(&newFIlme,sizeof(filme),1,Efilmef);
+                    newOp.entradaFilmesCadastro[j] = newFIlme;
                 }
                 new.filmes[i] = newOp;
             }
 
 
-            if (verificaID_eFilme(dtbase,*qtdeFilmes,new.IDFornecedor) != 1 || execute == 0){
+            if (verificaID_eFilme(dtbase,*tamanhoeFilmes,new.IDFornecedor) == -1){
                 refazNomeFornecedor(&new,dtbaseFornecedor,qtdFornecedor);
+                if (new.nomefornecedor == NULL){
+                    break;
+                }
                 t = inserir_eFilme(dtbase,new,qtdeFilmes,tamanhoeFilmes);
                 printf(" 0 ");
-                execute = 1;
             }
 
             if (t != 0 || feof(Efilmef)){

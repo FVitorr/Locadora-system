@@ -2,7 +2,7 @@
 typedef struct
 {
     char user[50];
-    char *password;
+    char password[16];
 
 } autentificacao;
 

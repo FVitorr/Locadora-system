@@ -8,7 +8,7 @@
 typedef struct {
     int ID;
     int CodFilme;
-    char *nomeFilme;
+    char nomeFilme[120];
     float valorFilme;
     data dtemprestimo;
     data dtdevolucao; // Prevista
@@ -102,8 +102,6 @@ int inserirLocados(locados **dtbaseLocados,locados newEntry,int *tamanhoLocados)
 
 int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *tamanhoOperacao);
 
-void listOperacoes(operacoe **dtbaseOperacoe, int qtd, int KEY_operator);
-
 int  listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDlocado,int codigoDevolvido,int tipoPagamento, int mostraFilme, int mostrarNotas);
 
 int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *id,int tipo_config);
@@ -156,7 +154,8 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
 filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilme,int qtdDBFilme,fCategoria **dtbaseCategoria,int *qtdCategoria ,int *tamanhoCategoria, int *idControleCategoria, int tipoConfig);
 
 int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme, eFilme **dtBase_eFilme, int *tam_eFilme, int *qtd_eFime,filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme,int *iddtbasefilme,fCategoria **dtbaseCategoria, int *qtdCategoria,int *tamanhoCategoria,int *idControleCategoria,financeiro *monetario,int tipo_config);
-int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,int tipo_config);
+
+int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,fornecedor **dtbaseFornecedor,int qtdFornecedor,int tipo_config);
 
 int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, int tipoPagamento, int filtrarPagos);
 
@@ -169,3 +168,5 @@ int refazDadosEfIlme(eFilme **dtbase, int qtdCCliente, int tipo_config);
 int filme_in_dtbase(char namefile[],filme **dtbaseFilme, int qtdFilme, int *retornoIDFilme, int qtdTotal);
 
 void refazNameCCliente(contaCliente *objeto,filme **dtbaseFIlme,int qtdfilme,cliente **dtbaseCliente,int qtdCLiente);
+
+void refazNomeFornecedor(eFilme *objeto, fornecedor **dtbaseFornecedor, int qtdfornecedor);
