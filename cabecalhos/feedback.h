@@ -26,8 +26,8 @@ filtroCodigo obterFaixaCodigo();
 int locacoesRestantes(filme **dtBaseFilme, int qtdFilme, eFilme **dtBaseEFilme, int qtdEFilme,
                       fCategoria **dtbaseCategoria, int qtdCategoria, contaCliente **bdContaCliente, int qtdContaCliente);
 int listarLocacoes(contaCliente **bdContaCliente, int *qtdContaCliente);
-int listarContasAReceber();
-filtroData obterFaixaDatas();
+int listarContasAReceber(contaCliente **bdContaCliente, int qtdContaCliente);
+filtroData *obterFaixaDatas();
 int listarContasAPagar();
 int listarMovimentacaoCaixa();
 int vendaTipoPagamento(contaCliente **bdContaCliente, int qtdContaCliente, int tipoPagamento);

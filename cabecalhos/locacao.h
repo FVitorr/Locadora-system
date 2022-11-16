@@ -3,7 +3,6 @@
 #include "funcionarios.h"
 #include "fornecedor.h"
 
-
 //int PRIMEIRAEXECUCAO = 0; //0 NÃO
 typedef struct {
     int ID;
