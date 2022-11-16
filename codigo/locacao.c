@@ -53,7 +53,7 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
             refazDados_filme(dtbaseFilme,qtdFilme, 1);
 
             //Nome Filme
-            newOpc.nomeFilme = nomeFilme(dtbaseFilme,qtdFilme,idtpm);
+            strcpy(newOpc.nomeFilme,nomeFilme(dtbaseFilme,qtdFilme,idtpm));
             printf("\n>> Nome Filme: %s\n",newOpc.nomeFilme);
 
             printf("\n>> Valor Filme: R$ %.2f\n",newOpc.valorFilme);
@@ -441,7 +441,7 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
 
     if (primeiraexecute == 0){
         //carregarDados_CClientes(dtbaseCCliente,qtdCCliente,tamanho_CCliente,idCCliente,KEY_Cliente,tipo_config);
-        carregarDados_Efilme(dtBaseeFilme, qtd_eFilme, tam_eFilme,tipo_config);
+        carregarDados_Efilme(dtBaseeFilme, qtd_eFilme, tam_eFilme,dtbaseFornecedor,*qtdFornecedor,tipo_config);
         primeiraexecute = 1;
     }
     //system("cls");
@@ -717,7 +717,9 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
 
                     char nome_[120];
                     fgets(nome_, 120, fileLocados);
-                    new.dEmprestimo[i].dFilme[j].nomeFilme = string_to_pointer(nome_);
+                    limpa_final_string(nome_);
+                    strcpy(new.dEmprestimo[i].dFilme[j].nomeFilme,nome_);
+                    //new.dEmprestimo[i].dFilme[j].nomeFilme = string_to_pointer(nome_);
 
                     fscanf(fileLocados, "%f\n", &new.dEmprestimo[i].dFilme[j].valorFilme);
                     fscanf(fileLocados, "%d\n", &new.dEmprestimo[i].dFilme[j].dtemprestimo.dia);
@@ -810,15 +812,21 @@ void refazNameCCliente(contaCliente *objeto,filme **dtbaseFIlme,int qtdfilme,cli
         for (int j = 0; j < (*objeto).dEmprestimo[i].qtdFilme - 1; j++){
             for (int k = 0; k < qtdCLiente; k++){
                 if ((*objeto).dEmprestimo[i].dFilme[j].CodFilme == (*dtbaseFIlme)[i].codigo){
-                    (*objeto).dEmprestimo[i].dFilme[j].nomeFilme = (*dtbaseFIlme)[i].nome;
+                    strcpy((*objeto).dEmprestimo[i].dFilme[j].nomeFilme,(*dtbaseFIlme)[i].nome);
                     break;
                 }
             }
         }
     }
-
 }
 
+void refazNomeFornecedor(eFilme *objeto, fornecedor **dtbaseFornecedor, int qtdfornecedor){
+    for (int i = 0 ; i < qtdfornecedor; i++){
+        if ((*dtbaseFornecedor)[i].id == (*objeto).IDFornecedor){
+            (*objeto).nomefornecedor = (*dtbaseFornecedor)[i].nomeFantasia;
+        }
+    }
+}
 
 int refazDadosCCliente(contaCliente **dtbase, int qtdCCliente, int tipo_config){
 
@@ -1412,7 +1420,7 @@ int inserir_eFilme(eFilme **dtbase,eFilme novaEntrada, int *qtd_eFilme, int *tam
     }
 
     if ((*dtbase) == NULL){
-        return -1;
+        return 1;
     }
 
     (*dtbase)[*tam_eFilme - 1] = novaEntrada;
@@ -1743,6 +1751,12 @@ int save_eFilme(eFilme objeto,int tipo_config){
             return 1;
         }
         fwrite(&objeto, sizeof(eFilme), 1,entradaFilmeF);
+        for (int i = 0; i < objeto.tamOp -1; i++){
+            fwrite(&objeto.filmes[i], sizeof(operacaoEFilme), 1,entradaFilmeF);
+            for (int j =0 ; j < objeto.filmes[i].tamFilm; j++){
+                fwrite(&objeto.filmes[i].entradaFilmesCadastro[j], sizeof(filme), 1,entradaFilmeF);
+            }
+        }
     }
     fclose(entradaFilmeF);
     entradaFilmeF = NULL;
@@ -1750,7 +1764,7 @@ int save_eFilme(eFilme objeto,int tipo_config){
 }
 
 
-int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,int tipo_config) {
+int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,fornecedor **dtbaseFornecedor,int qtdFornecedor,int tipo_config) {
     FILE *Efilmef = NULL;
     eFilme new;
 
@@ -1836,10 +1850,11 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
 
             t = inserir_eFilme(dtbase,new,qtdeFilmes,tamanhoeFilmes);
 
-            if (t != 0){
+            if (t == 1){
                 printf("\nAcao Interrompida");
                 break;
             }
+
         }
     }
     else { //Arquivo BIN
@@ -1854,14 +1869,30 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
             }
             fread(&new,sizeof(eFilme),1,Efilmef);
             new.filmes = calloc(new.tamOp,sizeof (operacaoEFilme));
+
+            operacaoEFilme newOp;
             for (int i = 0; i < new.tamOp -1; i++){
-                fread(&new.filmes[i],sizeof(eFilme),1,Efilmef);
+                fread(&newOp,sizeof(operacaoEFilme),1,Efilmef);
+
+                newOp.entradaFilmesCadastro  = (filme *)calloc(newOp.tamFilm,sizeof (filme));
+
+                filme newFIlme;
+                for (int j = 0; j < newOp.tamFilm ; j++){
+                    fread(&newFIlme,sizeof(operacaoEFilme),1,Efilmef);
+                    newOp.entradaFilmesCadastro[i] = newFIlme;
+
+                }
+                new.filmes[i] = newOp;
             }
 
 
-            t = inserir_eFilme(dtbase,new,qtdeFilmes,tamanhoeFilmes);
+            if (verificaID_eFilme(dtbase,*qtdeFilmes,new.IDFornecedor) != 1){
+                refazNomeFornecedor(&new,dtbaseFornecedor,qtdFornecedor);
+                t = inserir_eFilme(dtbase,new,qtdeFilmes,tamanhoeFilmes);
+                printf(" 0 ");
+            }
 
-            if (t == 0){
+            if (t != 0){
                 printf("\nAcao Interrompida");
                 break;
             }
@@ -1874,18 +1905,19 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
  
 int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, int tipoPagamento, int filtrarPagos){ // filtrarPagos 0 - Retorna tudo       1 - Retorna os que não foram Pagos
     int controle = 0;
+
     for (int i = 0; i  < qtd_eFime; i++){
         if (((*dtBase_eFilme)[i].ID == IDconta) || (IDconta == -1)){
-            printf("\n| ID Conta: (%d)  \t Fornecedor:  %s  \t\tCNPJ: %s", (*dtBase_eFilme)[i].ID,
+            printf("\n\n| ID Conta: (%d)  \t Fornecedor:  %s  \t\tCNPJ: %s", (*dtBase_eFilme)[i].ID,
                    (*dtBase_eFilme)[i].nomefornecedor, (*dtBase_eFilme)[i].cnpj);
             for (int j = 0; j < (*dtBase_eFilme)[i].tamOp - 1; j++) {
                if (((*dtBase_eFilme)[i].filmes[j].tipoPagamento == tipoPagamento || tipoPagamento == -1) && ((*dtBase_eFilme)[i].filmes[j].ID == IDnota || IDnota == -1) && ((*dtBase_eFilme)[i].filmes[j].parcelasPagas < (*dtBase_eFilme)[i].filmes[j].qtdParcelas || (int)(*dtBase_eFilme)[i].filmes[j].valorDeve > 0 || filtrarPagos == 0)) {
                     printf("\n\n| (%d) Data da Nota: %d/%d/%d ", (*dtBase_eFilme)[i].filmes[j].ID,
                            (*dtBase_eFilme)[i].filmes[j].dtNota.dia, (*dtBase_eFilme)[i].filmes[j].dtNota.mes,
                            (*dtBase_eFilme)[i].filmes[j].dtNota.ano);
-                    printf("| Frete: R$ %.2f      Imposto: R$ %.2f %s |", (*dtBase_eFilme)[i].filmes[j].frete,
-                           (*dtBase_eFilme)[i].filmes[j].Imposto,
-                           formatstring(41, 1, " "));
+                    printf("| Frete: R$ %.2f      Imposto: R$ %.2f  |", (*dtBase_eFilme)[i].filmes[j].frete,
+                           (*dtBase_eFilme)[i].filmes[j].Imposto);
+                    setbuf(stdin, NULL);
                     printf("\n|%s|%s|%s|%s|%s|%s|%s|", formatstring(30, strlen("Descricao\0"), "Descricao\0"),
                            formatstring(13, strlen("Preco Custo\0"), "Preco Custo\0"),
                            formatstring(13, strlen("Frete\0"), "Frete\0"),

@@ -68,7 +68,12 @@ funcionarios criarFuncionario(int *idFuncionario) {
     setbuf(stdin, NULL);
 
     printf("Senha: ");
-    obj.login.password = obterPassword(16);
+
+    char *tempPass;
+    tempPass = obterPassword(16);
+
+    strcpy(obj.login.password,tempPass);
+
     return obj;
 }
 
@@ -309,6 +314,7 @@ int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
             } else {
                 printf("\n[Erro 401] Usuario ou senha errado.\n");
                 system("Pause");
+                break;
             }
         }
     }
@@ -368,8 +374,8 @@ int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *
             fgets(new.login.user, 50, p);
             limpa_final_string(new.login.user);
 
-            fgets(password, 16, p);
-            new.login.password = retorna_password_file(password);
+            fgets(new.login.password, 17, p);
+            limpa_final_string(new.login.password);
 
 
             if (verificaIdFuncionario(dtBase, *qtdFuncionarios, new.codigo) == 0){
@@ -396,8 +402,7 @@ int carregarDadosFuncionarios(funcionarios **dtBase, int *qtdFuncionarios, int *
                 break;
             }
             fread(&new,sizeof(funcionarios),1,p);
-            printf("%s %s %s %s %s %s %s %s %s %s", new.nome, new.cargo, new.endereco.rua, new.endereco.bairro,
-                   new.endereco.cidade, new.endereco.estado, new.telefone, new.email, new.login.user, new.login.password);
+
             if (verificaIdFuncionario(dtBase, *qtdFuncionarios, new.codigo) == 0){
                 t = inserirFuncionario(dtBase, new, qtdFuncionarios, tamanhoFuncionarios);
                 if (*id <= new.codigo) {
