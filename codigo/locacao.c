@@ -494,7 +494,7 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
         //Devolução;
         devolucaoFilmes(dtbaseCCliente,*qtdCCliente,dtbaseFilme,*qtdFilme,monetario,tipo_config);
     }else if (op == 3){
-        listLocacao(dtbaseCCliente, *qtdCCliente, -1,-1,-1,-1,0,1);
+        listLocacao(dtbaseCCliente, *qtdCCliente, -1,-1,-1,-1,1,1);
         //listCCliente(dtbaseCCliente,*qtdCCliente);
         //listLocacao(dtbaseLocados,*qtdLocados,dtbaseOperacoe,*qtdCCliente,-1);
         system("pause");
@@ -518,7 +518,7 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
 
 int inserirLocados(locados **dtbaseLocados,locados newEntry,int *tamanhoLocados){
     //Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
-    *dtbaseLocados = (locados *) realloc(*dtbaseLocados, *tamanhoLocados * sizeof(locados));
+    *dtbaseLocados = (locados *) realloc(*dtbaseLocados, (*tamanhoLocados + 1) * sizeof(locados));
 
     if (*dtbaseLocados == NULL){
         printf("\n  Erro na alocação de memória!");
@@ -634,13 +634,21 @@ int saveContaCliente(contaCliente objeto, int tipo_config){
             return 1;
         }
         fwrite(&objeto, sizeof(contaCliente), 1,contaclienteF);
+        for (int i = 0; i < objeto.tamLocados - 1; i++){
+            fwrite(&objeto.dEmprestimo[i], sizeof(locados), 1,contaclienteF);
+            for (int j = 0; j < objeto.dEmprestimo[i].qtdFilme - 1; j++){
+                fwrite(&objeto.dEmprestimo[i].dFilme[j], sizeof(operacoe), 1,contaclienteF);
+            }
+        }
+
+
     }
     fclose(contaclienteF);
     contaclienteF = NULL;
     return 0;
 }
 
-int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, int *tamanhoCCliente, int *idControle, int * Key_Cliente,int tipo_config) {
+int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, int *tamanhoCCliente, int *idControle,cliente **dtbaseCLiente, int qtdCliente, filme **dtbaseFIlme, int qtdFilme,int tipo_config) {
     FILE *fileLocados = NULL;
     contaCliente new;
 
@@ -747,14 +755,39 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
             if (!filelength(fileno(fileLocados))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
             }
-            fread(&new,sizeof(locados),1,fileLocados);
-//            if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
-//                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
-//                if (*id <= new.codigo) {
-//                    *id = new.codigo + 1;
-//                }
-//            }
+            fread(&new,sizeof(contaCliente),1,fileLocados);
 
+            new.dEmprestimo = (locados *)malloc(new.tamLocados * sizeof (locados));
+
+            locados newlocados;
+            for (int i = 0; i < new.tamLocados - 1; i++){
+
+                fread(&newlocados, sizeof(locados), 1,fileLocados);
+                newlocados.dFilme = (operacoe *) calloc(newlocados.qtdFilme , sizeof (operacoe));
+
+                if (newlocados.dFilme == NULL){
+                    printf("Erro Na alocacao de memoria");
+                    system("pause");
+                }
+
+                operacoe newOpp;
+
+                for (int j = 0; j < newlocados.qtdFilme - 1; j++){
+                    fread(&newOpp, sizeof(operacoe), 1,fileLocados);
+                    newlocados.dFilme[j] = newOpp;
+                }
+
+                new.dEmprestimo[i] = newlocados;
+            }
+
+            if (verificaConta(dtBaseCCliente,*qtd_CCliente,new.ID) == 0){
+                refazNameCCliente(&new,dtbaseFIlme,qtdFilme,dtbaseCLiente,qtdCliente);
+                t = inserirCCliente(dtBaseCCliente,new,qtd_CCliente,tamanhoCCliente);
+
+                if (*idControle >= new.ID){
+                    *idControle = new.ID + 1;
+                }
+            }
             if (t == 0){
                 printf("\nAcao Interrompida");
                 break;
@@ -765,6 +798,27 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
     fileLocados = NULL;
     return 0;
 }
+
+void refazNameCCliente(contaCliente *objeto,filme **dtbaseFIlme,int qtdfilme,cliente **dtbaseCliente,int qtdCLiente){
+    for (int i = 0; i < qtdCLiente; i++){
+        if ((*objeto).idCliente == (*dtbaseCliente)[i].id){
+            (*objeto).Nome = (*dtbaseCliente)[i].nome;
+            break;
+        }
+    }
+    for (int i = 0; i < (*objeto).tamLocados - 1 ; i++){
+        for (int j = 0; j < (*objeto).dEmprestimo[i].qtdFilme - 1; j++){
+            for (int k = 0; k < qtdCLiente; k++){
+                if ((*objeto).dEmprestimo[i].dFilme[j].CodFilme == (*dtbaseFIlme)[i].codigo){
+                    (*objeto).dEmprestimo[i].dFilme[j].nomeFilme = (*dtbaseFIlme)[i].nome;
+                    break;
+                }
+            }
+        }
+    }
+
+}
+
 
 int refazDadosCCliente(contaCliente **dtbase, int qtdCCliente, int tipo_config){
 
@@ -1336,7 +1390,7 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
         }
     }
     //Salvar as Alteraçoes nos arquivos
-    refazDados_Categoria(dtbaseCategoria,qtdCategoria,tamanhoCategoria,tipo_config);
+    refazDados_Categoria(dtbaseCategoria,*qtdCategoria,tipo_config);
     refazDados_filme(dtbaseFilme,*qtdFilme,tipo_config);
     return 0;
 }
@@ -1789,9 +1843,9 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
         }
     }
     else { //Arquivo BIN
-        Efilmef = fopen("cpyBdEntradaFilme.txt", "rb");
+        Efilmef = fopen("cpyBdEntradaFilme.bin", "rb");
         if (Efilmef == NULL){
-            printf("\nErro na Leitura 'cpyBdEntradaFilme.txt' \n");
+            printf("\nErro na Leitura 'cpyBdEntradaFilme.bin' \n");
             return 1;
         }
         while (!feof(Efilmef)){
@@ -1799,12 +1853,7 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
                 break;
             }
             fread(&new,sizeof(eFilme),1,Efilmef);
-//            if (verificaIdFilme(dtBase,*qtdFilme,new.codigo) == 0){
-//                t = inserirFilme(dtBase,new,qtdFilme,tamanhoFilme,tipo_config);
-//                if (*id <= new.codigo) {
-//                    *id = new.codigo + 1;
-//                }
-//            }
+            t = inserir_eFilme(dtbase,new,qtdeFilmes,tamanhoeFilmes);
 
             if (t == 0){
                 printf("\nAcao Interrompida");

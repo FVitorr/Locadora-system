@@ -124,7 +124,7 @@ int refazDadosOperacao(operacoe **dtbase, int qtdOperacao, int tipo_config);
 
 int saveContaCliente(contaCliente objeto, int tipo_config);
 
-int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, int *tamanhoCCliente, int *idControle, int * Key_Cliente,int tipo_config);
+int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, int *tamanhoCCliente, int *idControle,cliente **dtbaseCLiente, int qtdCliente, filme **dtbaseFIlme, int qtdFilme,int tipo_config);
 
 int refazDadosCCliente(contaCliente **dtbase, int qtdCCliente, int tipo_config);
 
@@ -167,3 +167,5 @@ int refazDadosEfIlme(eFilme **dtbase, int qtdCCliente, int tipo_config);
 //int transportaDados(const char *namefilme,filme **dtbaseFilme, int qtdFilme, int *retornoIDFilme, int qtdEntrada);
 
 int filme_in_dtbase(char namefile[],filme **dtbaseFilme, int qtdFilme, int *retornoIDFilme, int qtdTotal);
+
+void refazNameCCliente(contaCliente *objeto,filme **dtbaseFIlme,int qtdfilme,cliente **dtbaseCliente,int qtdCLiente);

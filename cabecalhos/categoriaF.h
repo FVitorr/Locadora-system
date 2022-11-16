@@ -20,11 +20,11 @@ int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *
  Remove a Categoria no array Dinamico
  */
 
-int remCategoria(fCategoria **dtbase, int id, int *qtdCategoria,int *tamanhoCategoria,int tipo_config);
+int remCategoria(fCategoria **dtbase, int id, int qtdCategoria,int tipo_config);
 
 void listCategorias(fCategoria **dtbase, int qtd);
 
-int editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,int id,int tipo_config);
+int editaCategoria(fCategoria **dtbase,int qtdCategoria,int id,int tipo_config);
 
 int locID(fCategoria **dtbase,int qtd_Categoria, int ID) ;
 /*Retorna o Valor pago na Categoria de acordo com o ID informado*/
@@ -36,6 +36,6 @@ int saveCategoria(fCategoria objeto,int tipo_config);
 
 int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanhoCategoria, int *id,int tipo_config);
 
-int refazDados_Categoria(fCategoria **dtbase, int *qtdCategoria, int *tamanhoCategoria, int tipo_config);
+int refazDados_Categoria(fCategoria **dtbase, int qtdCategoria, int tipo_config);
 
 //int verifica_IDCategoria(fCategoria **dtbase,int qtd_Locadora,int id);

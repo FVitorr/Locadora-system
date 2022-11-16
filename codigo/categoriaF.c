@@ -55,13 +55,13 @@ int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *
     *qtdCategoria = *qtdCategoria + 1;
     return 1;
 }
-int remCategoria(fCategoria **dtbase, int id, int *qtdCategoria,int *tamanhoCategoria,int tipo_config){
-    for (int i = 0; i < *qtdCategoria; i++){
+int remCategoria(fCategoria **dtbase, int id, int qtdCategoria,int tipo_config){
+    for (int i = 0; i < qtdCategoria; i++){
         if ((*dtbase)[i].codigo == id){
             (*dtbase)[i].ativo = 0;
         }
     }
-    refazDados_Categoria(dtbase,qtdCategoria,tamanhoCategoria,tipo_config);
+    refazDados_Categoria(dtbase,qtdCategoria,tipo_config);
     return 0;
 }
 
@@ -77,15 +77,15 @@ void listCategorias(fCategoria **dtbase, int qtd){
     }
     printf("\n");
 }
-int editaCategoria(fCategoria **dtbase,int *qtdCategoria,int *tamanhoCategoria,int id,int tipo_config){
-    for (int i = 0; i < *qtdCategoria; i++) {
+int editaCategoria(fCategoria **dtbase,int qtdCategoria,int id,int tipo_config){
+    for (int i = 0; i <qtdCategoria; i++) {
         if ((*dtbase)[i].codigo == id) {
             fCategoria newEntrada = objCategoria(&id,0);
             (*dtbase)[i] = newEntrada;
             break;
         }
     }
-    refazDados_Categoria(dtbase,qtdCategoria,tamanhoCategoria,tipo_config);
+    refazDados_Categoria(dtbase,qtdCategoria,tipo_config);
     return 1;
 }
 int locID(fCategoria **dtbase,int qtd_Categoria, int ID) {
@@ -135,14 +135,14 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
                 listCategorias(dtbase,*qtdCategoria);
                 printf(">>Editar:");
                 scanf("%d", &cod);
-                editaCategoria(dtbase,qtdCategoria,tamanhoCategoria,cod,tipo_config);
+                editaCategoria(dtbase,*qtdCategoria,cod,tipo_config);
                 break;
             }
             case 4: {
                 int cod;
                 printf("Remover:");
                 scanf("%d", &cod);
-                remCategoria(dtbase, cod, qtdCategoria,tamanhoCategoria, tipo_config);
+                remCategoria(dtbase, cod, *qtdCategoria, tipo_config);
                 break;
             }
             case 0: {
@@ -190,6 +190,8 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
     FILE *p;
     fCategoria new;
     int t = 0;
+
+
     if (tipo_config == 1){ //Arquivo TXT
         p = fopen("cpyBdCategoria.txt", "r");
 
@@ -232,7 +234,7 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
             if (!filelength(fileno(p))){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
             }
-            fread(&new,sizeof(filme),1,p);
+            fread(&new,sizeof(fCategoria),1,p);
 
             t = insCategoria(dtBase,new,qtdCategoria,tamanhoCategoria,tipo_config);
             if (*id <= new.codigo) {
@@ -250,20 +252,20 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
     return 0;
 }
 
-int refazDados_Categoria(fCategoria **dtbase, int *qtdCategoria, int *tamanhoCategoria, int tipo_config){
+int refazDados_Categoria(fCategoria **dtbase, int qtdCategoria, int tipo_config){
     FILE *p;
     if (tipo_config == 1){
         p = fopen("cpyBdCategoria.txt", "w");
         fclose(p);
         p = NULL;
-        for (int i = 0; i < *tamanhoCategoria; i++){
+        for (int i = 0; i < qtdCategoria; i++){
             saveCategoria((*dtbase)[i],1);
         }
     }else if (tipo_config == 0){
         p = fopen("cpyBdCategoria.bin", "wb");
         fclose(p);
         p = NULL;
-        for (int i = 0; i < *tamanhoCategoria; i++){
+        for (int i = 0; i < qtdCategoria; i++){
             saveCategoria((*dtbase)[i],0);
         }
     }

@@ -117,7 +117,7 @@ void remover_espaco(char *c);
 
 int confirm_remover(int cod);
 
-int menuConfiguracao(config * set,int tipoConfig);
+int menuConfiguracao(config *set,int *tipoConfig);
 
 void info_cancela(void);
 

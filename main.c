@@ -11,6 +11,7 @@
 fCategoria *bd_cat;
 int qtdCategoria = 0, tamanhoCategoria = 1, idControleCategoria = 1;
 
+
 filme  *bd_filme;
 int qtdFilmes = 0, tamanhoFilme = 1, idControleFilmes = 1;
 
@@ -42,7 +43,7 @@ int IdfuncionarioLogado = -1;
 financeiro monetario;
 
 
-int menuprincipal(int tipo_config,financeiro *monetario_,config *config_system,
+int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
                   fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,int *idCategoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,int idFuncionarioLogado,
@@ -82,38 +83,38 @@ int menuprincipal(int tipo_config,financeiro *monetario_,config *config_system,
             while (1){
                 int t = menuLocacao(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
                                     dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,
-                                    dtbaseFornecedor,qtd_Fornecedor,tamanho_Fornecedor,idEntradaFilme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario_,tipo_config);
+                                    dtbaseFornecedor,qtd_Fornecedor,tamanho_Fornecedor,idEntradaFilme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario_,*tipo_config);
                 (*dtbaseLocadora)[0].monetario = *monetario_;
-                refazDados_Locadora(dtbaseLocadora,*qtd_Locadora,tipo_config);
+                refazDados_Locadora(dtbaseLocadora,*qtd_Locadora,*tipo_config);
                 if (t == 1){
                     return 0;
                 }
             }
         case 2:
             while (1){
-                int t = menuClientes(dtbaseCliente,qtd_Cliente,tamanho_Cliente,idCliente, tipo_config);
+                int t = menuClientes(dtbaseCliente,qtd_Cliente,tamanho_Cliente,idCliente, *tipo_config);
                 if (t == 1){
                     return 0;
                 }
             }
         case 3:
             while (1){
-                int t = menuCategoria(dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,tipo_config);
+                int t = menuCategoria(dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,*tipo_config);
                 if (t == 1){
                     return 0;
                 }
             }
         case 4:
             while (1){
-                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,idFilme, tipo_config);
-                refazDados_Categoria(dtbaseCategoria,qtd_Categoria,tamanho_Categoria,tipo_config);
+                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,idFilme, *tipo_config);
+                refazDados_Categoria(dtbaseCategoria,*qtd_Categoria,*tipo_config);
                 if (t == 1){
                     return 0;
                 }
             }
         case 5:
             while (1){
-                int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios, tipo_config);
+                int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios, *tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -121,14 +122,14 @@ int menuprincipal(int tipo_config,financeiro *monetario_,config *config_system,
 
         case 6:
             while (1){
-                int t = menuFornecedor(dtbaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, tipo_config);
+                int t = menuFornecedor(dtbaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipo_config);
                 if (t == 1){
                     return 0;
                 }
             }
         case 7:
             while (1){
-                int t = menuLocadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora, tipo_config);
+                int t = menuLocadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora, *tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -148,8 +149,10 @@ int menuprincipal(int tipo_config,financeiro *monetario_,config *config_system,
             }
         case 10:
             //printf("Menu Configuração e Ajuda");
-            menuConfiguracao(config_system,tipo_config);//ATENÇÂO MANIPULAÇÃO DE VARIAVEL GLOBAL
-
+            system("cls");
+            menuConfiguracao(config_system,tipo_config);
+            //return 0;
+            break;
         default: {
             printf("Esta não é uma opção válida, favor selecionar novamente.\n");
             break;
@@ -177,13 +180,14 @@ int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmone
 
     monetario = (*dtbaseLocadora)[0].monetario ;
 
+    printf("%d %d",*qtd_Categoria,*tamanho_Categoria);
     carregarDados_Categoria(dtbaseCategoria, qtd_Categoria,tamanho_Categoria,idCategoria,*tipoConfig);
     carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
     carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
     //carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
     //carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
-    carregarDados_CClientes(dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,Key_cliente,*tipoConfig);
+    carregarDados_CClientes(dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtBaseCliente,*qtd_Cliente,dtbaseFilme,*qtd_Filmes,*tipoConfig);
     system("cls");
     char nConfig[10];
     printf("Tipo Configuracao: %d ",*tipoConfig);
@@ -262,7 +266,7 @@ int main() {
 
     while (1){
         int v;
-        v = menuprincipal(tipoConfig,&config_System,&monetario,
+        v = menuprincipal(&tipoConfig,&monetario,&config_System,
                           &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                           &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,IdfuncionarioLogado,

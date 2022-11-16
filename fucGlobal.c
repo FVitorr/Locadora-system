@@ -419,15 +419,52 @@ void systemPause(){
     scanf("%c",a);
 }
 
-int menuConfiguracao(config * set,int tipoConfig){
+int menuConfiguracao(config *set,int *tipoConfig){
     char ConfigTipo[4];
-    if (tipoConfig == 0){
+    if (*tipoConfig == 0){
         strcpy(ConfigTipo,"BIN\0");
-    }else if (tipoConfig == 1){
+    }else if (*tipoConfig == 1){
         strcpy(ConfigTipo,"TXT\0");
     }else{
         strcpy(ConfigTipo,"MEM\0");
     }
 
-    printf("\t1- Arquivos Salvos Comos .......... %s",ConfigTipo);
+    int alterarID;
+    printf("\t1- Arquivos Salvos ...................... %s\n",ConfigTipo);
+    printf("\t2- Usuario Logado  ...................... (NULL)\n");
+    char num[4];
+
+    //Permitir sair do menu.
+    do{
+        printf("1 - Alterar 0 - Sair ");
+        scanf("%s",num);
+        alterarID = strtol(num,NULL,10);
+        if (alterarID == 0){
+            return 0;
+        }
+    } while (alterarID != 1);
+
+    int numOpc = 0;
+    do{
+        printf("\nInforme o numero do campo: ");
+        scanf("%s",num);
+        numOpc = strtol(num,NULL,10);
+        if (numOpc == 0){
+            return 0;
+        }
+    } while (numOpc != 1);
+
+    printf(" 0 - TXT \t 1 - BIN \t 2 - Memoria");
+
+    int tipoConfig_ = 2;
+    do{
+        printf("\nInforme o numero do campo: ");
+        scanf("%s",num);
+        tipoConfig_ = strtol(num,NULL,10);
+    } while (tipoConfig_ < 0 || tipoConfig_ > 2);
+
+    *tipoConfig = tipoConfig_;
+    set->tipo_configuracao = tipoConfig_;
+    refazLog(set);
+    return 0;
 }
