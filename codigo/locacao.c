@@ -1853,6 +1853,12 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,i
                 break;
             }
             fread(&new,sizeof(eFilme),1,Efilmef);
+            new.filmes = calloc(new.tamOp,sizeof (operacaoEFilme));
+            for (int i = 0; i < new.tamOp -1; i++){
+                fread(&new.filmes[i],sizeof(eFilme),1,Efilmef);
+            }
+
+
             t = inserir_eFilme(dtbase,new,qtdeFilmes,tamanhoeFilmes);
 
             if (t == 0){
