@@ -117,7 +117,7 @@ char  *obterPassword(int max){
     return senha;
 }
 
-char *retorna_password_file (char password_e[16]){
+char *retorna_password_file (const char password_e[16]){
     int i = 0;
     char *password = (char *)malloc(sizeof(char) * 16);
     while (password_e[i] != '#' && i < 16 && password_e[i] != '\n'){
@@ -131,7 +131,7 @@ char *retorna_password_file (char password_e[16]){
  * Algumas Struct
  */
 
-char *string_to_pointer (char entry[120]){
+char *string_to_pointer (const char entry[120]){
     int i = 0;
     char *string = (char *)malloc(sizeof(char) * 120);
     while (entry[i] != '\n' && i < 120 && entry[i] != '\0'){
@@ -321,10 +321,10 @@ int tipo_configuracao(config *set) {
     char entry;
     while (1){
         line(100, "Configuracoes de Sistema\0");
-        printf(" >> Salvar dados em qual Extensao: \t0 - BIN \t1 - TXT ");
+        printf(" >> Salvar dados em qual Extensao: \n\t0 - BIN \t1 - TXT \t 2 - Em Memoria (Ao fechar dados deletados)");
         line(100, "=\0");
         scanf("%c", &entry);
-        if ((ctoi(entry)) == 0 || (ctoi(entry)) == 1) {
+        if ((ctoi(entry)) == 0 || (ctoi(entry)) == 1|| (ctoi(entry)) == 2) {
             break;
         }
         system("cls");
@@ -358,10 +358,17 @@ int verifica_log(config *set,int *tipo_config){
             fread(&setTpm,sizeof(config),1,log);
         }while (!feof(log));
 
-        set->tipo_configuracao = setTpm.tipo_configuracao;
-        strcpy(set->user,setTpm.user);
-        strcpy(set->password,setTpm.password);
-        *tipo_config = set->tipo_configuracao;
+        if (setTpm.tipo_configuracao < 3 && setTpm.tipo_configuracao >= 0){
+            set->tipo_configuracao = setTpm.tipo_configuracao;
+            strcpy(set->user,setTpm.user);
+            strcpy(set->password,setTpm.password);
+            *tipo_config = set->tipo_configuracao;
+        }else{
+            printf("\nPrecisamos de algumas infomacoes para inicializar o Sistema\n");
+            *tipo_config = tipo_configuracao(set);
+            return 1; // Primeira Execussão do programa
+        }
+
 
         //system("pause");
     }
@@ -410,4 +417,17 @@ void systemPause(){
     char a;
     printf("\nPrecione uma Tecla para continuar...");
     scanf("%c",a);
+}
+
+int menuConfiguracao(config * set,int tipoConfig){
+    char ConfigTipo[4];
+    if (tipoConfig == 0){
+        strcpy(ConfigTipo,"BIN\0");
+    }else if (tipoConfig == 1){
+        strcpy(ConfigTipo,"TXT\0");
+    }else{
+        strcpy(ConfigTipo,"MEM\0");
+    }
+
+    printf("\t1- Arquivos Salvos Comos .......... %s",ConfigTipo);
 }

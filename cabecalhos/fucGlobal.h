@@ -52,9 +52,9 @@ void sucess(void);
 
 char  *obterPassword(int max);
 
-char *retorna_password_file (char password[16]);
+char *retorna_password_file (const char password_e[16]);
 
-char *string_to_pointer (char entry[120]);
+char *string_to_pointer (const char entry[120]);
 
 void stringLower(char *string);
 
@@ -116,6 +116,8 @@ void refazLog(config *set);
 void remover_espaco(char *c);
 
 int confirm_remover(int cod);
+
+int menuConfiguracao(config * set,int tipoConfig);
 
 void info_cancela(void);
 

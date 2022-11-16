@@ -42,7 +42,7 @@ int IdfuncionarioLogado = -1;
 financeiro monetario;
 
 
-int menuprincipal(int tipo_config,financeiro *monetario_,
+int menuprincipal(int tipo_config,financeiro *monetario_,config *config_system,
                   fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,int *idCategoria,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,int idFuncionarioLogado,
@@ -147,8 +147,9 @@ int menuprincipal(int tipo_config,financeiro *monetario_,
                 }
             }
         case 10:
-            printf("Menu Configuração e Ajuda");
-            break;
+            //printf("Menu Configuração e Ajuda");
+            menuConfiguracao(config_system,tipo_config);//ATENÇÂO MANIPULAÇÃO DE VARIAVEL GLOBAL
+
         default: {
             printf("Esta não é uma opção válida, favor selecionar novamente.\n");
             break;
@@ -184,12 +185,14 @@ int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmone
     //carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
     carregarDados_CClientes(dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,Key_cliente,*tipoConfig);
     system("cls");
-    char nConfig[5];
+    char nConfig[10];
     printf("Tipo Configuracao: %d ",*tipoConfig);
     if (*tipoConfig == 1){
         strcpy(nConfig,".txt\0");
-    }else{
+    }else if (*tipoConfig == 0){
         strcpy(nConfig,".bin\0");
+    }else{
+        strcpy(nConfig,"Memoria\0");
     }
     if (*qtd_Locadora == 0){
 
@@ -259,7 +262,7 @@ int main() {
 
     while (1){
         int v;
-        v = menuprincipal(tipoConfig,&monetario,
+        v = menuprincipal(tipoConfig,&config_System,&monetario,
                           &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                           &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,IdfuncionarioLogado,

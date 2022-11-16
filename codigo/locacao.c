@@ -1821,11 +1821,11 @@ int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, i
     int controle = 0;
     for (int i = 0; i  < qtd_eFime; i++){
         if (((*dtBase_eFilme)[i].ID == IDconta) || (IDconta == -1)){
-            printf("| ID Conta: (%d)  \t Fornecedor:  %s  \t\tCNPJ: %s", (*dtBase_eFilme)[i].ID,
+            printf("\n| ID Conta: (%d)  \t Fornecedor:  %s  \t\tCNPJ: %s", (*dtBase_eFilme)[i].ID,
                    (*dtBase_eFilme)[i].nomefornecedor, (*dtBase_eFilme)[i].cnpj);
             for (int j = 0; j < (*dtBase_eFilme)[i].tamOp - 1; j++) {
                if (((*dtBase_eFilme)[i].filmes[j].tipoPagamento == tipoPagamento || tipoPagamento == -1) && ((*dtBase_eFilme)[i].filmes[j].ID == IDnota || IDnota == -1) && ((*dtBase_eFilme)[i].filmes[j].parcelasPagas < (*dtBase_eFilme)[i].filmes[j].qtdParcelas || (int)(*dtBase_eFilme)[i].filmes[j].valorDeve > 0 || filtrarPagos == 0)) {
-                    printf("\n\n| (%d) Data da Nota: %d/%d/%d  ", (*dtBase_eFilme)[i].filmes[j].ID,
+                    printf("\n\n| (%d) Data da Nota: %d/%d/%d ", (*dtBase_eFilme)[i].filmes[j].ID,
                            (*dtBase_eFilme)[i].filmes[j].dtNota.dia, (*dtBase_eFilme)[i].filmes[j].dtNota.mes,
                            (*dtBase_eFilme)[i].filmes[j].dtNota.ano);
                     printf("| Frete: R$ %.2f      Imposto: R$ %.2f %s |", (*dtBase_eFilme)[i].filmes[j].frete,

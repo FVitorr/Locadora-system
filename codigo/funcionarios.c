@@ -277,7 +277,7 @@ int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
 
         setbuf(stdin, NULL);
 
-        printf("\n[!]Nao e possivel apagar os caracteres informados na Senha\n\n>> Senha: ");
+        printf("\n[!] Nao e possivel apagar os caracteres informados na Senha\n\n>> Senha: ");
 
         password = obterPassword(16);
         //printf("%s",password);
