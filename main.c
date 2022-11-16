@@ -141,8 +141,9 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
             }
         case 9:
             while (1){
-                int t = menuFeedback(dtbaseCliente, qtd_Cliente,
-                                     dtbaseFilme, qtd_Filmes);
+                int t = menuFeedback(dtbaseCliente, qtd_Cliente, dtbaseFilme, qtd_Filmes, dtBaseeFilme, qtd_eFilme,
+                                     dtbaseCategoria, qtd_Categoria, dtbaseCCliente, qtd_CCliente);
+
                 if (t == 1) {
                     return 0;
                 }
