@@ -159,7 +159,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
 }
 
 int saveCategoria(fCategoria objeto,int tipo_config){
-    FILE *fileCategoria;
+    FILE *fileCategoria = NULL;
 
     if (tipo_config == 1){//Arquivo TXT
         fileCategoria = fopen("cpyBdCategoria.txt", "a");
@@ -236,11 +236,12 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
             }
             fread(&new,sizeof(fCategoria),1,p);
 
-            t = insCategoria(dtBase,new,qtdCategoria,tamanhoCategoria,tipo_config);
-            if (*id <= new.codigo) {
-                *id = new.codigo + 1;
+            if (locID(dtBase,*qtdCategoria,new.codigo) == 0){
+                t = insCategoria(dtBase,new,qtdCategoria,tamanhoCategoria,tipo_config);
+                if (*id <= new.codigo) {
+                    *id = new.codigo + 1;
+                }
             }
-
 
             if (t == 0){
                 printf("\nAcao Interrompida");

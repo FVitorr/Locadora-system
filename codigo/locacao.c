@@ -754,7 +754,7 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
             return 1;
         }
         while (!feof(fileLocados)){
-            if (!filelength(fileno(fileLocados))){  /* teste para saber se o tamanho do arquivo é zero */
+            if (!filelength(fileno(fileLocados)) || feof(fileLocados)){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
             }
             fread(&new,sizeof(contaCliente),1,fileLocados);
@@ -782,7 +782,7 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
                 new.dEmprestimo[i] = newlocados;
             }
 
-            if (verificaConta(dtBaseCCliente,*qtd_CCliente,new.ID) == 0){
+            if (verificaConta(dtBaseCCliente,*qtd_CCliente,new.idCliente) == 0){
                 refazNameCCliente(&new,dtbaseFIlme,qtdFilme,dtbaseCLiente,qtdCliente);
                 t = inserirCCliente(dtBaseCCliente,new,qtd_CCliente,tamanhoCCliente);
 
@@ -790,14 +790,16 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
                     *idControle = new.ID + 1;
                 }
             }
-            if (t == 0){
+            if (t == 0 || feof(fileLocados)) {
                 printf("\nAcao Interrompida");
                 break;
             }
+            printf("\n%d, %d",new.ID,new.idCliente);
         }
     }
     fclose(fileLocados);
     fileLocados = NULL;
+    system("pause");
     return 0;
 }
 
@@ -1751,7 +1753,7 @@ int save_eFilme(eFilme objeto,int tipo_config){
             return 1;
         }
         fwrite(&objeto, sizeof(eFilme), 1,entradaFilmeF);
-        for (int i = 0; i < objeto.tamOp -1; i++){
+        for (int i = 0; i < objeto.tamOp - 1; i++){
             fwrite(&objeto.filmes[i], sizeof(operacaoEFilme), 1,entradaFilmeF);
             for (int j =0 ; j < objeto.filmes[i].tamFilm; j++){
                 fwrite(&objeto.filmes[i].entradaFilmesCadastro[j], sizeof(filme), 1,entradaFilmeF);
@@ -1767,6 +1769,7 @@ int save_eFilme(eFilme objeto,int tipo_config){
 int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,fornecedor **dtbaseFornecedor,int qtdFornecedor,int tipo_config) {
     FILE *Efilmef = NULL;
     eFilme new;
+    int execute = 0;
 
     //int *qtdTemp = qtdeFilmes;
 
@@ -1864,14 +1867,15 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,f
             return 1;
         }
         while (!feof(Efilmef)){
-            if (!filelength(fileno(Efilmef))){  /* teste para saber se o tamanho do arquivo é zero */
+            if (!filelength(fileno(Efilmef)) || feof(Efilmef)){  /* teste para saber se o tamanho do arquivo é zero */
                 break;
             }
             fread(&new,sizeof(eFilme),1,Efilmef);
+            new.filmes = NULL;
             new.filmes = calloc(new.tamOp,sizeof (operacaoEFilme));
 
             operacaoEFilme newOp;
-            for (int i = 0; i < new.tamOp -1; i++){
+            for (int i = 0; i < new.tamOp - 1 ; i++){
                 fread(&newOp,sizeof(operacaoEFilme),1,Efilmef);
 
                 newOp.entradaFilmesCadastro  = (filme *)calloc(newOp.tamFilm,sizeof (filme));
@@ -1880,19 +1884,19 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,f
                 for (int j = 0; j < newOp.tamFilm ; j++){
                     fread(&newFIlme,sizeof(operacaoEFilme),1,Efilmef);
                     newOp.entradaFilmesCadastro[i] = newFIlme;
-
                 }
                 new.filmes[i] = newOp;
             }
 
 
-            if (verificaID_eFilme(dtbase,*qtdeFilmes,new.IDFornecedor) != 1){
+            if (verificaID_eFilme(dtbase,*qtdeFilmes,new.IDFornecedor) != 1 || execute == 0){
                 refazNomeFornecedor(&new,dtbaseFornecedor,qtdFornecedor);
                 t = inserir_eFilme(dtbase,new,qtdeFilmes,tamanhoeFilmes);
                 printf(" 0 ");
+                execute = 1;
             }
 
-            if (t != 0){
+            if (t != 0 || feof(Efilmef)){
                 printf("\nAcao Interrompida");
                 break;
             }
