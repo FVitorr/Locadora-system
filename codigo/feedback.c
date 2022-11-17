@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include "../cabecalhos/feedback.h"
+
 
 int menuFeedback(cliente **dtbaseCliente, int *qtd_Cliente,
                  filme **dtbaseFilme, int *qtd_Filme,
@@ -30,11 +32,11 @@ int menuFeedback(cliente **dtbaseCliente, int *qtd_Cliente,
             case 4:
                 return listarLocacoes(dtbaseContaCliente, qtdContaCliente);
             case 5:
-                return listarContasAReceber(dtbaseContaCliente, qtdContaCliente);
+                return listarContasAReceber(dtbaseContaCliente, *qtdContaCliente);
             case 6:
-                return listarContasAPagar(dtbaseeFilme, qtd_eFilme);
+                return listarContasAPagar(dtbaseeFilme, *qtd_eFilme);
             case 7:
-                return listarMovimentacaoCaixa(dtbaseeFilme, qtd_eFilme, dtbaseContaCliente, qtdContaCliente);
+                return listarMovimentacaoCaixa(dtbaseeFilme, *qtd_eFilme, dtbaseContaCliente, *qtdContaCliente);
             case 0:
                 return 1;
             default:
@@ -330,13 +332,15 @@ int relatorioListagemClientes(cliente **dtBaseCliente, int qtdCliente) {
             case 1: {
                 char sexo[15];
                 printf("Digite o sexo pelo qual deseja filtrar os registros: ");
-                scanf("%[^\n]s", sexo);
+                scanf("%s", sexo);
                 filtrarClientesPorSexo(dtBaseCliente, qtdCliente, sexo);
+                system("pause");
                 return INT32_MAX;
             }
             case 2: {
                 filtroCodigo filtro = obterFaixaCodigo();
                 filtrarClientesPorFaixaCodigo(dtBaseCliente, qtdCliente, filtro.inicio, filtro.fim);
+                system("pause");
                 return INT32_MAX;
             }
             case 0: {
@@ -346,16 +350,23 @@ int relatorioListagemClientes(cliente **dtBaseCliente, int qtdCliente) {
                 printf("Esta não é uma opção válida, favor selecionar novamente.\n");
                 break;
         }
+        system("pause");
     }
-    return INT32_MAX;
+    return 0;
 }
 
 void filtrarClientesPorSexo(cliente **dtBaseCliente, int qtdCliente, const char sexo[15]) {
     system("cls");
+    //Tratamento String Sexo
+    int execute = 0;
     if (qtdCliente > 0) {
-        printf("\n ID \tNome \tCPF \tTelefone \tE-mail \tSexo \tEstado Civil \tData de Nascimento \tRua \tNumero \tBairo \tCidade \tEstado  \n");
         for (int c = 0; c < qtdCliente; c++) {
-            if ((*dtBaseCliente)[c].sexo == sexo) {
+            if (strncmp(sexo,(*dtBaseCliente)[c].sexo,1) == 0) {
+
+                if (execute == 0){
+                    printf("\n ID \tNome \tCPF \tTelefone \tE-mail \tSexo \tEstado Civil \tData de Nascimento \tRua \tNumero \tBairo \tCidade \tEstado  \n");
+                    execute = 1;
+                }
                 printf("----------------------------------------------------------------------------------------------------------------------------------\n");
                 printf("%d\t %s \t %s \t %s \t %s \t %s \t %s\t %s \t %s \t %d \t %s \t %s \t %s",
                        (*dtBaseCliente)[c].id,
@@ -385,9 +396,9 @@ void filtrarClientesPorFaixaCodigo(cliente **dtBaseCliente, int qtdCliente, int 
         printf("\n ID \tNome \tCPF \tTelefone \tE-mail \tSexo \tEstado Civil \tData de Nascimento \tRua \tNumero \tBairo \tCidade \tEstado  \n");
         for (int c = 0; c < qtdCliente; c++) {
             if ((*dtBaseCliente)[c].id >= inicio && (*dtBaseCliente)[c].id <= fim) {
-                system("cls");
+                //system("cls");
                 printf("----------------------------------------------------------------------------------------------------------------------------------\n");
-                system("cls");
+                //system("cls");
                 printf("%d\t %s \t %s \t %s \t %s \t %s \t %s\t %s \t %s \t %d \t %s \t %s \t %s",
                        (*dtBaseCliente)[c].id,
                        (*dtBaseCliente)[c].nome,

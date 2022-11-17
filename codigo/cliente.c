@@ -106,7 +106,7 @@ void listCliente(cliente **dtbase, int qtd) {
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
             printf("(%d)\nNome: %s\nCPF %s\nTelefone %s\nE-mail %s\nSexo %s\nEstado civil %s"
-                   "\nData de Nascimento %s \nRua %s ,%d Bairo: %s \tCidade: %s - %s",
+                   "\nData de Nascimento %s \nRua %s, %d Bairo: %s \tCidade: %s - %s\n",
                    (*dtbase)[c].id,
                    (*dtbase)[c].nome,
                    (*dtbase)[c].cpf,
