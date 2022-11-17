@@ -16,7 +16,7 @@ int menuFeedback(cliente **dtbaseCliente, int *qtd_Cliente,
         system("cls");
         printf("Digite a opcao referente a operacao que deseja executar\n\n");
         printf("\t 0 - Sair \t\t 1 - Listar Clientes \n\t 2 - Listar Filmes \t 3 - Locacoes restantes para que o filme se pague"
-               "\n\t 4 - Listar Locacoes \t 5 - Contas a receber \n\t 6 - Contas a pagar \t 7 - Movimentacao de Caixa \n");
+               "\n\t 4 - Listar Locacoes \t 5 - Contas a receber \n\t 6 - Contas a pagar \t 7 - Movimentacao de Caixa \n>> ");
         scanf("%d", &opc);
         line(30, "-\0");
 
@@ -361,14 +361,11 @@ void filtrarClientesPorSexo(cliente **dtBaseCliente, int qtdCliente, const char 
     int execute = 0;
     if (qtdCliente > 0) {
         for (int c = 0; c < qtdCliente; c++) {
-            if (strncmp(sexo,(*dtBaseCliente)[c].sexo,1) == 0) {
+            if (strncmp(sexo, (*dtBaseCliente)[c].sexo, 1) == 0) {
 
-                if (execute == 0){
-                    printf("\n ID \tNome \tCPF \tTelefone \tE-mail \tSexo \tEstado Civil \tData de Nascimento \tRua \tNumero \tBairo \tCidade \tEstado  \n");
-                    execute = 1;
-                }
-                printf("----------------------------------------------------------------------------------------------------------------------------------\n");
-                printf("%d\t %s \t %s \t %s \t %s \t %s \t %s\t %s \t %s \t %d \t %s \t %s \t %s",
+                printf("---------------------------------------------------------------------------------\n");
+                printf("(%d)\nNome: %s\nCPF: %s\nTelefone: %s\nE-mail: %s\nSexo: %s\nEstado civil: %s"
+                       "\nData de Nascimento: %s \nRua: %s, %d \tBairo: %s \tCidade: %s - %s\n",
                        (*dtBaseCliente)[c].id,
                        (*dtBaseCliente)[c].nome,
                        (*dtBaseCliente)[c].cpf,
@@ -382,10 +379,15 @@ void filtrarClientesPorSexo(cliente **dtBaseCliente, int qtdCliente, const char 
                        (*dtBaseCliente)[c].endereco.bairro,
                        (*dtBaseCliente)[c].endereco.cidade,
                        (*dtBaseCliente)[c].endereco.estado);
+                execute = 1;
             }
         }
-    } else {
-        printf("\n\t>> Nenhum registro para o filtro informado");
+        printf("---------------------------------------------------------------------------------\n");
+        if (execute != 1) {
+            printf("\n\t>> Nenhum registro para o filtro informado");
+        }
+    } else{
+        printf("\n\t>> Nenhum registro de cliente encontrado");
     }
     printf("\n");
 }
