@@ -165,15 +165,14 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
 
 
 
-int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmonetario,
+int carregaTodosDados(int *tipoConfig, config *config_system,
                       filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                       locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
-                      locados **dtBaseLocados, int *qtd_Locados, int *tamanho_Locados, int *idLocados,
                       fCategoria **dtbaseCategoria, int *qtd_Categoria, int *tamanho_Categoria, int *idCategoria,
                       cliente **dtBaseCliente, int *qtd_Cliente, int *tamanho_Cliente, int *idCliente,
                       fornecedor **dtBaseFornecedor, int *qtd_Fornecedor, int *tamanho_Fornecedor, int *idFornecedor,
-                      operacoe **dtbaseoperacoe, int *qtd_Operacao, int *tamanho_Operacao, int *key_controle,
-                      contaCliente **dtbaseCCliente, int *qtd_CCliente,int *tamanho_CCliente,int *idCCliente,int *Key_cliente,
+                      contaCliente **dtbaseCCliente, int *qtd_CCliente,int *tamanho_CCliente,int *idCCliente,
+                      eFilme **dtBase_efilme, int *qtd_efilme, int *tamanho_efilme, int *idefilme,
                       funcionarios **dtBaseFuncionario, int *qtd_Funcionario, int *tamanho_Funcionario, int *idFuncionario,int *idFuncionarioLogado){
 
     int pExecute = verifica_log(config_system,tipoConfig);
@@ -187,8 +186,7 @@ int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmone
     carregarDadosClientes(dtBaseCliente, qtd_Cliente,tamanho_Cliente,idCliente,*tipoConfig);
     carregarDadosFornecedores(dtBaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipoConfig);
     carregarDadosFuncionarios(dtBaseFuncionario, qtd_Funcionario, tamanho_Funcionario, idFuncionario, *tipoConfig);
-    //carregarDados_locacao(dtBaseLocados,qtd_Locados,tamanho_Locados,idLocados,*tipoConfig);
-    //carregarDados_Operacoes(dtbaseoperacoe,qtd_Operacao,tamanho_Operacao,key_controle,*tipoConfig);
+    carregarDados_Efilme(dtBase_efilme,qtd_efilme,tamanho_efilme,dtBaseFornecedor,qtdFuncionarios,*tipoConfig);
     carregarDados_CClientes(dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtBaseCliente,*qtd_Cliente,dtbaseFilme,*qtd_Filmes,*tipoConfig);
     system("cls");
     char nConfig[10];
@@ -255,15 +253,14 @@ int main() {
     //Verifica se os arquivos existem caso contrario criar
     //verifica_arquivos(tipoConfig);
     //Carrega os arquivos e Verifica se é primeira execursão
-    carregaTodosDados(&tipoConfig,&config_System,&monetario,
+    carregaTodosDados(&tipoConfig,&config_System,
                       &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                       &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
-                      &bd_locados,&qtdLocado,&tamanhoLocados,&idControleLocados,
                       &bd_cat,&qtdCategoria,&tamanhoCategoria,&idControleCategoria,
                       &bd_cliente, &qtdCliente, &tamanhoCliente, &idControleCliente,
                       &bd_fornecedor, &qtdFornecedor, &tamanhoFornecedor, &idControleFornecedor,
-                      &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
-                      &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,&KEY_cliente,
+                      &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,
+                      &bd_eFilme,&qtdeFilme,&tameFilme,&idCOntroleeFIlme,
                       &bd_funcionarios, &qtdFuncionarios, &tamanhoFuncionarios, &idControleFuncionarios,&IdfuncionarioLogado);
 
 

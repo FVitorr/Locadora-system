@@ -454,11 +454,6 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
                 fornecedor **dtbaseFornecedor, int *qtdFornecedor,int *tamFornecedor,int *idEntradaFIlme,
                 eFilme **dtBaseeFilme, int *tam_eFilme, int *qtd_eFilme,financeiro *monetario,int tipo_config){
 
-    if (primeiraexecute == 0){
-        //carregarDados_CClientes(dtbaseCCliente,qtdCCliente,tamanho_CCliente,idCCliente,KEY_Cliente,tipo_config);
-        carregarDados_Efilme(dtBaseeFilme, qtd_eFilme, tam_eFilme,dtbaseFornecedor,*qtdFornecedor,tipo_config);
-        primeiraexecute = 1;
-    }
     //system("cls");
     if ( qtdCategoria == 0){
         printf("\n\n\t[!] Menu Nao disponivel, Precisamos que os dados de Categoria sejam preenchidos.\n"
