@@ -75,7 +75,7 @@ typedef struct
     int ID;
     int IDFornecedor;
     char *nomefornecedor;
-    char cnpj[16];
+    char cnpj[17];
     int key_fornecedorArray; // Id de referencia no array dtbaseFornecedor
     operacaoEFilme *filmes; //
     int tamOp;

@@ -182,7 +182,7 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
                 valorInvalido = 1;
             } while (valorE >= newObjeto.valorTotal);
             //Calcular restante(valordeve) =  Valor Total menos valor de entrada
-            newObjeto.valordeve = newObjeto.valorTotal - valorE;
+            newObjeto.valordeve = (newObjeto.valorTotal - (float)valorE);
             //Adicionar valor de entrada
             newObjeto.valorEntrada = valorE;
 
@@ -211,10 +211,11 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
                 else{ printf("\n[!] Quantidade de Parcelas invalido\n");}
             } while (1);
 
-            float valorParcelas = newObjeto.valorTotal/qtdParcelas;
-            printf("\nA conta foi dividida em %f parcelas \n O Valor de cada parcela e: R$ %.2f",qtdParcelas,valorParcelas);
-            newObjeto.qtdParcelas = (int)qtdParcelas;
             newObjeto.valordeve = newObjeto.valorTotal;
+            newObjeto.qtdParcelas = (int)qtdParcelas;
+            float valorParcelas = newObjeto.valordeve/qtdParcelas;
+            printf("\nA conta foi dividida em %f parcelas \n O Valor de cada parcela e: R$ %.2f",qtdParcelas,valorParcelas);
+
         }
         //monetario->contasReceber = monetario->contasReceber + newObjeto.valorPago;
     }
@@ -1835,16 +1836,24 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,f
             fgets(nomeFornecedor,120,Efilmef);
             new.nomefornecedor = string_to_pointer(nomeFornecedor);
 
-            fgets(new.cnpj,15,Efilmef);
+            fgets(new.cnpj,17,Efilmef);
             limpa_final_string(new.cnpj);
 
-            fscanf(Efilmef, "%d\n", &new.key_fornecedorArray);
+            char key_forne[10];
+            fgets(key_forne,5,Efilmef);
+            new.key_fornecedorArray = strtol(key_forne,NULL,10);
 
-            fscanf(Efilmef, "%d\n", &new.tamOp);
+            //fscanf(Efilmef, "%d\n", &new.key_fornecedorArray);
+
+            char tamop[10];
+            fgets(tamop,10,Efilmef);
+            new.tamOp = strtol(tamop,NULL,10);
+
+            ///fscanf(Efilmef, "%d\n", &new.tamOp);
 
             fscanf(Efilmef, "%d\n", &new.ultIDOp);
 
-            new.filmes = (operacaoEFilme *)malloc(new.tamOp * sizeof (operacaoEFilme));
+            new.filmes = (operacaoEFilme *)calloc(new.tamOp , sizeof (operacaoEFilme));
             if (new.filmes == NULL){
                 printf("Erro na Alocaçao Dinamica");
                 system("pause");
@@ -1865,15 +1874,23 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,f
                 fscanf(Efilmef, "%d\n", &new.filmes[i].parcelasPagas);
                 fscanf(Efilmef, "%f\n", &new.filmes[i].valorEntrada);
                 fscanf(Efilmef, "%f\n", &new.filmes[i].valorDeve);
-                fscanf(Efilmef, "%d\n", &new.filmes[i].dtNota.dia);
-                fscanf(Efilmef, "%d\n", &new.filmes[i].dtNota.mes);
-                fscanf(Efilmef, "%d\n", &new.filmes[i].dtNota.ano);
+
+                char dia[4],mes[4],ano[6];
+                fgets(dia,4,Efilmef);
+                new.filmes[i].dtNota.dia = strtol(dia,NULL,10);
+
+                fgets(mes,4,Efilmef);
+                new.filmes[i].dtNota.mes = strtol(mes,NULL,10);
+
+                fgets(ano,6,Efilmef);
+                new.filmes[i].dtNota.ano = strtol(ano,NULL,10);
+
                 fscanf(Efilmef, "%d\n", &new.filmes[i].dtPagamento.dia);
                 fscanf(Efilmef, "%d\n", &new.filmes[i].dtPagamento.mes);
                 fscanf(Efilmef, "%d\n", &new.filmes[i].dtPagamento.ano);
 
 
-                new.filmes[i].entradaFilmesCadastro = (filme *) malloc((new.filmes[i].tamFilm + 1) * sizeof (filme));
+                new.filmes[i].entradaFilmesCadastro = (filme *) calloc((new.filmes[i].tamFilm + 1) , sizeof (filme));
                 if (new.filmes[i].entradaFilmesCadastro == NULL){
                     printf("Erro na Alocaçao Dinamica");
                     system("pause");
@@ -2024,14 +2041,14 @@ int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, i
                     if ((*dtBase_eFilme)[i].filmes[j].tipoPagamento == 1) {
                         printf("\n|%s| Valor Total : R$ %.2f \t\t Data Pagamento: %d/%d/%d %s ",
                                formatstring(30, (int) strlen("Tipo Pagamento: A vista\0"), "Tipo Pagamento: A vista\0"),
-                               (*dtBase_eFilme)[i].filmes[j].valorDeve, (*dtBase_eFilme)[i].filmes[j].dtPagamento.dia,
+                               (*dtBase_eFilme)[i].filmes[j].valorTotal, (*dtBase_eFilme)[i].filmes[j].dtPagamento.dia,
                                (*dtBase_eFilme)[i].filmes[j].dtPagamento.mes,
                                (*dtBase_eFilme)[i].filmes[j].dtPagamento.ano, formatstring(17, 1, " \0"));
                     } else {
-                        printf("\n|%s|  Valor Total : R$ %.2f \t\t  | Qtd Parcelas Pagas: %d de %d ",
+                        printf("\n|%s| Valor Total : R$ %.2f \t\t  | Qtd Parcelas Pagas: %d de %d ",
                                formatstring(30, (int) strlen("Tipo Pagamento: Parcelado\0"),
                                             "Tipo Parcelado: Parcelado\0"),
-                               (*dtBase_eFilme)[i].filmes[j].valorDeve,(*dtBase_eFilme)[i].filmes[j].parcelasPagas ,(*dtBase_eFilme)[i].filmes[j].qtdParcelas);
+                               (*dtBase_eFilme)[i].filmes[j].valorTotal,(*dtBase_eFilme)[i].filmes[j].parcelasPagas ,(*dtBase_eFilme)[i].filmes[j].qtdParcelas);
                     }
                     controle++;
                 }
