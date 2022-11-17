@@ -79,13 +79,15 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 }
 
 
-locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,
+locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,int idFuncionario,
                        fCategoria **dtbaseCategoria, int qtdCategoria){
 
     locados newObjeto;
 
     newObjeto.ID = *idControleLocados; // valor guardado na struct cliente
     *idControleLocados = *idControleLocados + 1; //Incrementar ID
+
+    newObjeto.IdFuncionario = idFuncionario;
 
     newObjeto.qtdFilme = 1;
 
@@ -226,17 +228,29 @@ locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,
 }
 
 int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_CCliente,int *IdContaCliente,cliente **dtbaseCliente,int qtdcliente,
-                   filme **dtbaseFilme,int qtdFilme,int *iddtbasefilme,fCategoria **dtbaseCategoria, int qtdCategoria,financeiro *monetario,int tipoConfig){
+                   filme **dtbaseFilme,int qtdFilme,int *iddtbasefilme,fCategoria **dtbaseCategoria, int qtdCategoria,int idFuncionarioLogado,financeiro *monetario,int tipoConfig){
     //Cliente
     int idCliente;
+    if (qtdcliente == 0){
+        printf("Clientes nao cadastrados");
+        system("Pause");
+        return 1;
+    }
     do {
-        printf("\n\nClientes Disponiveis: ");
+        printf("\n\nClientes Disponiveis:  (0) Sair");
         for (int i = 0; i < qtdcliente; i++){
             printf("  (%d) %s  ",(*dtbaseCliente)[i].id,(*dtbaseCliente)[i].nome);
         }
 
+        char opc[4];
         printf("\n\nInforme ID do Cliente: ");
-        scanf("%d", &idCliente);
+        scanf("%s", opc);
+
+        idCliente = strtol(opc,NULL,10);
+
+        if(idCliente == 0){
+            return 1;
+        }
 
         int confirm;
         if (verificaIdCliente(dtbaseCliente, qtdcliente, idCliente) == 1) { //Verifica se o cliente existe
@@ -258,7 +272,7 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
 
                     //int key_client = (*dtBaseCCliente)[indexCliente].key_cliente;
 
-                    locados novaLocacao = objetoLocados(&(*dtBaseCCliente)[indexCliente].IDlocado,idCliente,dtbaseFilme,qtdFilme,
+                    locados novaLocacao = objetoLocados(&(*dtBaseCCliente)[indexCliente].IDlocado,idCliente,dtbaseFilme,qtdFilme,idFuncionarioLogado,
                                                         dtbaseCategoria,qtdCategoria);
 
                     //(*dtBaseCCliente)[indexCliente].IDlocado = (*dtBaseCCliente)[indexCliente].IDlocado + 1;
@@ -293,7 +307,7 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
 
                     contaCliente novoCliente = objetoCCliente(IdContaCliente, idCliente, dtbaseCliente, qtdcliente,idCliente);
                     //Criar objeto Locado
-                    locados novaLocacao = objetoLocados(&novoCliente.IDlocado,idCliente,dtbaseFilme,qtdFilme,
+                    locados novaLocacao = objetoLocados(&novoCliente.IDlocado,idCliente,dtbaseFilme,qtdFilme,idFuncionarioLogado,
                                                         dtbaseCategoria,qtdCategoria);
 
                     if (novaLocacao.qtdFilme != -1) {
@@ -488,7 +502,7 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
 
     if (op == 1){
         emprestaFilme(dtbaseCCliente,qtdCCliente,tamanho_CCliente,idCCliente,dtbaseCliente,qtdcliente,dtbaseFilme,*qtdFilme,iddtbasefilme
-                      ,dtbaseCategoria,*qtdCategoria,monetario,tipo_config);
+                      ,dtbaseCategoria,*qtdCategoria,idFuncionarioLogado,monetario,tipo_config);
 
     }else if (op == 2){
         //Devolução;
@@ -591,8 +605,9 @@ int saveContaCliente(contaCliente objeto, int tipo_config){
                 objeto.tamLocados,
                 objeto.IDlocado);
         for (int i = 0; i < objeto.tamLocados - 1; i++){
-            fprintf(contaclienteF, "%d\n%d\n%f\n%f\n%f\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",
+            fprintf(contaclienteF, "%d\n%d\n%d\n%f\n%f\n%f\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n",
                     objeto.dEmprestimo[i].ID,
+                    objeto.dEmprestimo[i].IdFuncionario,
                     objeto.dEmprestimo[i].qtdFilme,
                     objeto.dEmprestimo[i].valorTotal,
                     objeto.dEmprestimo[i].valordeve,
@@ -690,6 +705,7 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
             for (int i = 0; i < new.tamLocados - 1; i++){
                 char ID[4];
                 fscanf(fileLocados, "%d\n", &new.dEmprestimo[i].ID);
+                fscanf(fileLocados, "%d\n", &new.dEmprestimo[i].IdFuncionario);
                 fscanf(fileLocados, "%d\n", &new.dEmprestimo[i].qtdFilme);
                 fscanf(fileLocados, "%f\n", &new.dEmprestimo[i].valorTotal);
                 fscanf(fileLocados, "%f\n", &new.dEmprestimo[i].valordeve);
@@ -862,7 +878,7 @@ int posicaoContaArray(contaCliente **dtbaseCCliente, int qtdCCliente, int idClie
 
 int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente,financeiro *monetario,int tipoconfig){
     line(100,"Pagamento Parcelas\0");
-    printf("\nContas Disponiveis:\n\n");
+    printf("\nContas Disponiveis:\n\n(0) Sair ");
     for (int i = 0; i < qtdCCliente; i++){
         printf(" (ID: %d) Cliente: %s   ",(*dtbaseCCliente)[i].idCliente,(*dtbaseCCliente)[i].Nome);
     }
@@ -871,8 +887,16 @@ int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente,financeiro *mone
         if (erroID == 1){
             printf("\nID invalido por gentileza informe um valido\n");
         }
+        char opc[4];
         printf("\n\nInforme o ID do Cliente: ");
-        scanf("%d",&IdCliente);
+        scanf("%s",opc);
+
+        IdCliente = strtol(opc,NULL,10);
+
+        if (IdCliente == 0){
+            return 1;
+        }
+
         erroID = 1;
     } while (verificaConta(dtbaseCCliente,qtdCCliente,IdCliente) == 0);
 
@@ -994,7 +1018,7 @@ int verificaIDLocados(contaCliente **dtbaseCCliente, int qtdCCliente, int idClie
 int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbaseFilme,int qtdFilme,financeiro *monetario,int tipoConfig){
     system("cls");
     line(100,"Devolucao Filmes\0");
-    printf("\nContas Disponiveis:\n");
+    printf("\nContas Disponiveis:\n (0) Sair");
     for (int i = 0; i < qtdCCliente; i++){
         printf(" (ID: %d) Cliente: %s   ",(*dtbaseCCliente)[i].idCliente,(*dtbaseCCliente)[i].Nome);
     }
@@ -1007,6 +1031,10 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
         }
         printf("\nInforme o ID do Conta Cliente: ");
         scanf("%d",&IdCliente);
+
+        if (IdCliente == 0){
+            return 1;
+        }
         erroID = 1;
     } while (verificaConta(dtbaseCCliente,qtdCCliente,IdCliente) == 0);
 
@@ -1775,7 +1803,7 @@ int save_eFilme(eFilme objeto,int tipo_config){
     }
     fclose(entradaFilmeF);
     entradaFilmeF = NULL;
-    return 0;
+return 0;
 }
 
 

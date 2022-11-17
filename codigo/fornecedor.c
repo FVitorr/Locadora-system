@@ -257,7 +257,7 @@ int retornarUltimoID_Fornecedor(fornecedor **dtBase, int qtdFornecedor){
     for (int i = 1; i < qtdFornecedor; i++){
         tId = (id < (*dtBase)[i].id) ? id = (*dtBase)[i].id : id;
     }
-    return tId;
+    return tId + 1;
 }
 int verificaIdFornecedor(fornecedor **dtbase, int qtdFornecedor, int id) {
     for (int i = 0; i < qtdFornecedor; i++) {
