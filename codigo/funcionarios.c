@@ -99,7 +99,7 @@ void listFuncionarios(funcionarios **dtbase, int qtd) {
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
             printf("(%d) Nome : %s\nCargo: %s \n\nRua: %s \nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s\nTelefone: %s\nEmail: %s"
-                   "\nUser: %s \n Password: %s",
+                   "\nUser: %s \nPassword: %s\n",
                    (*dtbase)[c].codigo,
                    (*dtbase)[c].nome,
                    (*dtbase)[c].cargo,
@@ -264,7 +264,8 @@ char *nomefuncionario(funcionarios **dtbase, int qtdFuncionarios,int id){
 
 
 
-int autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
+int
+autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
     while (1) {
         if (qtdFuncionarios == 0 && set->id != 0){
             break;

@@ -111,11 +111,11 @@ int posArrayFornecedor(fornecedor **dtbase,int qtd_Locadora,int id){
 
 void listFornecedor(fornecedor **dtbase, int qtd) {
     if (qtd > 0) {
-        printf("\nID \t Nome Fantasia \t Razão Social \t Inscrição Estadual \t CNPJ \t Telefone \t E-mail \t "
-               " Rua \t Número \t Bairro \t Cidade \t Estado\n");
+//        printf("\nID \t Nome Fantasia \t Razão Social \t Inscrição Estadual \t CNPJ \t Telefone \t E-mail \t "
+//               " Rua \t Número \t Bairro \t Cidade \t Estado\n");
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
-            printf("(%d)\t %s\t %s\t %s\t %s\t %s\t %s\t %s\t %d\t %s\t %s\t %s \n",
+            printf("(ID : %d)\n Nome Fantasia: %s\n Razão Social: %s\n Inscrição Estadual: %s\n CNPJ: %s\n Telefone: %s\n E-mail: %s \n Endereco: %s, %d, %s, %s-%s \n",
                    (*dtbase)[c].id,
                    (*dtbase)[c].nomeFantasia,
                    (*dtbase)[c].razaoSocial,
