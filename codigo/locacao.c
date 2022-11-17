@@ -382,7 +382,7 @@ int verificaConta(contaCliente **dtbaseCcliente, int qtdCcliente, int idCliente)
 
 
 int  listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDlocado,int codigoDevolvido,int tipoPagamento, int mostraFilme, int mostrarNotas){ //mostrarNotas,mostraDevolvidos (0 - não 1- sim)
-    int temFilme = 0;                                                                                                                             //codigo devolvido  (1 sim 0 não)
+    int temFilme = 0,execute = 0;                                                                                                                             //codigo devolvido  (1 sim 0 não -1 Tudo)
     for (int i = 0; i  < qtdCliente; i++){
         if (((*dtbase)[i].idCliente == IDcliente) || (IDcliente == -1)){
 

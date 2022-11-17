@@ -5,11 +5,11 @@
 #include "../cabecalhos/feedback.h"
 
 
-int menuFeedback(cliente **dtbaseCliente, int *qtd_Cliente,
-                 filme **dtbaseFilme, int *qtd_Filme,
-                 eFilme **dtbaseeFilme, int *qtd_eFilme,
-                 fCategoria **dtbaseCategoria, int *qtdCategoria,
-                 contaCliente **dtbaseContaCliente, int *qtdContaCliente) {
+int menuFeedback(cliente **dtbaseCliente, int qtd_Cliente,
+                 filme **dtbaseFilme, int qtd_Filme,
+                 eFilme **dtbaseeFilme, int qtd_eFilme,
+                 fCategoria **dtbaseCategoria, int qtdCategoria,
+                 contaCliente **dtbaseContaCliente, int qtdContaCliente) {
     int opc = INT32_MAX;
 
     while (opc != 0) {
@@ -22,21 +22,21 @@ int menuFeedback(cliente **dtbaseCliente, int *qtd_Cliente,
 
         switch (opc) {
             case 1:
-                return relatorioListagemClientes(dtbaseCliente, *qtd_Cliente);
+                return relatorioListagemClientes(dtbaseCliente, qtd_Cliente);
             case 2:
-                return relatorioListagemFilmes(dtbaseFilme, *qtd_Filme);
+                return relatorioListagemFilmes(dtbaseFilme, qtd_Filme);
             case 3:
-                return locacoesRestantes(dtbaseFilme, *qtd_Filme, dtbaseeFilme,
-                                         *qtd_eFilme, dtbaseCategoria, *qtdCategoria,
-                                         dtbaseContaCliente, *qtdContaCliente);
+                return locacoesRestantes(dtbaseFilme, qtd_Filme, dtbaseeFilme,
+                                         qtd_eFilme, dtbaseCategoria, qtdCategoria,
+                                         dtbaseContaCliente, qtdContaCliente);
             case 4:
                 return listarLocacoes(dtbaseContaCliente, qtdContaCliente);
             case 5:
-                return listarContasAReceber(dtbaseContaCliente, *qtdContaCliente);
+                return listarContasAReceber(dtbaseContaCliente, qtdContaCliente);
             case 6:
-                return listarContasAPagar(dtbaseeFilme, *qtd_eFilme);
+                return listarContasAPagar(dtbaseeFilme, qtd_eFilme);
             case 7:
-                return listarMovimentacaoCaixa(dtbaseeFilme, *qtd_eFilme, dtbaseContaCliente, *qtdContaCliente);
+                return listarMovimentacaoCaixa(dtbaseeFilme, qtd_eFilme, dtbaseContaCliente, qtdContaCliente);
             case 0:
                 return 1;
             default:
@@ -193,7 +193,7 @@ int listarContasAReceber(contaCliente **bdContaCliente, int qtdContaCliente) {
     return INT32_MAX;
 }
 
-int listarLocacoes(contaCliente **bdContaCliente, int *qtdContaCliente) {
+int listarLocacoes(contaCliente **bdContaCliente, int qtdContaCliente) {
     int tipo = INT32_MAX;
     printf("Relatorio de locacoes\n\n");
     while (tipo != 0) {
@@ -203,10 +203,10 @@ int listarLocacoes(contaCliente **bdContaCliente, int *qtdContaCliente) {
         line(30, "-\0");
         switch(tipo){
             case 1: {
-                return vendaTipoPagamento(bdContaCliente, *qtdContaCliente, 1);
+                return vendaTipoPagamento(bdContaCliente, qtdContaCliente, 1);
             }
             case 2: {
-                return vendaTipoPagamento(bdContaCliente, *qtdContaCliente, 2);
+                return vendaTipoPagamento(bdContaCliente, qtdContaCliente, 2);
             }
             case 3: {
                 // TODO: ver como vai ser feito
@@ -224,27 +224,45 @@ int listarLocacoes(contaCliente **bdContaCliente, int *qtdContaCliente) {
 }
 
 int vendaTipoPagamento(contaCliente **bdContaCliente, int qtdContaCliente, int tipoPagamento) {
-    if (tipoPagamento == 1) {
-        printf("\n ID \tValor Total \tQuantidade de Filmes \t Data Emprestimo\n");
-    } else {
-        printf("\n ID \tNome Cliente \tValor Total \tQuantidade de Filmes \t Data Emprestimo\n");
+    int execute = 0;
+
+    char tipoPg[11]="A vista\0";
+    if (tipoPagamento == 2){
+        strcpy(tipoPg,"Parcelado\0");
     }
+
     for (int j = 0; j < qtdContaCliente; ++j) {
-        if ((*bdContaCliente)[j].dEmprestimo->tipoPagamento == tipoPagamento) {
-            printf("----------------------------------------------------------------------------------------------------------------------------------\n");
-            if (tipoPagamento == 1) {
-                printf("%d \t %f \t %d\t %d %d %d\n", (*bdContaCliente)[j].ID, (*bdContaCliente)[j].dEmprestimo->valorTotal,
-                       (*bdContaCliente)[j].dEmprestimo->qtdFilme,
-                       (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.dia, (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.mes,
-                       (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.ano);
-            } else {
-                printf("%d \t %s \t %f \t %d\t %d %d %d\n",  (*bdContaCliente)[j].ID, (*bdContaCliente)[j].Nome,
-                       (*bdContaCliente)[j].dEmprestimo->valorTotal, (*bdContaCliente)[j].dEmprestimo->qtdFilme,
-                       (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.dia, (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.mes,
-                       (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.ano);
+        for (int i = 0; i < (*bdContaCliente)[j].tamLocados - 1; i++){
+            if ((*bdContaCliente)[j].dEmprestimo[i].tipoPagamento == tipoPagamento) {
+                if (execute == 0) {
+                    printf("\nFiltro: Pagamentos %s",tipoPg);
+                    printf("\n|%s|%s|%s|%s|%s|", formatstring(5, strlen("ID\0"), "ID\0"),
+                           formatstring(30, strlen("Nome Cliente\0"), "Nome Cliente\0"),
+                           formatstring(14, strlen("Valor Total\0"), "Valor Total\0"),
+                           formatstring(22, strlen("Quantidade de Filmes\0"), "Quantidade de Filmes\0"),
+                           formatstring(18, strlen("Data Pagamento\0"), "Data Pagamento\0"));
+                    execute = 1;
+                }
+                printf("\n-----------------------------------------------------------------------------------------------");
+
+                char valorTotal[10] = "\0\0\0\0\0\0\0\0\0\0";
+                char qtdFilme[10] = "\0\0\0\0\0\0\0\0\0\0";
+
+                sprintf(valorTotal, "%.2f", (*bdContaCliente)[j].dEmprestimo[i].valorTotal);
+                sprintf(qtdFilme, "%d", (*bdContaCliente)[j].dEmprestimo[i].qtdFilme);
+
+                printf("\n| %.3d |%s|%s|%s|    %.2d/%.2d/%.4d    |", (*bdContaCliente)[j].ID,
+                       formatstring(30, (int)strlen((*bdContaCliente)[j].Nome), (*bdContaCliente)[j].Nome),
+                       formatstring(14, (int)strlen(valorTotal), valorTotal),
+                       formatstring(22, (int)strlen(qtdFilme), qtdFilme),(*bdContaCliente)[j].dEmprestimo[i].Dtpagamento.dia,
+                       (*bdContaCliente)[j].dEmprestimo[i].Dtpagamento.mes,
+                       (*bdContaCliente)[j].dEmprestimo[i].Dtpagamento.ano);
+
             }
         }
     }
+    printf("\n");
+    system("pause");
     return INT32_MAX;
 }
 
@@ -297,24 +315,50 @@ int relatorioListagemFilmes(filme **dtBaseFilme, int qtdFilme) {
     printf("Relatorio de listagem de filmes\n\n");
     filtroCodigo filtro = obterFaixaCodigo();
     system("cls");
-    if (qtdFilme > 0) {
-        printf("\nID \t Nome \t Descrição \t Quant. Exemplares \t ID categoria \t Lingua\n");
+
+    //Verfificar se tem algo para mostrar
+    int mostrar = 0;
+    for (int c = 0; c < qtdFilme; c++) {
+        if ((*dtBaseFilme)[c].codigo >= filtro.inicio && (*dtBaseFilme)[c].codigo <= filtro.fim){
+            mostrar++;
+        }
+    }
+
+    if (qtdFilme > 0 && mostrar > 0) {
+        printf("Filtro: Faixa de Codigo %d ate %d",filtro.inicio,filtro.fim);
+        printf("\n---------------------------------------------------------------------------------------------------------");
+        printf("\n|%s|%s|%s|%s|%s|\n",
+               formatstring(4, strlen("ID\0"), "ID\0"),
+               formatstring(30, strlen("Nome\0"), "Nome\0"),
+               formatstring(30, strlen("Quantidade Exemplares\0"), "Quantidade Exemplares\0"),
+               formatstring(20, strlen("Codigo Categoria\0"), "Codigo Categoria\0"),
+               formatstring(15, strlen("Lingua\0"), "Lingua\0"));
+
+
         for (int c = 0; c < qtdFilme; c++) {
-            if ((*dtBaseFilme)[c].codigo >= filtro.inicio && (*dtBaseFilme)[c].codigo <= filtro.fim) {
-                system("cls");
-                printf("----------------------------------------------------------------------------------------------------------------------------------\n");
-                system("cls");
-                printf("(%d)\t %s\t\t\t\t %d\t\t %d\t\t %s\n", (*dtBaseFilme)[c].codigo,
-                       (*dtBaseFilme)[c].nome,
-                       (*dtBaseFilme)[c].qtd,
-                       (*dtBaseFilme)[c].c_categoria,
-                       (*dtBaseFilme)[c].lingua);
+            if ((*dtBaseFilme)[c].codigo >= filtro.inicio && (*dtBaseFilme)[c].codigo <= filtro.fim){
+
+                char codigo[10];
+                char qtdChar[10];
+                char codCategoria[10];
+                sprintf(codigo, "%d", (*dtBaseFilme)[c].codigo);
+                sprintf(qtdChar, "%d", (*dtBaseFilme)[c].qtd);
+                sprintf(codCategoria, "%d", (*dtBaseFilme)[c].c_categoria);
+
+                printf("---------------------------------------------------------------------------------------------------------\n");
+                printf("|%s|%s|%s|%s|%s|\n", formatstring(4, (int) strlen(codigo), codigo),
+                       formatstring(30, (int) strlen((*dtBaseFilme)[c].nome), (*dtBaseFilme)[c].nome),
+                       formatstring(30, (int) strlen(qtdChar), qtdChar),
+                       formatstring(20, (int) strlen(codCategoria), codCategoria),
+                       formatstring(15, (int) strlen((*dtBaseFilme)[c].lingua), (*dtBaseFilme)[c].lingua));
             }
         }
+        printf("\n---------------------------------------------------------------------------------------------------------");
     } else {
         printf("\n\t>> Nenhum registro para o filtro informado");
     }
     printf("\n");
+    system("pause");
     return INT32_MAX;
 }
 
@@ -355,13 +399,23 @@ int relatorioListagemClientes(cliente **dtBaseCliente, int qtdCliente) {
     return 0;
 }
 
-void filtrarClientesPorSexo(cliente **dtBaseCliente, int qtdCliente, const char sexo[15]) {
+void filtrarClientesPorSexo(cliente **dtBaseCliente, int qtdCliente, char sexo[15]) {
     system("cls");
     //Tratamento String Sexo
     int execute = 0;
     if (qtdCliente > 0) {
         for (int c = 0; c < qtdCliente; c++) {
-            if (strncmp(sexo, (*dtBaseCliente)[c].sexo, 1) == 0) {
+            char dtbaseSex[20];
+            //Transformar string para minusculo e remover espaco em branco
+            strcpy(dtbaseSex,(*dtBaseCliente)[c].sexo);
+
+            stringLower(sexo);
+            removeSpace(sexo);
+
+            stringLower(dtbaseSex);
+            removeSpace(dtbaseSex);
+
+            if (strncmp(sexo, dtbaseSex, 1) == 0) {
 
                 printf("---------------------------------------------------------------------------------\n");
                 printf("(%d)\nNome: %s\nCPF: %s\nTelefone: %s\nE-mail: %s\nSexo: %s\nEstado civil: %s"
@@ -395,13 +449,12 @@ void filtrarClientesPorSexo(cliente **dtBaseCliente, int qtdCliente, const char 
 void filtrarClientesPorFaixaCodigo(cliente **dtBaseCliente, int qtdCliente, int inicio, int fim) {
     system("cls");
     if (qtdCliente > 0) {
-        printf("\n ID \tNome \tCPF \tTelefone \tE-mail \tSexo \tEstado Civil \tData de Nascimento \tRua \tNumero \tBairo \tCidade \tEstado  \n");
+        printf(">> Filtro: Faixa de Codigo %d ate %d\n\n",inicio,fim);
         for (int c = 0; c < qtdCliente; c++) {
             if ((*dtBaseCliente)[c].id >= inicio && (*dtBaseCliente)[c].id <= fim) {
-                //system("cls");
-                printf("----------------------------------------------------------------------------------------------------------------------------------\n");
-                //system("cls");
-                printf("%d\t %s \t %s \t %s \t %s \t %s \t %s\t %s \t %s \t %d \t %s \t %s \t %s",
+                printf("---------------------------------------------------------------------------------\n");
+                printf("(%d)\nNome: %s\nCPF: %s\nTelefone: %s\nE-mail: %s\nSexo: %s\nEstado civil: %s"
+                       "\nData de Nascimento: %s \nRua: %s, %d \tBairo: %s \tCidade: %s - %s\n",
                        (*dtBaseCliente)[c].id,
                        (*dtBaseCliente)[c].nome,
                        (*dtBaseCliente)[c].cpf,
@@ -425,42 +478,58 @@ void filtrarClientesPorFaixaCodigo(cliente **dtBaseCliente, int qtdCliente, int 
 
 filtroCodigo obterFaixaCodigo() {
     filtroCodigo filtro;
-    int opc = 0;
-    while(opc == 0){
+    while(1){
         system("cls");
-        printf("Digite o numero inicial da faixa de codigo pela qual deseja filtrar os registros: ");
+        printf("Digite o numero INICIAL da faixa de codigo pela qual deseja filtrar os registros: ");
         scanf("%d", &filtro.inicio);
         system("cls");
-        printf("Digite o numero final da faixa de codigo pela qual deseja filtrar os registros: ");
+        printf("Digite o numero FINAL da faixa de codigo pela qual deseja filtrar os registros: ");
         scanf("%d", &filtro.fim);
         system("cls");
         if (filtro.inicio >= filtro.fim) {
-            printf("Faixa de codigos invalida, selecione novamente\n");
+            printf("[!] Faixa de codigos invalida, selecione novamente\n");
             system("cls");
-            opc = 0;
         } else {
-            opc = 1;
+            break;
         }
     }
     return filtro;
 }
 
-filtroData* obterFaixaDatas() {
-    filtroData *filtro;
+filtroData *obterFaixaDatas() {
+    //Alteração dos Scanf para evitar quebra no codigo
+    filtroData *filtro = NULL;
+
+    char dia[3], mes[3], ano[5];
+
     system("cls");
-    printf("Digite o dia da data inicial: ");
-    scanf("%d", &filtro->inicio.ano);
-    printf("Digite o mes da data inicial: ");
-    scanf("%d", &filtro->inicio.mes);
-    printf("Digite o ano da data inicial: ");
-    scanf("%d", &filtro->inicio.ano);
+
+    printf("Digite o dia da data INICIAL: ");
+    scanf("%s", dia);
+    filtro->inicio.dia = strtol(dia, NULL, 10);
+
+    printf("Digite o mes da data INICIAL: ");
+    scanf("%s", mes);
+    filtro->inicio.mes = strtol(mes, NULL, 10);
+
+    printf("Digite o ano da data INICIAL: ");
+    scanf("%s", ano);
+    filtro->inicio.ano = strtol(ano, NULL, 10);
+
     system("cls");
-    printf("Digite o dia da data final: ");
-    scanf("%d", &filtro->fim.dia);
-    printf("Digite o mes da data final: ");
-    scanf("%d", &filtro->fim.mes);
-    printf("Digite o ano da data final: ");
-    scanf("%d", &filtro->fim.ano);
+
+    printf("Digite o dia da data FINAL: ");
+    scanf("%s", dia);
+    filtro->fim.dia = strtol(dia, NULL, 10);
+
+    printf("Digite o mes da data FINAL: ");
+    scanf("%s", mes);
+    filtro->fim.mes = strtol(mes, NULL, 10);
+
+    printf("Digite o ano da data FINAL: ");
+    scanf("%s", ano);
+    filtro->fim.ano = strtol(ano, NULL, 10);
+
     system("cls");
     return filtro;
 }
