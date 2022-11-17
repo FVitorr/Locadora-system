@@ -80,13 +80,13 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
             printf(">> Exit \n");
             return 1;
         case 1:
+            system("cls");
             while (1){
-                system("cls");
                 int t = menuLocacao(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
                                     dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,
                                     dtbaseFornecedor,qtd_Fornecedor,tamanho_Fornecedor,idEntradaFilme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario_,*tipo_config);
                 (*dtbaseLocadora)[0].monetario = *monetario_;
-                refazDados_Locadora(dtbaseLocadora,*qtd_Locadora,*tipo_config);
+                refazDados_Locadora(dtbaseLocadora,1,*tipo_config);
                 if (t == 1){
                     return 0;
                 }
@@ -224,8 +224,9 @@ int carregaTodosDados(int *tipoConfig, config *config_system,financeiro *setmone
         strcpy(set.password,config_system->password);
 
 
-        *idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,*qtd_Funcionario);
+        //*idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,*qtd_Funcionario);
         printf("ID: %d",*idFuncionarioLogado);
+        *idFuncionarioLogado = 1;
 
         system("cls");
     }

@@ -1351,8 +1351,11 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
                     }
 
 
+                    char codCategoria[4];
                     printf("\nCodigo Categoria: ");
-                    scanf("%d%*c", &novoFilme.c_categoria); //Possivelmente este campo precisa ser comparado ...
+                    scanf("%s", codCategoria); //Possivelmente este campo precisa ser comparado ...
+
+                    novoFilme.c_categoria = strtol(codCategoria,NULL,10);
 
                     novoFilme.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,novoFilme.c_categoria,idControleCategoria,tipo_config);
 
@@ -1506,17 +1509,25 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
     newOpEfilme.ID = *id;
     *id = *id + 1;
 
-    float vFrete, vImposto;
+    float vFrete = 0, vImposto = 0;
     int test = 0;
+
+    char vfrete[9],vimposto[9],conf[2];
     do {
         printf("\n\t>> Frete: R$");
-        scanf("%f", &vFrete);
+        scanf("%s", vfrete);
+
+        vFrete = strtof(vfrete,NULL);
 
         printf("\t>> Imposto: R$");
-        scanf("%f", &vImposto);
+        scanf("%s", vimposto);
+
+        vImposto = strtof(vimposto,NULL);
 
         printf("\n\t>> Informacoes Corretas ? [1 - Sim 0 - Não]");
-        scanf("%d", &test);
+        scanf("%s", conf);
+
+        test = strtol(conf,NULL,10);
         if (test == 1){
             break;
         }
@@ -1554,9 +1565,13 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
 
     printf("\n[!] Valor total a ser Pago: R$ %.2f \n",newOpEfilme.valorTotal);
     //TIPO PAGAMENTO
+    char tipoPag[2];
     do{
         printf("\n>>Tipo do pagamento: [1- A vista \t2 - A prazo]: ");
-        scanf("%d",&newOpEfilme.tipoPagamento);
+        scanf("%s",tipoPag);
+
+        newOpEfilme.tipoPagamento = strtol(tipoPag,NULL,10);
+
     } while (newOpEfilme.tipoPagamento > 2 || newOpEfilme.tipoPagamento < 1);
 
     replacefloat(0,&newOpEfilme.valorEntrada);
@@ -1578,7 +1593,8 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
 
             monetario->caixa = monetario->caixa - newOpEfilme.valorTotal;
 
-            dataAtual(&newOpEfilme.dtPagamento);
+            data *dtPagamento = &newOpEfilme.dtPagamento;
+            dataAtual(dtPagamento);
             pagouaVista = 1;
             break;
         }
@@ -1586,21 +1602,26 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
     if (newOpEfilme.tipoPagamento == 2 || pagouaVista == 0) {
         int ent = 0;
         float qtdParcelas;
-        float valorE;
+        float valorE = 0;
 
         if (pagouaVista == 0){
             printf("\n\n  [!]Saldo Insuficiente.\n    Saldo: R$ %.2f \n\n>> Pagamento Parcelado\n\n",monetario->caixa);
         }
         // Valores de entrada
+        char vEnt[9];
         do {
             printf("\n >>Deseja dar entrada ?  [ 1 - Sim \t0 - Nao ]: ");
-            scanf("%d", &ent);
+            scanf("%s", vEnt);
+
+            ent = strtol(vEnt,NULL,10);
+
             if (ent == 0 || ent == 1) { break; }
             else { printf("\n>> Opc Invalida"); }
         } while (1);
 
         int valorInvalido = 0;
         if (ent == 1) {
+            char valorEn[9];
             do {
                 if (valorInvalido == 1) {
                     printf("\n[!]Valor Invalido\nPagar: R$ %.2f\nCaixa: R$ %.2f\n",
@@ -1608,12 +1629,14 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
                 }
                 //Valor de entrada
                 printf("\n>> Valor R$ ");
-                scanf("%f", &valorE);
+                scanf("%s", valorEn);
+
+                valorE = strtof(valorEn,NULL);
 
                 valorInvalido = 1;
             } while (valorE >= newOpEfilme.valorTotal || valorE > monetario->caixa);
             //Calcular restante(valordeve) =  Valor Total menos valor de entrada
-            newOpEfilme.valorDeve = newOpEfilme.valorTotal - valorE;
+            newOpEfilme.valorDeve = newOpEfilme.valorTotal - (float)valorE;
             //Alterar caixa LOCADORA
             monetario->caixa = monetario->caixa - valorE;
             monetario->despesas = monetario->despesas + newOpEfilme.valorDeve;
@@ -1621,25 +1644,32 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
             newOpEfilme.valorEntrada = valorE;
 
             do {
+                char qtdPar[2];
                 printf("\n>> Deseja dividir o valor R$ %.2f de quantas Vezes [3x Parcelas Maximas] ? ",
                        newOpEfilme.valorDeve);
-                scanf("%f", &qtdParcelas);
+                scanf("%s", qtdPar);
+
+                qtdParcelas = strtof(qtdPar,NULL);
+
                 if (qtdParcelas <= 3 && qtdParcelas > 0) { break; }
                 else { printf("\n[!] Quantidade de Parcelas invalido\n"); }
             } while (1);
 
 
-            float valorParcelas = newOpEfilme.valorTotal / qtdParcelas;
+            float valorParcelas = newOpEfilme.valorDeve / qtdParcelas;
             printf("\nA conta foi dividida em %f parcelas \n O Valor de cada parcela e: R$ %.2f\n", qtdParcelas,
                    valorParcelas);
             newOpEfilme.qtdParcelas = (int) qtdParcelas;
 
         } else {
             //Caso não seja fornecido uma entrada
+            char qtdPar[2];
             do {
                 printf("\n>> Deseja dividir o valor R$ %.2f de quantas Vezes [3x Parcelas Maximas] ? ",
                        newOpEfilme.valorTotal);
-                scanf("%f", &qtdParcelas);
+                scanf("%s", qtdPar);
+
+                qtdParcelas = strtof(qtdPar,NULL);
                 if (qtdParcelas <= 3 && qtdParcelas > 0) { break; }
                 else { printf("\n[!] Quantidade de Parcelas invalido\n"); }
             } while (1);
@@ -1652,10 +1682,10 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
 
             monetario->despesas = monetario->despesas + newOpEfilme.valorDeve;
         }
+        newOpEfilme.dtPagamento.dia = 0;
+        newOpEfilme.dtPagamento.mes = 0;
+        newOpEfilme.dtPagamento.ano = 0;
     }
-    newOpEfilme.dtPagamento.dia = 0;
-    newOpEfilme.dtPagamento.mes = 0;
-    newOpEfilme.dtPagamento.ano = 0;
 
     dataAtual(&newOpEfilme.dtNota);
 
@@ -1701,12 +1731,8 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilm
             if (opc == 1) {
                 break;
             }
-        }//Preencher Infos do Filme
-//        if (filme_in_dtbase(novo.nome,dtbaseFilme,qtdDBFilme,&novo.IDDTbaseFIlme,novo.qtd)== 0){
-//                qtdCadastro ++;
-//                cadastrarID[qtdCadastro -1] = novo.codigo;
-//                cadastrarID = (int *)realloc(cadastrarID,(qtdCadastro + 1) * sizeof(int));
-//        }
+        }
+
         (*dtbase)[*tamFilm - 1] = novo; //Adicionar Infos do Filme
 
         int opc =0;
@@ -1972,7 +1998,8 @@ int list_eFilme(eFilme **dtBase_eFilme, int qtd_eFime, int IDconta,int IDnota, i
 
     for (int i = 0; i  < qtd_eFime; i++){
         if (((*dtBase_eFilme)[i].ID == IDconta) || (IDconta == -1)){
-            printf("\n\n| ID Conta: (%d)  \t Fornecedor:  %s  \t\tCNPJ: %s", (*dtBase_eFilme)[i].ID,
+            printf("\n--------------------------------------------------------------------------------------------------------------------");
+            printf("\n| ID Conta: (%d)  \t Fornecedor:  %s  \t\tCNPJ: %s", (*dtBase_eFilme)[i].ID,
                    (*dtBase_eFilme)[i].nomefornecedor, (*dtBase_eFilme)[i].cnpj);
             for (int j = 0; j < (*dtBase_eFilme)[i].tamOp - 1; j++) {
                if (((*dtBase_eFilme)[i].filmes[j].tipoPagamento == tipoPagamento || tipoPagamento == -1) && ((*dtBase_eFilme)[i].filmes[j].ID == IDnota || IDnota == -1) && ((*dtBase_eFilme)[i].filmes[j].parcelasPagas < (*dtBase_eFilme)[i].filmes[j].qtdParcelas || (int)(*dtBase_eFilme)[i].filmes[j].valorDeve > 0 || filtrarPagos == 0)) {
