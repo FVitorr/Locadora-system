@@ -298,6 +298,7 @@ autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
             }
         }
 
+        int acesso = 0;
         for (int i = 0; i < qtdFuncionarios; i++) {
             if ((strcmp((*dtBase)[i].login.user, user) == 0 &&  strcmp((*dtBase)[i].login.password, password) == 0 ) ||
                     (strcmp(set->user, user) == 0 && strcmp(set->password, password) == 0 )) {
@@ -305,6 +306,7 @@ autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
                     printf("\n\n>> Sucess\n\n");
                     system("Pause");
 
+                    acesso = 1;
                     if (strcmp(set->password, password) == 0 && strcmp(set->user, user) == 0){
                         //Informa que o ADM esta Logado.
                         return 0;
@@ -312,11 +314,12 @@ autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
                         //Informa qual funcionario esta Logado.
                         return (*dtBase)[i].codigo;
                     }
-            } else {
-                printf("\n[Erro 401] Usuario ou senha errado.\n");
-                system("Pause");
-                break;
             }
+        }
+
+        if (acesso == 0){
+            printf("\n[Erro 401] Usuario ou senha errado.\n");
+            system("Pause");
         }
     }
     return -1;

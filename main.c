@@ -81,6 +81,7 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
             return 1;
         case 1:
             while (1){
+                system("cls");
                 int t = menuLocacao(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
                                     dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,
                                     dtbaseFornecedor,qtd_Fornecedor,tamanho_Fornecedor,idEntradaFilme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario_,*tipo_config);

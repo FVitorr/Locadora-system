@@ -423,18 +423,23 @@ void systemPause(){
     scanf("%c",a);
 }
 
-int menuConfiguracao(config *set,int *tipoConfig){
-    char ConfigTipo[4];
-    if (*tipoConfig == 0){
+char *nameConfig(int tipoConfig){
+    char *ConfigTipo = calloc(4,sizeof(char));
+    if (tipoConfig == 0){
         strcpy(ConfigTipo,"BIN\0");
-    }else if (*tipoConfig == 1){
+    }else if (tipoConfig == 1){
         strcpy(ConfigTipo,"TXT\0");
     }else{
         strcpy(ConfigTipo,"MEM\0");
     }
+    return ConfigTipo;
+}
+
+
+int menuConfiguracao(config *set,int *tipoConfig){
 
     int alterarID;
-    printf("\t1- Arquivos Salvos ...................... %s\n",ConfigTipo);
+    printf("\t1- Arquivos Salvos ...................... %s\n",nameConfig(*tipoConfig));
     printf("\t2- Usuario Logado  ...................... (NULL)\n");
     char num[4];
 
@@ -462,13 +467,41 @@ int menuConfiguracao(config *set,int *tipoConfig){
 
     int tipoConfig_ = 2;
     do{
-        printf("\nInforme o numero do campo: ");
+        printf("\nInforme qual o tipo de armazenamento: ");
         scanf("%s",num);
         tipoConfig_ = strtol(num,NULL,10);
     } while (tipoConfig_ < 0 || tipoConfig_ > 2);
 
+    int exportar = 0; // Não Exportar
+
+    char opc[2];
+    printf("\nDeseja Exportar os dados de %s para %s: [1 - Sim 0 - Não] ", nameConfig(*tipoConfig), nameConfig(tipoConfig_));
+    scanf("%s",opc);
+
+    exportar = strtol(opc,NULL,10);
+
+    if (exportar == 1){
+        if (*tipoConfig == 0 && tipoConfig_ == 1){
+            set->tipo_configuracao = tipoConfig_;
+            refazLog(set);
+            return 1;
+        }else{
+            set->tipo_configuracao = tipoConfig_;
+            refazLog(set);
+            return 2;
+        }
+    }else{
+        printf("Salvar Informacoes (Precisa reiniciar o Sistema)?  [1 - Sim 0 - Não]");
+        scanf("%s",opc);
+
+        int salve = strtol(opc,NULL,10);
+        if (salve == 1){
+            set->tipo_configuracao = tipoConfig_;
+            refazLog(set);
+            exit(1);
+        }
+    }
+
     *tipoConfig = tipoConfig_;
-    set->tipo_configuracao = tipoConfig_;
-    refazLog(set);
     return 0;
 }

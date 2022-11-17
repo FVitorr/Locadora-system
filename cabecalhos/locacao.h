@@ -17,6 +17,7 @@ typedef struct {
 
 typedef struct {
     int ID;
+    int IdFuncionario;
     operacoe *dFilme;
     int qtdFilme;
     float valorTotal; // Valor total da Locacao
@@ -85,7 +86,7 @@ typedef struct
 
 operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCategoria,int qtdCategoria,int *idOperacao);
 
-locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,
+locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,int idFuncionario,
                        fCategoria **dtbaseCategoria, int qtdCategoria);
 
 contaCliente objetoCCliente(int *IdContaCliente,int key_cliente,cliente **dtbaseCliente,int qtdcliente,int idCliente);
@@ -126,7 +127,7 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
 int refazDadosCCliente(contaCliente **dtbase, int qtdCCliente, int tipo_config);
 
 int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_CCliente,int *IdContaCliente,cliente **dtbaseCliente,int qtdcliente,
-                  filme **dtbaseFilme,int qtdFilme,int *iddtbasefilme,fCategoria **dtbaseCategoria, int qtdCategoria,financeiro *monetario,int tipoConfig);
+                  filme **dtbaseFilme,int qtdFilme,int *iddtbasefilme,fCategoria **dtbaseCategoria, int qtdCategoria,int idFuncionarioLogado,financeiro *monetario,int tipoConfig);
 
 int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbaseFilme,int qtdFilme,financeiro *monetario,int tipoConfig);
 
