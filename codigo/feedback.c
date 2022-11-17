@@ -50,40 +50,41 @@ int menuFeedback(cliente **dtbaseCliente, int qtd_Cliente,
 int listarMovimentacaoCaixa(eFilme **bdEFilme, int qtdEFilme, contaCliente **bdContaCliente, int qtdContaCliente) {
     printf("Relatorio de movimentacao do caixa\n\n");
     filtroData *filtro = obterFaixaDatas();
-    printf("COMPRAS\n");
-    printf("\n ID \tID Fornecedor \tValor Restante \t Data Compra\n");
-    for (int j = 0; j < qtdEFilme; ++j) {
-        if ((*bdEFilme)[j].filmes->dtNota.dia >= filtro->inicio.ano &&
-            (*bdEFilme)[j].filmes->dtNota.mes >= filtro->inicio.mes &&
-            (*bdEFilme)[j].filmes->dtNota.ano >= filtro->inicio.ano &&
-            (*bdEFilme)[j].filmes->dtNota.dia <= filtro->fim.dia &&
-            (*bdEFilme)[j].filmes->dtNota.mes <= filtro->fim.mes &&
-            (*bdEFilme)[j].filmes->dtNota.ano <= filtro->fim.ano)
-        {
-            printf("%d \t %d \t %f \t %d %d %d\n", (*bdEFilme)[j].ID, (*bdEFilme)[j].IDFornecedor,
-                   (*bdEFilme)[j].filmes->valorDeve, (*bdEFilme)[j].filmes->dtNota.dia,
-                   (*bdEFilme)[j].filmes->dtNota.mes,
-                   (*bdEFilme)[j].filmes->dtNota.ano);
+    printf("COMPRAS:\n");
+    printf("\n ID \tID Fornecedor \tValor Total \tValor em Debito \t Data Compra\n");
+    //                        if (diasEntreDatas(filtro->inicio, (*bdEFilme)[j].filmes[k].dtNota) >= 0 &&
+    //                            diasEntreDatas(filtro->inicio, (*bdEFilme)[j].filmes[k].dtNota) >= 0) {
+    for (int j = 0; j < qtdEFilme; j++) {
+        for (int k = 0; k < (*bdEFilme)[j].tamOp - 1; k++) {
+            if (diasEntreDatas(filtro->inicio, (*bdEFilme)[j].filmes[k].dtNota) >= 0 &&
+                    diasEntreDatas(filtro->inicio, (*bdEFilme)[j].filmes[k].dtNota) >= 0){
+                printf("%d \t %d \t %f \t %f \t %.2d %.2d %.4d\n", (*bdEFilme)[j].ID, (*bdEFilme)[j].IDFornecedor,
+                       (*bdEFilme)[j].filmes[k].valorTotal,(*bdEFilme)[j].filmes[k].valorDeve, (*bdEFilme)[j].filmes[k].dtNota.dia,
+                       (*bdEFilme)[j].filmes[k].dtNota.mes,
+                       (*bdEFilme)[j].filmes[k].dtNota.ano);
+            }
         }
     }
 
-    printf("VENDAS\n");
+    printf("VENDAS:\n");
     printf("\n ID \tID Cliente \tValor a Receber \t Data Emprestimo\n");
+    //                        if (diasEntreDatas(filtro->inicio, (*bdEFilme)[j].filmes[k].dtNota) >= 0 &&
+    //                            diasEntreDatas(filtro->inicio, (*bdEFilme)[j].filmes[k].dtNota) >= 0) {
     for (int j = 0; j < qtdContaCliente; ++j) {
-        if ((*bdContaCliente)[j].valorDeve > 0 &&
-            (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.dia >= filtro->inicio.ano &&
-            (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.mes >= filtro->inicio.mes &&
-            (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.ano >= filtro->inicio.ano &&
-            (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.dia <= filtro->fim.dia &&
-            (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.mes <= filtro->fim.mes &&
-            (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.ano <= filtro->fim.ano)
-        {
-            printf("%d \t %d \t %f \t %d %d %d\n", (*bdContaCliente)[j].ID, (*bdContaCliente)[j].idCliente,
-                   (*bdContaCliente)[j].valorDeve, (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.dia,
-                   (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.mes,
-                   (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.ano);
+        for (int k = 0; k < (*bdContaCliente)[j].tamLocados -1; k++) {
+            for (int l = 0; l < (*bdContaCliente)[j].dEmprestimo[k].qtdFilme - 1; l++) {
+                if ((*bdContaCliente)[j].valorDeve > 0 && diasEntreDatas(filtro->inicio, (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo) >= 0 &&
+                        diasEntreDatas(filtro->inicio, (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo) >= 0) {
+                        printf("%d \t %d \t %f \t %d %d %d\n", (*bdContaCliente)[j].ID, (*bdContaCliente)[j].idCliente,
+                               (*bdContaCliente)[j].valorDeve, (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.dia,
+                               (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.mes,
+                               (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.ano);
+                    break;
+                }
+            }
         }
     }
+    system("pause");
     return INT32_MAX;
 }
 
@@ -116,7 +117,7 @@ int listarContasAPagar(eFilme **bdEFilme, int qtdEFilme) {
                     }
                 }
                 system("pause");
-                return INT32_MAX;
+                return 0;
             }
             case 2:{
                 execute = 0;
@@ -140,10 +141,10 @@ int listarContasAPagar(eFilme **bdEFilme, int qtdEFilme) {
                     }
                 }
                 system("pause");
-                return INT32_MAX;
+                return 0;
             }
             case 0: {
-                return INT32_MAX;
+                return 0;
             }
             default:
                 printf("Esta não é uma opção válida, favor selecionar novamente.\n");
@@ -151,13 +152,13 @@ int listarContasAPagar(eFilme **bdEFilme, int qtdEFilme) {
         }
 
     }
-    return INT32_MAX;
+    return 0;
 }
 
 int listarContasAReceber(contaCliente **bdContaCliente, int qtdContaCliente) {
-    int tipo = INT32_MAX;
+    int tipo = 0 ;
     printf("Relatorio de contas a receber\n\n");
-    while (tipo != 0) {
+    while (1) {
         printf("Digite a opcao referente ao tipo de relatorio que deseja\n");
         printf("0 - Sair \n1 - Faixa de codigos \n2 - Data\n");
         scanf("%d", &tipo);
@@ -167,21 +168,28 @@ int listarContasAReceber(contaCliente **bdContaCliente, int qtdContaCliente) {
             case 1: {
                 filtroCodigo filtro = obterFaixaCodigo();
                 for (int j = 0; j < qtdContaCliente; ++j) {
-                    if ((*bdContaCliente)[j].idCliente >= filtro.inicio && (*bdContaCliente)[j].idCliente <= filtro.fim) {
-                        if ((int)(*bdContaCliente)[j].valorDeve > 0){
-                            if (execute ==0){
-                                printf("\n ID \tID Cliente \tValor a Receber \t Data Emprestimo\n");
-                                execute = 1;
+                    for (int k = 0; k < (*bdContaCliente)[j].tamLocados - 1; ++k) {
+                        for (int l = 0; l < (*bdContaCliente)[j].dEmprestimo[k].qtdFilme - 1; ++l) {
+                            if ((*bdContaCliente)[j].idCliente >= filtro.inicio &&
+                                (*bdContaCliente)[j].idCliente <= filtro.fim) {
+                                if ((int) (*bdContaCliente)[j].valorDeve > 0) {
+                                    if (execute == 0) {
+                                        printf("\n ID \tID Cliente \tValor a Receber \t Data Emprestimo\n");
+                                        execute = 1;
+                                    }
+                                    printf("%.4d \t %d \t %f \t %.2d/%.2d/%.4d\n", (*bdContaCliente)[j].ID,
+                                           (*bdContaCliente)[j].idCliente,
+                                           (*bdContaCliente)[j].valorDeve,
+                                           (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.dia,
+                                           (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.mes,
+                                           (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.ano);
+                                }
                             }
-                            printf("%.4d \t %d \t %f \t %.2d/%.2d/%.4d\n", (*bdContaCliente)[j].ID, (*bdContaCliente)[j].idCliente,
-                                   (*bdContaCliente)[j].valorDeve, (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.dia,
-                                   (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.mes,
-                                   (*bdContaCliente)[j].dEmprestimo->dFilme->dtemprestimo.ano);
                         }
                     }
                 }
                 system("pause");
-                return INT32_MAX;
+                return 0;
             }
             case 2: {
                 filtroData *filtro = obterFaixaDatas();
@@ -215,7 +223,7 @@ int listarContasAReceber(contaCliente **bdContaCliente, int qtdContaCliente) {
                 break;
         }
     }
-    return INT32_MAX;
+    return 0;
 }
 
 int listarLocacoes(contaCliente **bdContaCliente, int qtdContaCliente, funcionarios **dtbase,int qtdFuncionario) {
