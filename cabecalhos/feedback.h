@@ -18,9 +18,11 @@ int menuFeedback(cliente **dtbaseCliente, int qtd_Cliente,
                  filme **dtbaseFilme, int qtd_Filme,
                  eFilme **dtbaseeFilme, int qtd_eFilme,
                  fCategoria **dtbaseCategoria, int qtdCategoria,
+                 funcionarios **dtbaseFuncionario, int qtdFuncionario,
                  contaCliente **dtbaseContaCliente, int qtdContaCliente);
 
 int relatorioListagemClientes(cliente **dtbaseCliente, int qtd_Cliente);
+
 void filtrarClientesPorSexo(cliente **dtBaseCliente, int qtdCliente, char sexo[15]);
 
 void filtrarClientesPorFaixaCodigo(cliente **dtBaseCliente, int qtdCliente, int inicio, int fim);
@@ -31,7 +33,10 @@ filtroCodigo obterFaixaCodigo();
 
 int locacoesRestantes(filme **dtBaseFilme, int qtdFilme, eFilme **dtBaseEFilme, int qtdEFilme,
                       fCategoria **dtbaseCategoria, int qtdCategoria, contaCliente **bdContaCliente, int qtdContaCliente);
-int listarLocacoes(contaCliente **bdContaCliente, int qtdContaCliente);
+
+int listarLocacoes(contaCliente **bdContaCliente, int qtdContaCliente, funcionarios **dtbase,int qtdFuncionario);
+
+int vendaFuncionario(funcionarios **dtbase,int qtdFuncionario,contaCliente **bdContaCliente, int qtdContaCliente);
 
 int listarContasAReceber(contaCliente **bdContaCliente, int qtdContaCliente);
 
