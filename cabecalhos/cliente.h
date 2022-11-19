@@ -26,8 +26,11 @@ int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *
 int removerCliente(cliente **dtbase, int id, int *qtdCliente, int tipo_config);
 
 void listCliente(cliente **dtbase, int qtd);
-
-void editaCliente(cliente **dtbase, int qtdCliente, int *tamanhoCliente, int id, int tipo_config);
+/*
+ * Função que permite editar os parametros de Cliente
+ * Entrada: Array Dinamico de Clientes, Quantidade de Cliente, Id que deseja editar, Tipo de Configuraçao
+ */
+void editaCliente(cliente **dtbase, int qtdCliente, int id, int tipo_config);
 /*
  Cria menu Filme
  Parametros: 
@@ -41,7 +44,12 @@ char *nomeCliente(cliente **dtbase,int qtd_Cliente, int ID);
 
 int saveCliente(cliente objeto, int tipo_config);
 
-int refazDadosCliente(cliente **dtbase, int *tamanhoCliente, int tipo_config);
+/*
+ * Função que restaura o arquivo de dados clientes
+ * Entrada: Array Dinamico de Clientes, Quantidade de Cliente, Tipo de Configuraçao
+ * */
+
+int refazDadosCliente(cliente **dtbase, int qtdCliente, int tipo_config);
 
 int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoCliente, int *id, int tipo_config);
 

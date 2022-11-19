@@ -27,18 +27,26 @@ fCategoria objCategoria (int *id,int tab){
     fflush(stdin);
     scanf("%[^\n]s",obj.descricao);
 
+    char *valocacaoTpm = calloc(9,sizeof (char));
+
     printf("%s ",msg[1]);
-    scanf("%f%*c", &obj.vAlocacao);
+    fflush(stdin);
+
+    scanf("%[^\n]s", valocacaoTpm);
+    obj.vAlocacao = strtof(valocacaoTpm,NULL);
+
+    fflush(stdin);
+    free(valocacaoTpm);
 
     obj.ativo = 1;
     return obj;
 }
 
 
-int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *tamanhoCategoria, int tipo_config)
+int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *tamanhoCategoria)
 {
     //printf("%d",*tamanhoCategoria);
-    //Se a quantidade de categorias for igual ao tamanho alocado da lista -> espandir
+    //Se a quantidade de categorias for igual ao tamanho alocado da lista espandir
     if (*qtdCategoria == *tamanhoCategoria)
     {
         *tamanhoCategoria = *tamanhoCategoria + 1;
@@ -110,19 +118,35 @@ float valorCategoria(fCategoria **dtbase,int qtd_Categoria, int ID) {
 
 int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,int *idCategoria, int tipo_config) {
     int escolha = INT32_MAX;
-    char escolhatpm[4];
+    char temEscolha[4];
     while (1) {
         system("cls");
-        printf("Digite a opcao referente a operacao que deseja executar\n\n");
-        printf("0 - Sair \n1 - Cadastrar \n2 - Visualizar \n3 - Editar \n4 - Remover\n");
-        scanf("%s", escolhatpm);
+        setbuf(stdin,NULL);
+        lineBox(70,"MENU CLIENTES\0",1);
+        printf("\tDigite a opcao referente a operacao que deseja executar\n\n");
+        printf("\t0 - Sair \n\t1 - Cadastrar \n\t2 - Visualizar \n\t3 - Editar \n\t4 - Remover\n");
+        lineBox(70,"-\0",0);
 
-        escolha = strtol(escolhatpm,NULL,10);
+        //Tratamento de entrada
+        printf(">>");
+        scanf("%s", temEscolha); //Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+
+        escolha = strtol(temEscolha,NULL,10); //Procura na entrada o numero na base 10
+
 
         switch (escolha) {
             case 1: {
+                int correto = 0;
+                printf("\n\tCadastrar Categoria: [1- Sim  0- Nao]\n\t>> ");
+                scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+                setbuf(stdin,NULL);
+                correto = strtol(temEscolha,NULL,10);//Procura na entrada o numero na base 10
+
+                if (correto == 0)break;
+
                 fCategoria newObjeto = objCategoria(idCategoria,0);
-                insCategoria(dtbase,newObjeto,qtdCategoria,tamanhoCategoria,tipo_config);
+                insCategoria(dtbase,newObjeto,qtdCategoria,tamanhoCategoria);
                 saveCategoria(newObjeto,tipo_config);
                 break;
             }
@@ -136,15 +160,25 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
                 int cod;
                 printf(">> Categorias Cadastradas  \t Total: %d\n\n", *qtdCategoria);
                 listCategorias(dtbase,*qtdCategoria);
-                printf(">>Editar:");
-                scanf("%d", &cod);
+
+                printf("\n\tDigite o ID da Categoria que deseja editar (0- Sair).\n\t>>");
+                scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+                setbuf(stdin,NULL);
+                cod = strtol(temEscolha,NULL,10);//Procura na entrada o numero na base 10
+                if (cod == 0){ break;}
                 editaCategoria(dtbase,*qtdCategoria,cod,tipo_config);
                 break;
             }
             case 4: {
                 int cod;
-                printf("Remover:");
-                scanf("%d", &cod);
+                listCategorias(dtbase,*qtdCategoria);
+                printf("\tDigite o ID da Categoria que deseja excluir (0- Sair).\n\t>>");
+
+                scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+                setbuf(stdin,NULL);
+                cod = strtol(temEscolha,NULL,10);//Procura na entrada o numero na base 10
+                if (cod == 0){break;}
+
                 remCategoria(dtbase, cod, *qtdCategoria, tipo_config);
                 break;
             }
@@ -158,7 +192,6 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
             }
         }
     }
-    return 1;
 }
 
 int saveCategoria(fCategoria objeto,int tipo_config){
@@ -190,7 +223,7 @@ int saveCategoria(fCategoria objeto,int tipo_config){
 }
 
 int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanhoCategoria, int *id,int tipo_config){
-    FILE *p;
+    FILE *p = NULL;
     fCategoria new;
     int t = 0;
 
@@ -216,7 +249,7 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
 
             fscanf(p, "%d\n", &new.ativo);
 
-            t = insCategoria(dtBase,new,qtdCategoria,tamanhoCategoria,tipo_config);
+            t = insCategoria(dtBase,new,qtdCategoria,tamanhoCategoria);
             if (*id <= new.codigo) {
                 *id = new.codigo + 1;
             }
@@ -240,7 +273,7 @@ int carregarDados_Categoria(fCategoria **dtBase, int *qtdCategoria, int *tamanho
             fread(&new,sizeof(fCategoria),1,p);
 
             if (locID(dtBase,*qtdCategoria,new.codigo) == 0){
-                t = insCategoria(dtBase,new,qtdCategoria,tamanhoCategoria,tipo_config);
+                t = insCategoria(dtBase,new,qtdCategoria,tamanhoCategoria);
                 if (*id <= new.codigo) {
                     *id = new.codigo + 1;
                 }

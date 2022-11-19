@@ -9,13 +9,13 @@ typedef struct {
 
 /*
  Cria um objeto de Categoria
- param: (int id, int tab = Tabulação?
+ param: int id, int tab = Tabulação?
  */
 fCategoria objCategoria (int *id,int tab);
 /*
  Insere a Categoria no array Dinamico
  */
-int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *tamanhoCategoria, int tipo_config);
+int insCategoria(fCategoria **dtbase,fCategoria newEntry,int *qtdCategoria,int *tamanhoCategoria);
 /*
  Remove a Categoria no array Dinamico
  */

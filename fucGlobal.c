@@ -239,15 +239,6 @@ void limpa_final_string(char *c) {
     }
 }
 
-void remover_espaco(char *c){
-    for(int i = 0; i < strlen(c); i++){
-        if(c[i]==' '){
-            c[i]=c[i+1];
-        }
-    }
-}
-
-
 void limpa_extensao(char *c) {
     int i;
     for (i = 0; i < strlen(c); i++){

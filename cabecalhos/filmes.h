@@ -11,7 +11,7 @@ extern "C" {
     #include "../cabecalhos/fucGlobal.h"
 
     filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria, int *id,
-               int *idControleCategoria, int tipoConfig);
+               int *idControleCategoria);
 
     int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes);
 
@@ -21,7 +21,7 @@ extern "C" {
 
     void editaFilme(filme **dtbase,int qtdFilmes,fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria,int id,int *idControleCategoria, int tipo_config);//Verificar se a categoria Existe, se não permite a criação
 
-    int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id,int *idControleCategoria,int tipoconfig);
+    int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id,int *idControleCategoria);
 
     int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria,int *idControleCategoria,int *id,int tipo_config);
 

@@ -148,16 +148,36 @@ int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id, int
 int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFuncionarios, int *idControleCliente,
                      int tipo_config) {
     int escolha = INT32_MAX;
+    char temEscolha[4];
 
     system("cls");
 
-    while (escolha != 0) {
-        printf("Digite a opcao referente a operacao que deseja executar\n\n");
-        printf("0 - Sair \n1 - Cadastrar \n2 - Visualizar \n3 - Editar \n4 - Remover\n");
-        scanf("%d", &escolha);
+    while (1) {
+        system("cls");
+        setbuf(stdin,NULL);
+        lineBox(70,"MENU FUNCIONARIOS\0",1);
+        printf("\tDigite a opcao referente a operacao que deseja executar\n\n");
+        printf("\t0 - Sair \n\t1 - Cadastrar \n\t2 - Visualizar \n\t3 - Editar \n\t4 - Remover\n");
+        lineBox(70,"-\0",0);
+
+        //Tratamento de entrada
+        printf(">>");
+        scanf("%s", temEscolha); //Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+
+        escolha = strtol(temEscolha,NULL,10); //Procura na entrada um numero na base 10
+
 
         switch (escolha) {
             case 1: {
+                int correto = 0;
+                printf("\n\tCadastrar Funcionario: [1- Sim  0- Nao]\n\t>> ");
+                scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+                setbuf(stdin,NULL);
+                correto = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
+
+                if (correto == 0)break;
+
                 funcionarios newFuncionario = criarFuncionario((idControleCliente));
                 inserirFuncionario(dtbase, newFuncionario, qtdFuncionarios, tamanhoFuncionarios);
                 saveFuncionario(newFuncionario, tipo_config);
@@ -165,21 +185,30 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFu
             }
             case 2: {
                 listFuncionarios(dtbase, *qtdFuncionarios);
+                system("pause");
                 break;
             }
             case 3: {
                 int id = 0;
                 listFuncionarios(dtbase, *qtdFuncionarios);
-                printf("Digite o ID do Funcionario que deseja editar.\nOpc:");
-                scanf("%d", &id);
+                printf("\n\tDigite o ID do Funcionario que deseja editar(0- Sair).\n\t>>");
+                scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+                setbuf(stdin,NULL);
+                id = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
+
+                if (id == 0){ break;}
                 editaFuncionarios(dtbase, *qtdFuncionarios, tamanhoFuncionarios, id, tipo_config);
                 break;
             }
             case 4: {
                 int id = 0;
                 listFuncionarios(dtbase, *qtdFuncionarios);
-                printf("Digite o ID do Funcionario que deseja excluir.\n");
-                scanf("%d", &id);
+                printf("\n\tDigite o ID do Funcionario que deseja excluir (0- Sair).\n\t>>");
+                scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+                setbuf(stdin,NULL);
+                id = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
+
+                if (id == 0){ break;}
                 removerFuncionarios(dtbase, qtdFuncionarios, id, tipo_config);
                 break;
             }
@@ -279,7 +308,7 @@ autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
 
         scanf("%[^\n]s", user);
         limpa_final_string(user);
-        remover_espaco(user);
+        removeSpace(user);
 
         setbuf(stdin, NULL);
 

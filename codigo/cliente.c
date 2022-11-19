@@ -27,6 +27,8 @@ cliente criarCliente(int *idCliente){
     }
     while (validaCPF(obj.cpf) == 1);
 
+    char *tempString = calloc(9,sizeof (char));
+
     setbuf(stdin,NULL);
     printf("Telefone: ");
     scanf("%[^\n]s", obj.telefone);
@@ -51,8 +53,11 @@ cliente criarCliente(int *idCliente){
     printf("Rua: ");
     scanf("%[^\n]s", obj.endereco.rua);
 
+    setbuf(stdin,NULL);
     printf("Número: ");
-    scanf("%d", &obj.endereco.numero);
+    scanf("%[^\n]s", tempString);
+
+    obj.endereco.numero = strtol(tempString,NULL,10);
 
     setbuf(stdin,NULL);
     printf("Bairro: ");
@@ -65,6 +70,9 @@ cliente criarCliente(int *idCliente){
     setbuf(stdin,NULL);
     printf("Estado: ");
     scanf("%[^\n]s", obj.endereco.estado);
+
+    free(tempString);
+
     return obj;
 }
 
@@ -97,7 +105,7 @@ int removerCliente(cliente **dtbase, int id, int *qtdCliente, int tipo_config) {
             break;
         }
     }
-    refazDadosCliente(dtbase, qtdCliente, tipo_config);
+    refazDadosCliente(dtbase, *qtdCliente, tipo_config);
     return 0;
 }
 
@@ -128,7 +136,7 @@ void listCliente(cliente **dtbase, int qtd) {
     printf("\n");
 }
 
-void editaCliente(cliente **dtbase, int qtdCliente, int *tamanhoCliente, int id, int tipo_config)
+void editaCliente(cliente **dtbase, int qtdCliente, int id, int tipo_config)
 {
     for (int i = 0; i < qtdCliente; i++) {
         if ((*dtbase)[i].id == id) {
@@ -137,19 +145,38 @@ void editaCliente(cliente **dtbase, int qtdCliente, int *tamanhoCliente, int id,
             break;
         }
     }
-    refazDadosCliente(dtbase, tamanhoCliente, tipo_config);
+    refazDadosCliente(dtbase, qtdCliente, tipo_config);
 }
 
 int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int *idControleCliente, int tipo_config){
-    int escolha = INT32_MAX;
-    while (escolha != 0) {
+    int escolha = 5;
+    char temEscolha[4];
+
+    while (1) {
         system("cls");
-        printf("Digite a opcao referente a operacao que deseja executar\n\n");
-        printf("0 - Sair \n1 - Cadastrar \n2 - Visualizar \n3 - Editar \n4 - Remover\n");
-        scanf("%d", &escolha);
+        setbuf(stdin,NULL);
+        lineBox(70,"MENU CLIENTES\0",1);
+        printf("\tDigite a opcao referente a operacao que deseja executar\n\n");
+        printf("\t0 - Sair \n\t1 - Cadastrar \n\t2 - Visualizar \n\t3 - Editar \n\t4 - Remover\n");
+        lineBox(70,"-\0",0);
+
+        //Tratamento de entrada
+        printf(">>");
+        scanf("%s", temEscolha); //Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+
+        escolha = strtol(temEscolha,NULL,10); //Procura na entrada um numero na base 10
 
         switch (escolha) {
             case 1: {
+                int correto = 0;
+                printf("\n\tCadastrar Cliente: [1- Sim  0- Nao]\n\t>> ");
+                scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+                setbuf(stdin,NULL);
+                correto = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
+
+                if (correto == 0)break;
+
                 cliente newCliente = criarCliente((idControleCliente));
                 inserirCliente(bd_cliente, newCliente, qtdCliente, tamanhoCliente);
                 saveCliente(newCliente, tipo_config);
@@ -157,26 +184,41 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
             }
             case 2: {
                 listCliente(bd_cliente, *qtdCliente);
+                system("pause");
                 break;
             }
             case 3: {
-                int id = 0;
+                //Edita CLiente
+                int id;
                 listCliente(bd_cliente, *qtdCliente);
-                printf("Digite o ID do Cliente que deseja editar.\n");
-                scanf("%d", &id);
-                editaCliente(bd_cliente, *qtdCliente, tamanhoCliente, id, tipo_config);
+                printf("\n\tDigite o ID do Cliente que deseja editar (0- Sair).\n\t>>");
+
+                scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+                setbuf(stdin,NULL);
+                id = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
+
+                if (id == 0){ break;}
+
+                editaCliente(bd_cliente, *qtdCliente, id, tipo_config);
+
                 break;
             }
             case 4: {
-                int id = 0;
+                int id;
                 listCliente(bd_cliente, *qtdCliente);
-                printf("Digite o ID do Cliente que deseja excluir.\n");
-                scanf("%d", &id);
+                printf("\tDigite o ID do Cliente que deseja excluir (0- Sair).\n\t>>");
+
+                scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+                setbuf(stdin,NULL);
+                id = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
+                if (id == 0){ break;}
+
                 removerCliente(bd_cliente, id, qtdCliente, tipo_config);
                 break;
             }
             case 0: {
                 printf("Saindo...\n");
+                system("cls");
                 return 1;
             }
             default: {
@@ -185,7 +227,6 @@ int menuClientes(cliente **bd_cliente, int *qtdCliente, int *tamanhoCliente, int
             }
         }
     }
-    return escolha;
 }
 
 int saveCliente(cliente objeto, int tipo_config){
@@ -357,22 +398,22 @@ int carregarDadosClientes(cliente **dtBase, int *qtdClientes, int *tamanhoClient
 }
 
 
-int refazDadosCliente(cliente **dtbase, int *tamanhoCliente, int tipo_config){
+int refazDadosCliente(cliente **dtbase, int qtdCliente, int tipo_config){
 
     FILE *p;
-    if (tipo_config== 1){
+    if (tipo_config== 1){ // Tipo de salve TXT
         p = fopen("cpyBdCliente.txt", "w");
         fclose(p);
         p = NULL;
-        for (int i = 0; i < *tamanhoCliente; i++){
+        for (int i = 0; i < qtdCliente; i++){
             saveCliente((*dtbase)[i],1);
         }
-    }else if (tipo_config == 0){
+    }else if (tipo_config == 0){ // Tipo de salve Binario
         p = fopen("cpyBdCliente.bin", "wb");
         fclose(p);
-        for (int i = 0; i < *tamanhoCliente; i++){
+        for (int i = 0; i < qtdCliente; i++){
             saveCliente((*dtbase)[i],0);
         }
-    }
+    }// Tipo de salve Memoria;
     return 0;
 }

@@ -69,7 +69,7 @@ locadora criarLocadora(int *id) {
     printf("Usuario: ");
     scanf("%[^\n]s", obj.user);
     limpa_final_string(obj.user);
-    remover_espaco(obj.user);
+    removeSpace(obj.user);
 
     setbuf(stdin,NULL);
 

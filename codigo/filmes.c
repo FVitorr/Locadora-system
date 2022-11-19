@@ -6,7 +6,7 @@
 // +++++++++++++++++++++++++++++++++++++++++ Subrotinas para controle dos filmes +++++++++++++++++
 
 filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria, int *id,
-               int *idControleCategoria, int tipoConfig) // Bloco para receber as entradas e "compartar" na struct
+               int *idControleCategoria) // Bloco para receber as entradas e "compartar" na struct
 {
     filme p;
     p.codigo = *id;
@@ -40,7 +40,7 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
     printf("Codigo Categoria: ");
     scanf("%d%*c", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
 
-    p.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,p.c_categoria,idControleCategoria,tipoConfig);
+    p.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,p.c_categoria,idControleCategoria);
 
     setbuf(stdin,NULL);
 
@@ -140,7 +140,7 @@ void editaFilme(filme **dtbase,int qtdFilmes,fCategoria **dtbaseCategoria,int *q
     int qtd_emprestada = qtdEmprestada(dtbase,qtdFilmes,id);
     for (int i = 0; i < qtdFilmes; i++) {
         if ((*dtbase)[i].codigo == id) {
-            filme newEntrada = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,&id,idControleCategoria,tipo_config);
+            filme newEntrada = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,&id,idControleCategoria);
             newEntrada.qtdEmprestado = qtd_emprestada;
             (*dtbase)[i] = newEntrada;
             break;
@@ -149,7 +149,7 @@ void editaFilme(filme **dtbase,int qtdFilmes,fCategoria **dtbaseCategoria,int *q
     refazDados_filme(dtbase,qtdFilmes, tipo_config);
 }
 
-int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id,int *idControleCategoria,int tipoconfig) {
+int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategoria ,int id,int *idControleCategoria) {
     int opc = 0;
     int tem = locID(dtbaseCategoria,*qtdCategoria,id);
     if (tem == 1){
@@ -166,7 +166,7 @@ int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategori
         else {
             printf("\n");
             fCategoria new = objCategoria(idControleCategoria,1);
-            int suc = insCategoria(dtbaseCategoria,new,qtdCategoria,tamanhoCategoria,tipoconfig);
+            int suc = insCategoria(dtbaseCategoria,new,qtdCategoria,tamanhoCategoria);
             if (suc == 1) {
                 printf("\n\t>> Nova categoria adicionada");
             }
@@ -177,23 +177,31 @@ int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategori
 }
 
 int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtbaseCategoria, int *qtdCategoria, int *tamanhoCategoria,int *idControleCategoria,int *id,int tipo_config){
-    int opc = 0, erro = 0, exit = 0;
+    int opc, erro = 0, exit = 0;
+    int correto;
+    char temEscolha[4];
 
     system("cls");
+    setbuf(stdin,NULL);
 
-    printf("Digite a opcao referente a operacao que deseja executar\n\n");
-    printf("0 - Sair \n1 - Cadastrar \n2 - Cadastrar Multiplas");
-    printf("\n3 - Visualizar \n4 - Editar \n5 - Remover\n\n");
+    lineBox(70,"MENU FILME\0",1);
+    printf("\tDigite a opcao referente a operacao que deseja executar\n\n");
+    printf("\t0 - Sair \n\t1 - Cadastrar \n\t2 - Cadastrar Multiplos \n\t3 - Visualizar \n\t4 - Editar \n\t5 - Remover\n");
+    lineBox(70,"-\0",0);
 
 
     do
     {
         if (erro == 1)
         {
-            printf("MenuFilme:>> Parametro Invalido\n");
+            printf(">> Parametro Invalido\n");
         }
-        printf(">> ");
-        scanf("%d", &opc);
+        printf(">>");
+        scanf("%s", temEscolha); //Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+
+        opc = strtol(temEscolha,NULL,10); //Procura na entrada um numero na base 10
+
         erro = 1;
     } while (opc < 0 || opc > 5);
 
@@ -205,25 +213,47 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
     else if (opc == 1)
     {
         // Cadastrar um Filme
-        system("cls");
         printf(">> Novo filme     \tID: %d \n", *id);
-        filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id,idControleCategoria,tipo_config);
+
+        int correto;
+
+        printf("\n\tCadastrar Filme: [1- Sim  0- Nao]\n\t>> ");
+        scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+        correto = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
+
+        if (correto == 0)return 0;
+
+        filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id,idControleCategoria);
         inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes);
         saveFilme(new, tipo_config);
     }
     else if (opc == 2)
     {
         // Cadastrar multiplas categoria
-        system("cls");
-        int op = 1;
+        int op;
         printf(">> Multiplos filme     \tID: %d \n", *id);
+
+
+
+        printf("\n\tCadastrar Filme: [1- Sim  0- Nao]\n\t>> ");
+        scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+        correto = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
+
+        if (correto == 0)return 0;
+
         while (1)
         {
-            filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id,idControleCategoria,tipo_config);
+            filme new = objFilme(dtbaseCategoria,qtdCategoria,tamanhoCategoria,id,idControleCategoria);
             inserirFilme(dtbase,new,qtdFilmes,tamanhoFilmes);
             saveFilme(new,tipo_config);
+
             printf("\n >> [1 - Mais] \t [0 - Exit]: ");
-            scanf("%d", &op);
+            scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+            setbuf(stdin,NULL);
+
+            op = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
             if (op == 0)
             {
                 break;
@@ -234,7 +264,6 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
     else if (opc == 3)
     {
         // Visualizar
-        system("cls");
         printf(">> Filmes Cadastrados  \t Total: %d\n\n", *qtdFilmes);
         listFilme(dtbase, *qtdFilmes);
         system("pause");
@@ -242,23 +271,31 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
     else if (opc == 4)
     {
         // editar
-        system("cls");
         printf(">> Filmes Cadastrados  \t Total: %d\n\n", *qtdFilmes);
         listFilme(dtbase, *qtdFilmes);
         int cod;
-        printf("Editar (ID):");
-        scanf("%d", &cod);
-        editaFilme(dtbase,*qtdFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,cod,idControleCategoria,tipo_config);
+        printf("\n\tDigite o ID do Filme que deseja editar (0- Sair).\n\t>>");
 
+        scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+        cod = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
+
+        if (id == 0){ return 0;}
+
+        editaFilme(dtbase,*qtdFilmes,dtbaseCategoria,qtdCategoria,tamanhoCategoria,cod,idControleCategoria,tipo_config);
     }
     else if (opc == 5)
     {
         // Remover
-        system("cls");
         listFilme(dtbase, *qtdFilmes);
         int cod;
-        printf("Remover (ID):");
-        scanf("%d", &cod);
+        printf("\n\tDigite o ID do Filme que deseja remover (0- Sair).\n\t>>");
+
+        scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+        cod = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
+
+        if (cod == 0){ return 0;}
         removerFilme(dtbase,cod,qtdFilmes,tamanhoFilmes,tipo_config);
     }
     return exit;

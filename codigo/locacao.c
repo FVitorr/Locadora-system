@@ -1357,7 +1357,7 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
 
                     novoFilme.c_categoria = strtol(codCategoria,NULL,10);
 
-                    novoFilme.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,novoFilme.c_categoria,idControleCategoria,tipo_config);
+                    novoFilme.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,novoFilme.c_categoria,idControleCategoria);
 
                     setbuf(stdin,NULL);
 
@@ -1413,7 +1413,7 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
                     printf("\nCodigo Categoria: ");
                     scanf("%d%*c", &novoFilme.c_categoria); //Possivelmente este campo precisa ser comparado ...
 
-                    novoFilme.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,novoFilme.c_categoria,idControleCategoria,tipo_config);
+                    novoFilme.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,novoFilme.c_categoria,idControleCategoria);
 
                     setbuf(stdin,NULL);
 
@@ -2275,11 +2275,11 @@ int filme_in_dtbase(char namefilme[],filme **dtbaseFilme, int qtdFilme, int *ret
     for (int i = 0 ; i < qtdFilme; i++){
         //Tratar string nome
         strcpy(nameTpm,(*dtbaseFilme)[i].nome);
-        remover_espaco(nameTpm);
+        removeSpace(nameTpm);
         stringLower(nameTpm);
 
         strcpy(nameTpm1,namefilme);
-        remover_espaco(nameTpm1);
+        removeSpace(nameTpm1);
         stringLower(nameTpm1);
 
         if (strcmp(nameTpm,nameTpm1) == 0){

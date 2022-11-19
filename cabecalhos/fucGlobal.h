@@ -34,15 +34,10 @@ typedef struct {
 
 int replaceInt(int newValue, int *camp);
 
-int replaceChar(char newValue[5], char *camp);
-
-void removeSpace(char *string);
-
 int replacefloat(float newValue, float *camp);
 
 void addTab(char *str);
 
-int lenChar(char *n);
 
 void line(int max, char *t);
 
@@ -54,9 +49,23 @@ char  *obterPassword(int max);
 
 char *retorna_password_file (const char password_e[16]);
 
+//-------------------------------- Tratamento de Strings --------------------------------- //
+int replaceChar(char newValue[5], char *camp);
+
+void removeSpace(char *string);
+
+int lenChar(char *n);
+
 char *string_to_pointer (const char entry[120]);
 
 void stringLower(char *string);
+
+
+/*Substitui o caracter \n por \0 na string
+* \tParametros: "String";
+*/
+
+void limpa_final_string(char *c);
 
 /*
    Função para converter char em Int
@@ -87,17 +96,8 @@ Saida: 0 - CNPJ Valido
 */
 int validaCNPJ(char *CNPJ);
 
-/*Cria o arquivo caso não exista.
- * \tParametros: Nome do Arquivo , tipo_configuracao 1 txt;
- * \tRetorno: Inteiro 0 - Sucesso.  1 - Erro.
- * */
 
 
-/*Substitui o caracter \n por \0 na string
-* \tParametros: "String";
-*/
-
-void limpa_final_string(char *c);
 
 /*
  * Verifica se os arquivos ja existem caso não cria;
@@ -115,7 +115,6 @@ int verifica_log(config *set,int *tipo_config);
 
 void refazLog(config *set);
 
-void remover_espaco(char *c);
 
 int confirm_remover(int cod);
 
