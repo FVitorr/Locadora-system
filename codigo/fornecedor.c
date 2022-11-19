@@ -152,6 +152,7 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
     int escolha = INT32_MAX;
 
     while (escolha != 0 && escolha != 5) {
+        system("cls");
         printf("Digite a opcao referente a operacao que deseja executar\n\n");
         printf("0 - Sair \n1 - Cadastrar \n2 - Visualizar \n3 - Editar \n4 - Remover\n");
         scanf("%d", &escolha);

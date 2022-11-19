@@ -180,10 +180,11 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
     int opc = 0, erro = 0, exit = 0;
 
     system("cls");
-    line(30,"Filmes\0");
-    printf("\t 0 - Sair \n\t 1 - Cadastrar \n\t 2 - Cadastrar Multiplas \n");
-    printf("\t 3 - Visualizar \n\t 4 - Editar \n\t 5 - Remover");
-    line(30,"-\0");
+
+    printf("Digite a opcao referente a operacao que deseja executar\n\n");
+    printf("0 - Sair \n1 - Cadastrar \n2 - Cadastrar Multiplas");
+    printf("\n3 - Visualizar \n4 - Editar \n5 - Remover\n\n");
+
 
     do
     {
@@ -191,14 +192,14 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         {
             printf("MenuFilme:>> Parametro Invalido\n");
         }
-        printf(">> Opc: ");
+        printf(">> ");
         scanf("%d", &opc);
         erro = 1;
     } while (opc < 0 || opc > 5);
 
     if (opc == 0)
     {
-        printf(">> Exit");
+        system("cls");
         return 1;
     }
     else if (opc == 1)

@@ -163,10 +163,11 @@ void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, in
 int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id, int tipo_config){
     int erro = 0, exit = 0, opc = 0;
     system("cls");
-    line(60,"Locadora\0");
-    printf("\t 0 - Sair \t\t 1 - Cadastrar \n");
-    printf("\t 2 - Visualizar \t 3 - Editar \n\t 4 - Remover");
-    line(60,"-\0");
+
+    printf("Digite a opcao referente a operacao que deseja executar\n\n");
+    printf("0 - Sair \n1 - Cadastrar \n");
+    printf("2 - Visualizar \n3 - Editar \n4 - Remover");
+
 
     do
     {

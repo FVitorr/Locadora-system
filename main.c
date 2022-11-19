@@ -8,6 +8,8 @@
 
 /*Arrays Dinamicos*/
 
+const char HORIZONTAL = (char)186;
+
 fCategoria *bd_cat;
 int qtdCategoria = 0, tamanhoCategoria = 1, idControleCategoria = 1;
 
@@ -59,16 +61,22 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
 
     int opc = 0, erro = 0;
 
-    line(60,"Menu principal \0");
-    printf("\t 1 - Locacao \t\t 2 - Clientes \n\t 3 - Categoria \t\t 4 - Filmes\n\t 5 - Funcionarios\t 6 - Fornecedor\n\t 7 - Locadora\t\t 8 - Exportar/Importar\n\t 9 - FeedBack\t\t 10 - Configuracoe/Ajuda\n\t 0 - Sair");
-    line(60,"s\0");
+    //line(60,"Menu principal \0");
+    lineBox(78,"MENU PRINCIPAL\0",1);
+    printf("%c\t\t 1 - LOCACAO \t\t\t 2 - Clientes\t\t\t%c\n"
+           "%c\t\t 3 - Categoria \t\t\t 4 - Filmes \t\t\t%c\n"
+           "%c\t\t 5 - Funcionarios\t\t 6 - Fornecedor \t\t%c\n"
+           "%c\t\t 7 - Locadora\t\t\t 8 - Exportar/Importar \t\t%c\n"
+           "%c\t\t 9 - FeedBack\t\t\t 10 - Configuracoe/Ajuda \t%c\n"
+           "%c\t\t 0 - Sair\t\t\t\t\t\t\t%c\n",(char)HORIZONTAL,HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL);
+    lineBox(78,"-\0",0);
 
     char opcTm[10];
     do {
         if (erro == 1) {
             printf(">> Parametro Invalido:\n");
         }
-        printf(">> Opc: ");
+        printf(">> ");
         scanf("%s", opcTm);
 
         opc = strtol(opcTm,NULL,10);
@@ -234,6 +242,11 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
 
 int main() {
     int tipoConfig; // 0- BIN 1 - TXT
+
+//    lineBox(100, "TEST\0",1);
+//    lineBox(100, "a\0",0);
+//    system("pause");
+//    exit(1);
 
     config config_System;
 

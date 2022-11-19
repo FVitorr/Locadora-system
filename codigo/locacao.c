@@ -471,26 +471,31 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
         return 1;
     }
 
+    lineBox(100,"-\0",1);
 
-    printf("Funcionario: %s",nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado));
+    data hoje;
+    dataAtual(&hoje);
+    char namefuncionario[120];
+    strcpy(namefuncionario,nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado));
+    printf("%c Funcionario: %s %s Data do Sistema: %.2d/%.2d/%.4d %c",186,nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado),formatstring(57 - (int)strlen(namefuncionario) ,1," \0"),hoje.dia,hoje.mes,hoje.ano,186);
     if(nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado) == NULL && idFuncionarioLogado != 0){
         printf("\nPrecisa da autentificacao para acessar esse menu ...\n\n");
         system("pause");
         return 1;
     }
 
-    line(100,"Locacao\0");
-    printf("\t 1- Emprestar \n\t 2- Devolver \n\t 3- Vizualizar Operacoes \n\t 4- Pagamento Cliente"
-           "\n\t 5- Entrada de Filme"
-           "\n\t 6- Pagamento Fornecedor"
-           "\n\t 7- Vizualizar Entrada Filme"
-           "\n\t 0- Sair");
-    line(100,"1\0");
+    printf("\n%c --------------------------------------------- LOCACAO --------------------------------------------- %c\n",186,186);
+    printf("%c\t\t 1- Emprestar\t\t\t\t 5- Entrada de Filme\t\t\t      %c\n"
+           "%c\t\t 2- Devolver \t\t\t\t 6- Pagamento Fornecedor \t\t      %c\n"
+           "%c\t\t 3- Vizualizar Operacoes \t\t 7- Vizualizar Entrada Filme \t\t      %c\n"
+           "%c\t\t 4- Pagamento Cliente \t\t\t 0- Sair\t\t\t\t      %c\n",186,186,186,186,186,186,186,186);
+
+    lineBox(100,"-\0",0);
 
     int op;
     char opc[2];
     do {
-        printf(">>OPC: ");
+        printf(">> ");
         scanf("%s", opc);
 
         op = strtol(opc,NULL,10);
@@ -521,6 +526,7 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
         system("pause");
     }
     else{
+        system("cls");
         return 1;
     }
     return 0;
@@ -806,12 +812,11 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
                 printf("\nAcao Interrompida");
                 break;
             }
-            printf("\n%d, %d",new.ID,new.idCliente);
+            //printf("\n%d, %d",new.ID,new.idCliente);
         }
     }
     fclose(fileLocados);
     fileLocados = NULL;
-    system("pause");
     return 0;
 }
 
@@ -1265,7 +1270,7 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
 
     // ----------------------- Verifica ID Fornecedor --------------------------------
     int IDFornecedor = 0,erro = 0;
-    int idEFilme = 0;
+    int idEFilme = 1;
     do {
         int cadastrar;
         if (erro == 1){
@@ -1974,7 +1979,6 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,f
                     break;
                 }
                 t = inserir_eFilme(dtbase,new,qtdeFilmes,tamanhoeFilmes);
-                printf(" 0 ");
             }
 
             if (t != 0 || feof(Efilmef)){

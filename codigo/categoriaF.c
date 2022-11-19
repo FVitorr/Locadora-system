@@ -110,11 +110,14 @@ float valorCategoria(fCategoria **dtbase,int qtd_Categoria, int ID) {
 
 int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,int *idCategoria, int tipo_config) {
     int escolha = INT32_MAX;
-
-    while (escolha != 0) {
+    char escolhatpm[4];
+    while (1) {
+        system("cls");
         printf("Digite a opcao referente a operacao que deseja executar\n\n");
         printf("0 - Sair \n1 - Cadastrar \n2 - Visualizar \n3 - Editar \n4 - Remover\n");
-        scanf("%d", &escolha);
+        scanf("%s", escolhatpm);
+
+        escolha = strtol(escolhatpm,NULL,10);
 
         switch (escolha) {
             case 1: {
@@ -146,7 +149,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
                 break;
             }
             case 0: {
-                printf("Saindo...\n");
+                system("cls");
                 return 1;
             }
             default: {
@@ -155,7 +158,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
             }
         }
     }
-    return escolha;
+    return 1;
 }
 
 int saveCategoria(fCategoria objeto,int tipo_config){

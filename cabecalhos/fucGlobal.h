@@ -105,6 +105,8 @@ void limpa_final_string(char *c);
  *                     0 - BIN
  */
 
+void lineBox(int len_max, char *t, int direcao);
+
 int verifica_arquivos(int tipo_config,char *nameFile);
 
 int tipo_configuracao(config *set);

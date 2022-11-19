@@ -30,31 +30,6 @@ int lenChar(char *n){
     }
     return i;
 }
-
-void line(int max, char *t){
-    int qtd_a = (max - (int)strlen(t)) / 2;
-    int par = qtd_a % 2 == 0 ? 0 : 1;
-    char a = (char)205;
-    printf("\n");
-
-    for (int i = 0; i < max;)
-    {
-        printf("%c", a);
-        if (i == qtd_a + par)
-        {
-            if (lenChar(t) > 1){
-                printf(" %s ", t);
-            }else{
-                printf("%c%c%c",a,a,a);
-            }
-            i = i + lenChar(t);
-        }else{
-            i++;
-        }
-    }
-    printf("\n");
-}
-
 void abortOp(void){
     printf("\n\t[!] Operação Abortada:\n");
 }
@@ -439,8 +414,10 @@ char *nameConfig(int tipoConfig){
 int menuConfiguracao(config *set,int *tipoConfig){
 
     int alterarID;
+    lineBox(65,"CONFIGURACOES / AJUDA\0",1);
     printf("\t1- Arquivos Salvos ...................... %s\n",nameConfig(*tipoConfig));
     printf("\t2- Usuario Logado  ...................... (NULL)\n");
+    lineBox(65,"-\0",0);
     char num[4];
 
     //Permitir sair do menu.
@@ -449,6 +426,7 @@ int menuConfiguracao(config *set,int *tipoConfig){
         scanf("%s",num);
         alterarID = strtol(num,NULL,10);
         if (alterarID == 0){
+            system("cls");
             return 0;
         }
     } while (alterarID != 1);
@@ -505,3 +483,85 @@ int menuConfiguracao(config *set,int *tipoConfig){
     *tipoConfig = tipoConfig_;
     return 0;
 }
+
+
+// FUNÇOES DE TRATAMENTO DE LAYOUT
+
+
+void line(int max, char *t){
+    int qtd_a = (max - (int)strlen(t)) / 2;
+    int par = qtd_a % 2 == 0 ? 0 : 1;
+    char a = (char)205;
+    printf("\n");
+
+    for (int i = 0; i < max;)
+    {
+        printf("%c", a);
+        if (i == qtd_a + par)
+        {
+            if (lenChar(t) > 1){
+                printf(" %s ", t);
+            }else{
+                printf("%c%c%c",a,a,a);
+            }
+            i = i + lenChar(t);
+        }else{
+            i++;
+        }
+    }
+    printf("\n");
+}
+
+
+
+void lineBox(int len_max, char *t, int direcao){ // direcao 1- Top 0- Down
+    int qtd_a = (len_max - (int)strlen(t)) / 2; //Calcular a quantidade de carateres Antes da palavra
+    int par = qtd_a % 2 == 0 ? 0 : 1; // Verificar se é par
+    char direita = (char)187,esquerda = (char)201,horizontal = (char)205; //Top
+    char direitaD = (char)188,esquerdaD = (char)200; //down
+    for (int i = 0; i < len_max - 1;)
+    {
+        if (i ==0){ // Printar primeiro simbolo da linha
+            if (direcao == 1){ // Selecionar direção
+                printf("%c", esquerda); //Topp
+            }else{
+                printf("%c", esquerdaD);//Down
+            }
+
+        }else{
+            printf("%c", horizontal);//Linha
+        }
+
+        if (i == qtd_a + par)
+        {
+            if (lenChar(t) > 1){
+                printf(" %s ", t); //palavra no centro.
+            }else{
+                printf("%c%c%c",horizontal,horizontal,horizontal);
+            }
+            i = i + lenChar(t);
+        }else{
+            i++;
+        }
+    }
+    if (direcao == 1){ // Selecionar direção
+        printf("%c\n", direita); //Topp
+    }else{
+        printf("%c\n", direitaD);//Down
+    }
+}
+void linesdown(int len_max){
+    char direita = (char)188,esquerda = (char)200,horizontal = (char)205;
+    for ( int i = 0 ; i < len_max; i++){
+        if (i == 0){
+            printf("%c",esquerda);
+        }else if (i < len_max - 1){
+            printf("%c",horizontal);
+        }else{
+            printf("%c",direita);
+        }
+
+    }
+}
+
+
