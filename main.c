@@ -30,13 +30,7 @@ fornecedor *bd_fornecedor;
 int qtdFornecedor = 0, tamanhoFornecedor = 1, idControleFornecedor = 1;
 
 contaCliente *bd_CCliente = NULL;
-int qtdCCliente = 0, tamanhoCCliente = 1, idControleCCliente = 1, KEY_cliente = 0;
-
-locados *bd_locados;
-int qtdLocado = 0, tamanhoLocados = 1, idControleLocados = 1;
-
-operacoe *bd_Operacao;
-int qtdOperacao = 0, tamanhoOperacao = 1, KEY_operacao = 0;
+int qtdCCliente = 0, tamanhoCCliente = 1, idControleCCliente = 1;
 
 eFilme *bd_eFilme = NULL;
 int tameFilme = 1,qtdeFilme = 0, idCOntroleeFIlme = 0;
@@ -50,25 +44,21 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
                   filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,int idFuncionarioLogado,
                   locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
-                  locados **dtbaseLocados, int *qtd_Locados, int *tamanho_Locados, int *idLocados,
                   cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente,
-                  operacoe **dtbaseOperacoe, int *qtd_Operacoe, int *tamanho_Operacoe,int *Key_operacao,
-                  contaCliente **dtbaseCCliente, int *qtd_CCliente,int *tamanho_CCliente,int *idCCliente,int *Key_cliente,
+                  contaCliente **dtbaseCCliente, int *qtd_CCliente,int *tamanho_CCliente,int *idCCliente,
                   fornecedor **dtbaseFornecedor, int *qtd_Fornecedor,int *tamanho_Fornecedor,int *idFornecedor,
                   eFilme **dtBaseeFilme, int *tam_eFilme,int *qtd_eFilme,int *idEntradaFilme){
 
 
 
-    int opc = 0, erro = 0;
-
-    //line(60,"Menu principal \0");
+    int opc, erro = 0;
     lineBox(78,"MENU PRINCIPAL\0",1);
     printf("%c\t\t 1 - LOCACAO \t\t\t 2 - Clientes\t\t\t%c\n"
            "%c\t\t 3 - Categoria \t\t\t 4 - Filmes \t\t\t%c\n"
            "%c\t\t 5 - Funcionarios\t\t 6 - Fornecedor \t\t%c\n"
            "%c\t\t 7 - Locadora\t\t\t 8 - Exportar/Importar \t\t%c\n"
            "%c\t\t 9 - FeedBack\t\t\t 10 - Configuracoe/Ajuda \t%c\n"
-           "%c\t\t 0 - Sair\t\t\t\t\t\t\t%c\n",(char)HORIZONTAL,HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL,(char)HORIZONTAL);
+           "%c\t\t 0 - Sair\t\t\t\t\t\t\t%c\n",HORIZONTAL,HORIZONTAL,HORIZONTAL,HORIZONTAL,HORIZONTAL,HORIZONTAL,HORIZONTAL,HORIZONTAL,HORIZONTAL,HORIZONTAL,HORIZONTAL,HORIZONTAL);
     lineBox(78,"-\0",0);
 
     char opcTm[10];
@@ -89,6 +79,7 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
             return 1;
         case 1:
             system("cls");
+
             while (1){
                 int t = menuLocacao(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
                                     dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,
@@ -96,67 +87,76 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
                 (*dtbaseLocadora)[0].monetario = *monetario_;
                 refazDados_Locadora(dtbaseLocadora,1,*tipo_config);
                 if (t == 1){
-                    return 0;
+                    break;
                 }
             }
+            break;
         case 2:
             while (1){
                 int t = menuClientes(dtbaseCliente,qtd_Cliente,tamanho_Cliente,idCliente, *tipo_config);
                 if (t == 1){
-                    return 0;
+                    break;
                 }
             }
+            break;
         case 3:
             while (1){
                 int t = menuCategoria(dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,*tipo_config);
                 if (t == 1){
-                    return 0;
+                    break;
                 }
             }
+            break;
         case 4:
             while (1){
                 int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,idFilme, *tipo_config);
                 refazDados_Categoria(dtbaseCategoria,*qtd_Categoria,*tipo_config);
                 if (t == 1){
-                    return 0;
+                    break;
                 }
             }
+            break;
         case 5:
             while (1){
                 int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios, *tipo_config);
                 if (t == 1){
-                    return 0;
+                    break;
                 }
             }
+            break;
 
         case 6:
             while (1){
                 int t = menuFornecedor(dtbaseFornecedor, qtd_Fornecedor, tamanho_Fornecedor, idFornecedor, *tipo_config);
                 if (t == 1){
-                    return 0;
+                    break;
                 }
             }
+            break;
         case 7:
             while (1){
                 int t = menuLocadora(dtbaseLocadora,qtd_Locadora,tamanho_Locadora,idLocadora, *tipo_config);
                 if (t == 1){
-                    return 0;
+                    break;
                 }
             }
+            break;
         case 8:
             while (1){
                 printf("Exportar / Importar");
-                return 0;
+                break;
             }
+            break;
         case 9:
             while (1){
                 int t = menuFeedback(dtbaseCliente, *qtd_Cliente, dtbaseFilme, *qtd_Filmes, dtBaseeFilme, *qtd_eFilme,
                                      dtbaseCategoria, *qtd_Categoria,dtbasefuncionarios,*qtd_Funcionarios, dtbaseCCliente, *qtd_CCliente);
 
                 if (t == 1) {
-                    return 0;
+                    break;
                 }
             }
+            break;
         case 10:
             //printf("Menu Configuração e Ajuda");
             system("cls");
@@ -256,12 +256,9 @@ int main() {
     bd_cliente = malloc(tamanhoCliente * sizeof (cliente));
     bd_locadora = malloc(tamanhoLocadora * sizeof(locadora));
     bd_fornecedor = malloc(tamanhoFornecedor * sizeof(fornecedor));
-
-    bd_locados = malloc(tamanhoLocados * sizeof(locados));
-    bd_Operacao = malloc(tamanhoOperacao * sizeof(operacoe));
     bd_CCliente = (contaCliente *)malloc(tamanhoCCliente * sizeof(contaCliente));
 
-    bd_eFilme = malloc(tameFilme * sizeof(eFilme));
+    bd_eFilme = calloc(tameFilme,sizeof(eFilme));
 
     //Verifica se os arquivos existem caso contrario criar
     //verifica_arquivos(tipoConfig);
@@ -284,10 +281,8 @@ int main() {
                           &bd_filme,&qtdFilmes,&tamanhoFilme,&idControleFilmes,
                           &bd_funcionarios,&qtdFuncionarios,&tamanhoFuncionarios,&idControleFuncionarios,IdfuncionarioLogado,
                           &bd_locadora,&qtdLocadora,&tamanhoLocadora,&idControleLocadora,
-                          &bd_locados,&qtdLocado,&tamanhoLocados,&idControleLocados,
                           &bd_cliente,&qtdCliente,&tamanhoCliente,&idControleCliente,
-                          &bd_Operacao,&qtdOperacao,&tamanhoOperacao,&KEY_operacao,
-                          &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,&KEY_cliente,
+                          &bd_CCliente,&qtdCCliente,&tamanhoCCliente,&idControleCCliente,
                           &bd_fornecedor,&qtdFornecedor,&tamanhoFornecedor,&idControleFornecedor,
                           &bd_eFilme,&tameFilme,&qtdeFilme,&idCOntroleeFIlme);
         if (v == 1){
@@ -301,15 +296,11 @@ int main() {
     free(bd_locadora);
     free(bd_fornecedor);
     free(bd_CCliente);
-    free(bd_locados);
-    free(bd_Operacao);
     bd_cat = NULL;
     bd_filme = NULL;
     bd_funcionarios = NULL;
     bd_locadora = NULL;
     bd_cliente = NULL;
     bd_CCliente = NULL;
-    bd_locados = NULL;
-    bd_Operacao = NULL;
     return 0;
 }

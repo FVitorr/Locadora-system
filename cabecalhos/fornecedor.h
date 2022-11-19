@@ -39,7 +39,6 @@ int refazDadosFornecedor(fornecedor **dtbase, int *tamanhoFornecedor, int tipo_c
 
 int retornarUltimoID_Fornecedor(fornecedor **dtBase, int qtdFornecedor);
 
-char *retornarCNPJ(fornecedor **dtbase,int qtd, int id);
 
 char *nomeFornecedor(fornecedor **dtbase, int qtd, int id);
 

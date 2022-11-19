@@ -170,7 +170,7 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFu
 
         switch (escolha) {
             case 1: {
-                int correto = 0;
+                int correto;
                 printf("\n\tCadastrar Funcionario: [1- Sim  0- Nao]\n\t>> ");
                 scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
                 setbuf(stdin,NULL);
@@ -189,7 +189,7 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFu
                 break;
             }
             case 3: {
-                int id = 0;
+                int id;
                 listFuncionarios(dtbase, *qtdFuncionarios);
                 printf("\n\tDigite o ID do Funcionario que deseja editar(0- Sair).\n\t>>");
                 scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
@@ -201,7 +201,7 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFu
                 break;
             }
             case 4: {
-                int id = 0;
+                int id;
                 listFuncionarios(dtbase, *qtdFuncionarios);
                 printf("\n\tDigite o ID do Funcionario que deseja excluir (0- Sair).\n\t>>");
                 scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
@@ -213,7 +213,7 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFu
                 break;
             }
             case 0: {
-                printf("Saindo...\n");
+                system("cls");
                 return 1;
             }
             default: {
@@ -222,7 +222,6 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFu
             }
         }
     }
-    return escolha;
 }
 
 int saveFuncionario(funcionarios objeto, int tipo_config) {
@@ -343,10 +342,12 @@ autentificacaoSystem(adm *set, funcionarios **dtBase,int qtdFuncionarios){
                         //Informa qual funcionario esta Logado.
                         return (*dtBase)[i].codigo;
                     }
+            }else{
+                acesso = 0;
             }
         }
 
-        if (acesso == 0){
+        if (acesso != 1){
             printf("\n[Erro 401] Usuario ou senha errado.\n");
             system("Pause");
         }

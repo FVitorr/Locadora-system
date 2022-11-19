@@ -161,12 +161,16 @@ void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, in
 }
 
 int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id, int tipo_config){
-    int erro = 0, exit = 0, opc = 0;
-    system("cls");
+    int erro = 0, opc;
+    char temEscolha[4];
 
-    printf("Digite a opcao referente a operacao que deseja executar\n\n");
-    printf("0 - Sair \n1 - Cadastrar \n");
-    printf("2 - Visualizar \n3 - Editar \n4 - Remover");
+    system("cls");
+    setbuf(stdin,NULL);
+    lineBox(70,"MENU LOCADORA\0",1);
+    printf("\tDigite a opcao referente a operacao que deseja executar\n\n");
+    printf("\t0 - Sair \n\t1 - Cadastrar \n\t2 - Visualizar \n\t3 - Editar \n\t4 - Remover\n");
+    lineBox(70,"-\0",0);
+
 
 
     do
@@ -176,15 +180,19 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
             printf(">> Parametro Invalido\n");
             printf("dsa");
         }
-        printf("\n>> Opc: ");
-        scanf("%d", &opc);
+        //Tratamento de entrada
+        printf(">>");
+        scanf("%s", temEscolha); //Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+
+        opc = strtol(temEscolha,NULL,10); //Procura na entrada um numero na base 10
         erro = 1;
     } while (opc < 0 || opc > 5);
 
     if (opc == 0)
     {
-        printf(">> Exit");
-        exit = 1;
+        system("cls");
+        return 1;
     }
     else if (opc == 1)
     {
@@ -233,7 +241,7 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
             info_cancela();
         }
     }
-    return exit;
+    return 0;
 }
 
 int saveLocadora(locadora objeto,int tipo_config){

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <io.h>
 #include <stdint.h>
-#include <string.h>
 #include "../cabecalhos/fucGlobal.h"
 #include "../cabecalhos/fornecedor.h"
 
@@ -89,16 +88,6 @@ int removerFornecedor(fornecedor **dtbase, int id, int *qtdFornecedor, int tipo_
     return 0;
 }
 
-char *retornarCNPJ(fornecedor **dtbase,int qtd, int id){
-    for (int i = 0; i < qtd; i++){
-        if ((*dtbase)[i].id == id){
-            printf("%s",(*dtbase)[i].cnpj);
-            return  (*dtbase)[i].cnpj;
-        }
-    }
-    return NULL;
-}
-
 int posArrayFornecedor(fornecedor **dtbase,int qtd_Locadora,int id){
     for (int i = 0; i < qtd_Locadora; i++){
         if ((*dtbase)[i].id == id){
@@ -150,16 +139,27 @@ void editarFornecedor(fornecedor **dtbase, int qtdFornecedor, int *tamanhoFornec
 
 int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFornecedor,int *idControleFornecedor, int tipo_config) {
     int escolha = INT32_MAX;
+    char temEscolha[4];
 
-    while (escolha != 0 && escolha != 5) {
+    while (1) {
         system("cls");
-        printf("Digite a opcao referente a operacao que deseja executar\n\n");
-        printf("0 - Sair \n1 - Cadastrar \n2 - Visualizar \n3 - Editar \n4 - Remover\n");
-        scanf("%d", &escolha);
+        setbuf(stdin,NULL);
+        lineBox(70,"MENU FORNECEDOR\0",1);
+        printf("\tDigite a opcao referente a operacao que deseja executar\n\n");
+        printf("\t0 - Sair \n\t1 - Cadastrar \n\t2 - Visualizar \n\t3 - Editar \n\t4 - Remover\n");
+        lineBox(70,"-\0",0);
+
+        //Tratamento de entrada
+        printf(">>");
+        scanf("%s", temEscolha); //Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+
+        escolha = strtol(temEscolha,NULL,10); //Procura na entrada um numero na base 10
 
         switch (escolha) {
             case 1: {
-                fornecedor newFornecedor = criarFornecedor(*idControleFornecedor);
+                int IDFornecedor = retornarUltimoID_Fornecedor(bd_fornecedor, *qtdFornecedor);
+                fornecedor newFornecedor = criarFornecedor(IDFornecedor);
                 inserirFornecedor(bd_fornecedor, newFornecedor, qtdFornecedor, tamanhoFornecedor);
                 saveFornecedor(newFornecedor, tipo_config);
                 break;
@@ -185,7 +185,7 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
                 break;
             }
             case 0: {
-                printf("Saindo...\n");
+                system("cls");
                 return 1;
             }
             default: {
@@ -256,9 +256,9 @@ int retornarUltimoID_Fornecedor(fornecedor **dtBase, int qtdFornecedor){
     int id,tId = 0;
     id = (qtdFornecedor > 0) ? (*dtBase)[0].id : 0;
     for (int i = 1; i < qtdFornecedor; i++){
-        tId = (id < (*dtBase)[i].id) ? id = (*dtBase)[i].id : id;
+        tId = (id <= (*dtBase)[i].id) ? id = (*dtBase)[i].id + 1: id;
     }
-    return tId + 1;
+    return id;
 }
 int verificaIdFornecedor(fornecedor **dtbase, int qtdFornecedor, int id) {
     for (int i = 0; i < qtdFornecedor; i++) {

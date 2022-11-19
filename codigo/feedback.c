@@ -15,9 +15,17 @@ int menuFeedback(cliente **dtbaseCliente, int qtd_Cliente,
 
     while (opc != 0) {
         system("cls");
-        printf("Digite a opcao referente a operacao que deseja executar\n\n");
-        printf("\t 0 - Sair \t\t 1 - Listar Clientes \n\t 2 - Listar Filmes \t 3 - Locacoes restantes para que o filme se pague"
-               "\n\t 4 - Listar Locacoes \t 5 - Contas a receber \n\t 6 - Contas a pagar \t 7 - Movimentacao de Caixa \n>> ");
+        setbuf(stdin,NULL);
+        lineBox(95,"MENU RELATORIOS\0",1);
+        printf("\tDigite a opcao referente a operacao que deseja executar\n\n");
+        printf("\t\t 0 - Sair \t\t 1 - Listar Clientes \n"
+               "\t\t 2 - Listar Filmes \t 3 - Locacoes restantes para que o filme se pague\n"
+               "\t\t 4 - Listar Locacoes \t 5 - Contas a receber \n"
+               "\t\t 6 - Contas a pagar \t 7 - Movimentacao de Caixa\n");
+        lineBox(95,"-\0",0);
+
+        //Tratamento de entrada
+        printf(">>");
         scanf("%d", &opc);
         line(30, "-\0");
 
@@ -39,6 +47,7 @@ int menuFeedback(cliente **dtbaseCliente, int qtd_Cliente,
             case 7:
                 return listarMovimentacaoCaixa(dtbaseeFilme, qtd_eFilme, dtbaseContaCliente, qtdContaCliente);
             case 0:
+                system("cls");
                 return 1;
             default:
                 printf("Esta não é uma opção válida, favor selecionar novamente.\n");
