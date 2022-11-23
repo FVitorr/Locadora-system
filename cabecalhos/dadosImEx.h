@@ -21,13 +21,17 @@ typedef struct {
     int compras_filme;
 } exportcamp;
 
-int menuImportacaoExportcao(cliente **dtbaseCliente, int qtdcliente);
+int menuImportacaoExportcao(cliente **dtbaseCliente, int qtdcliente,filme **dtbaseFilme, int qtdfilme,locadora **dtbaselocadora, int qtdlocadora);
 
-
-void exportarDados(exportcamp camposExport, char *namepath, cliente **dtbaseCliente, int qtdCliente);
-
-void exportDadosCliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente);
+int menuexport(exportcamp *exportcampos);
 
 void refazexportCamp(exportcamp *exportcamp1, int value);
 
-int menuexport(exportcamp *exportcampos);
+void exportDadoslocadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora);
+
+void exportarDados(exportcamp camposExport, char *namepath, cliente **dtbaseCliente, int qtdCliente,filme **dtbaseFilme, int qtdfilme,
+                   locadora **dtbaselocadora, int qtdlocadora);
+
+void exportDadosFilme(FILE *arq, filme **dtbaseFilme, int qtdfilme);
+
+void exportDadosCliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente);
