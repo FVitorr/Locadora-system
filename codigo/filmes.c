@@ -33,7 +33,9 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
     line(100,"Categorias\0");
     printf(" (0)Nova Categoria");
     for (int i = 0; i < *qtdCategoria; i++){
-        printf("   (%d)%s ",(*dtbaseCategoria)[i].codigo,(*dtbaseCategoria)[i].descricao);
+        if ((*dtbaseCategoria)[i].ativo == 1){
+            printf("   (%d)%s ",(*dtbaseCategoria)[i].codigo,(*dtbaseCategoria)[i].descricao);
+        }
     }
     line(100,"-\0");
 

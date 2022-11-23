@@ -1347,7 +1347,9 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
                     //line(100,"Categorias\0");
                     printf(">> Selecione uma categoria: (0)Nova Categoria");
                     for (int j = 0; j < *qtdCategoria; j++){
-                        printf("   (%d)%s ",(*dtbaseCategoria)[j].codigo,(*dtbaseCategoria)[j].descricao);
+                        if ((*dtbaseCategoria)[j].ativo == 1){
+                            printf("   (%d)%s ",(*dtbaseCategoria)[j].codigo,(*dtbaseCategoria)[j].descricao);
+                        }
                     }
 
 
@@ -1406,7 +1408,9 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
                     //line(100,"Categorias\0");
                     printf("\n>> Selecione uma categoria: (0)Nova Categoria");
                     for (int j = 0; j < *qtdCategoria; j++){
-                        printf("   (%d)%s ",(*dtbaseCategoria)[j].codigo,(*dtbaseCategoria)[j].descricao);
+                        if ((*dtbaseCategoria)[j].ativo == 1){
+                            printf("   (%d)%s ",(*dtbaseCategoria)[j].codigo,(*dtbaseCategoria)[j].descricao);
+                        }
                     }
 
 

@@ -303,12 +303,10 @@ int menuImportacaoExportcao(cliente **dtbaseCliente, int qtdcliente,filme **dtba
             int t = menuexport(&exportcamp1);
             if (t == 0){
                 break;
-            } else if (t == 1){ // Tabelas Especificas
-                //exportDadosCliente(dtbaseCliente,qtdcliente,);
-                exportarDados(exportcamp1,"test.txt",dtbaseCliente,qtdcliente,dtbaseFilme,qtdfilme,dtbaselocadora,qtdlocadora);
-            }else if (t == 2){ // Todas as tabelas de dados
-
             }
+            exportarDados(exportcamp1,"test.xml",dtbaseCliente,qtdcliente,dtbaseFilme,qtdfilme,dtbaselocadora,qtdlocadora);
+            system("cls");
+            return 1; // Sair
         }
 
     }
