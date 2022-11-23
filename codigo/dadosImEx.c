@@ -224,6 +224,161 @@ void exportDadosFilme(FILE *arq, filme **dtbaseFilme, int qtdfilme){
     fprintf(arq,"\n\t</filmes>\n");
 }
 
+void exportDadosCategoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcategoria){
+    if (arq == NULL){
+        printf("\nErro na exportacao de dadps cliente\n\n");
+        exit(1);
+    }
+
+    fprintf(arq,"\t<categoria>");
+    for (int i = 0; i < qtdcategoria; i++)
+    {
+        fprintf(arq,"\n\t\t<registro>"
+                    "\n\t\t\t<id>%d</id>"
+                    "\n\t\t\t<descricao>%s</descricao>"
+                    "\n\t\t\t<vAlocacao>%f</vAlocacao>"
+                    "\n\t\t\t<ativo>%d</ativo>"
+                    ,(*dtbasecategoria)[i].codigo,
+                (*dtbasecategoria)[i].descricao,
+                (*dtbasecategoria)[i].vAlocacao,
+                (*dtbasecategoria)[i].ativo
+        );
+    }
+    fprintf(arq,"\n\t</categoria>\n");
+}
+
+void exportDadosFornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdFornecedor){
+    if (arq == NULL){
+        printf("\nErro na exportacao de dadps cliente\n\n");
+        exit(1);
+    }
+
+    fprintf(arq,"\t<cliente>\n");
+    for (int i = 0; i < qtdFornecedor; i++)
+    {
+        fprintf(arq,"\t\t<registro>"
+                    "\n\t\t\t<id>%d</id>"
+                    "\n\t\t\t<nomeFantasia>%s</nomeFantasia>"
+                    "\n\t\t\t<razaoSocial>%s</razaoSocial>"
+                    "\n\t\t\t<inscricaoEstadual>%s</inscricaoEstadual>"
+                    "\n\t\t\t<cnpj>%s</cnpj>"
+                    "\n\t\t\t<endereco>%s, %d, %s, %s, %s </endereco>"
+                    "\n\t\t\t<telefone>%s</telefone>"
+                    "\n\t\t\t<email>%s</email>"
+                    "\n\t\t</registro>\n\t",(*dtbasefornecedor)[i].id,
+                (*dtbasefornecedor)[i].nomeFantasia,
+                (*dtbasefornecedor)[i].razaoSocial,
+                (*dtbasefornecedor)[i].inscricaoEstadual,
+                (*dtbasefornecedor)[i].cnpj,
+                (*dtbasefornecedor)[i].endereco.rua,
+                (*dtbasefornecedor)[i].endereco.numero,
+                (*dtbasefornecedor)[i].endereco.bairro,
+                (*dtbasefornecedor)[i].endereco.cidade,
+                (*dtbasefornecedor)[i].endereco.estado,
+                (*dtbasefornecedor)[i].telefone,
+                (*dtbasefornecedor)[i].email
+        );
+    }
+    fprintf(arq,"</cliente>\n");
+}
+
+void exportDadosFuncionario(FILE *arq, funcionarios **dtbasefuncionarios, int qtdfuncionarios){
+    if (arq == NULL){
+        printf("\nErro na exportacao de dadps cliente\n\n");
+        exit(1);
+    }
+
+    fprintf(arq,"\t<cliente>\n");
+    for (int i = 0; i < qtdfuncionarios; i++)
+    {
+        fprintf(arq,"\t\t<registro>"
+                    "\n\t\t\t<id>%d</id>"
+                    "\n\t\t\t<nome>%s</nome>"
+                    "\n\t\t\t<cargo>%s</cargo>"
+                    "\n\t\t\t<endereco>%s, %d, %s, %s, %s </endereco>"
+                    "\n\t\t\t<telefone>%s</telefone>"
+                    "\n\t\t\t<email>%s</email>"
+                    "\n\t\t\t<user>%s</user>"
+                    "\n\t\t\t<password>%s</password>"
+                    "\n\t\t</registro>\n\t",(*dtbasefuncionarios)[i].codigo,
+                (*dtbasefuncionarios)[i].nome,
+                (*dtbasefuncionarios)[i].cargo,
+                (*dtbasefuncionarios)[i].endereco.rua,
+                (*dtbasefuncionarios)[i].endereco.numero,
+                (*dtbasefuncionarios)[i].endereco.bairro,
+                (*dtbasefuncionarios)[i].endereco.cidade,
+                (*dtbasefuncionarios)[i].endereco.estado,
+                (*dtbasefuncionarios)[i].telefone,
+                (*dtbasefuncionarios)[i].email,
+                (*dtbasefuncionarios)[i].login.user,
+                (*dtbasefuncionarios)[i].login.password
+
+        );
+    }
+    fprintf(arq,"</cliente>\n");
+}
+
+void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente){
+    if (arq == NULL){
+        printf("\nErro na exportacao de dadps cliente\n\n");
+        exit(1);
+    }
+
+    fprintf(arq,"\t<locacao>\n");
+    for (int i = 0; i < qtdCCliente; i++)
+    {
+        fprintf(arq,"\t\t<registro>"
+                    "\n\t\t\t<id>%d</id>"
+                    "\n\t\t\t<idCliente>%d</idCliente>"
+                    "\n\t\t\t<nome>%s</nome>"
+                    "\n\t\t\t<valorDeve>%.2f</valorDeve>"
+                    "\n\t\t\t<valorPago>%.2f</valorPago>"
+                    "\n\t\t\t<tamLocados>%d</tamLocados>"
+                    "\n\t\t\t<IDlocado>%d</IDlocado>",(*dtbaseCCliente)[i].ID,
+                (*dtbaseCCliente)[i].idCliente,
+                (*dtbaseCCliente)[i].Nome,
+                (*dtbaseCCliente)[i].valorDeve,
+                (*dtbaseCCliente)[i].valorDeve,
+                (*dtbaseCCliente)[i].tamLocados,
+                (*dtbaseCCliente)[i].IDlocado);
+
+        for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados - 1; j++)
+        {
+            fprintf(arq,"\n\t\t\t<locados>"
+                        "\n\t\t\t\t<id>%d</id>"
+                        "\n\t\t\t\t<idFuncionario>%d</idFuncionario>"
+                        "\n\t\t\t\t<qtdFilme>%d</qtdFilme>"
+                        "\n\t\t\t\t<valorTotal>%.2f</valorTotal>"
+                        "\n\t\t\t\t<valorDeve>%.2f</valorDeve>"
+                        "\n\t\t\t\t<valorEntrada>%.2f</valorEntrada>"
+                        "\n\t\t\t\t<tipo_pagamento>%d</tipo_pagamento>"
+                        "\n\t\t\t\t<dtPagamento>%d/%d/%d</dtPagamento>"
+                        "\n\t\t\t\t<qtdParcelas>%d</qtdParcelas>"
+                        "\n\t\t\t\t<parcelasPagas>%d</parcelasPagas>"
+                        "\n\t\t\t\t<TDdevolvido>%d</TDdevolvido>"
+                        "\n\t\t\t\t<ultimoIDOperacao>%d</ultimoIDOperacao>"
+
+                        "\n\t\t\t</locados>\n\t",(*dtbaseCCliente)[i].dEmprestimo[j].ID,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].IdFuncionario,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].valorTotal,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].valordeve,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].valorEntrada,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].tipoPagamento,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].Dtpagamento.dia,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].Dtpagamento.mes,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].Dtpagamento.ano,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].qtdParcelas,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].parcelasPagas,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido,
+                    (*dtbaseCCliente)[i].dEmprestimo[j].ultimoIDOperacao
+                    );
+        }
+    }
+    fprintf(arq,"</locacao>\n");
+}
+
+
 void exportarDados(exportcamp camposExport, char *namepath, cliente **dtbaseCliente, int qtdCliente,filme **dtbaseFilme, int qtdfilme,
                    locadora **dtbaselocadora, int qtdlocadora){
     FILE *arq;
