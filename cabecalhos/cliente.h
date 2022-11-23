@@ -19,6 +19,8 @@ typedef struct
     char dataNascimento[12];
 } cliente;
 
+
+
 cliente criarCliente(int *id);
 
 int inserirCliente(cliente **dtbase, cliente novoCliente, int *qtdCliente, int *tamanhoCliente);

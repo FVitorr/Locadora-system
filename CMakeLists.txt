@@ -27,4 +27,4 @@ add_executable(Locadora_system
         codigo/datas.c
         codigo/feedback.c
         fucGlobal.c
-        main.c )
+        main.c cabecalhos/dadosImEx.h codigo/dadosImEx.c)

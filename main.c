@@ -4,7 +4,8 @@
 
 #include "cabecalhos/locadora.h"
 #include "cabecalhos/fornecedor.h"
-#include "cabecalhos/feedback.h"
+//#include "cabecalhos/feedback.h"
+#include "cabecalhos/dadosImEx.h"
 
 /*Arrays Dinamicos*/
 
@@ -143,7 +144,12 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
             break;
         case 8:
             while (1){
-                printf("Exportar / Importar");
+                while (1){
+                    int t = menuImportacaoExportcao(dtbaseCliente,*qtd_Cliente);
+                    if (t == 1){
+                        break;
+                    }
+                }
                 break;
             }
             break;
