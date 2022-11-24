@@ -145,7 +145,7 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
         case 8:
             while (1){
                 while (1){
-                    int t = menuImportacaoExportcao(dtbaseCliente,*qtd_Cliente,dtbaseFilme,*qtd_Filmes,dtbaseLocadora,*qtd_Locadora);
+                    int t = menuImportacaoExportcao(dtbaseCliente,*qtd_Cliente,dtbaseFilme,*qtd_Filmes,dtbaseLocadora,*qtd_Locadora,dtbaseCategoria,*qtd_Categoria,dtbaseFornecedor,*qtd_Fornecedor,dtbasefuncionarios,*qtd_Funcionarios,dtbaseCCliente,*qtd_CCliente,dtBaseeFilme,*qtd_eFilme);
                     if (t == 1){
                         break;
                     }

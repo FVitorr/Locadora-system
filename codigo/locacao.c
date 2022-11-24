@@ -1495,7 +1495,7 @@ eFilme  objetoefilme(int *id,fornecedor **dtbase,int qtdFornecedor,int IDFornece
     strcpy(objetoEfilme.cnpj,(*dtbase)[indexDtBaseLocados].cnpj);
     printf("\n\nCNPJ: %s ",objetoEfilme.cnpj);
 
-    objetoEfilme.key_fornecedorArray = (*dtbase)[indexDtBaseLocados].id;
+    //objetoEfilme.key_fornecedorArray = (*dtbase)[indexDtBaseLocados].id;
     objetoEfilme.tamOp = 1;
 
     objetoEfilme.ultIDOp = 0;
@@ -1768,12 +1768,12 @@ int save_eFilme(eFilme objeto,int tipo_config){
             return 1;
         }
 
-        fprintf(entradaFilmeF, "%d\n%d\n%s\n%s\n%d\n%d\n%d\n",
+        fprintf(entradaFilmeF, "%d\n%d\n%s\n%s\n%d\n%d\n",
                 objeto.ID,
                 objeto.IDFornecedor,
                 objeto.nomefornecedor,
                 objeto.cnpj,
-                objeto.key_fornecedorArray,
+                //objeto.key_fornecedorArray,
                 objeto.tamOp,
                 objeto.ultIDOp);
 
@@ -1866,12 +1866,12 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,f
             fgets(nomeFornecedor,120,Efilmef);
             new.nomefornecedor = string_to_pointer(nomeFornecedor);
 
-            fgets(new.cnpj,17,Efilmef);
+            fgets(new.cnpj,18,Efilmef);
             limpa_final_string(new.cnpj);
 
-            char key_forne[10];
-            fgets(key_forne,5,Efilmef);
-            new.key_fornecedorArray = strtol(key_forne,NULL,10);
+            //char key_forne[10];
+            //fgets(key_forne,5,Efilmef);
+            //new.key_fornecedorArray = strtol(key_forne,NULL,10);
 
             //fscanf(Efilmef, "%d\n", &new.key_fornecedorArray);
 
@@ -1883,17 +1883,21 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,f
 
             fscanf(Efilmef, "%d\n", &new.ultIDOp);
 
-            new.filmes = (operacaoEFilme *)calloc(new.tamOp , sizeof (operacaoEFilme));
+            new.filmes = (operacaoEFilme *)calloc(new.tamOp, sizeof (operacaoEFilme));
             if (new.filmes == NULL){
                 printf("Erro na Alocaçao Dinamica");
                 system("pause");
                 exit(1);
             }
-            for (int i = 0 ; i < new.tamOp - 1; i++){
+            for (int i = 0 ; i < new.tamOp; i++){
                 fscanf(Efilmef, "%d\n", &new.filmes[i].ID);
                 fscanf(Efilmef, "%f\n", &new.filmes[i].frete);
                 fscanf(Efilmef, "%f\n", &new.filmes[i].Imposto);
-                fscanf(Efilmef, "%d\n", &new.filmes[i].tamFilm);
+
+                fgets(tamop,10,Efilmef);
+                new.filmes[i].tamFilm = strtol(tamop,NULL,10);
+
+                //fscanf(Efilmef, "%d\n", &new.filmes[i].tamFilm);
                 fscanf(Efilmef, "%d\n", &new.filmes[i].ultIDFilm);
 
                 fscanf(Efilmef, "%f\n", &new.filmes[i].fretePproduto);
@@ -1915,9 +1919,18 @@ int carregarDados_Efilme(eFilme **dtbase, int *qtdeFilmes, int *tamanhoeFilmes,f
                 fgets(ano,6,Efilmef);
                 new.filmes[i].dtNota.ano = strtol(ano,NULL,10);
 
-                fscanf(Efilmef, "%d\n", &new.filmes[i].dtPagamento.dia);
-                fscanf(Efilmef, "%d\n", &new.filmes[i].dtPagamento.mes);
-                fscanf(Efilmef, "%d\n", &new.filmes[i].dtPagamento.ano);
+                fgets(dia,4,Efilmef);
+                new.filmes[i].dtPagamento.dia = strtol(dia,NULL,10);
+
+                fgets(mes,4,Efilmef);
+                new.filmes[i].dtPagamento.mes = strtol(mes,NULL,10);
+
+                fgets(ano,6,Efilmef);
+                new.filmes[i].dtPagamento.ano = strtol(ano,NULL,10);
+
+//                fscanf(Efilmef, "%d\n", &new.filmes[i].dtPagamento.dia);
+//                fscanf(Efilmef, "%d\n", &new.filmes[i].dtPagamento.mes);
+//                fscanf(Efilmef, "%d\n", &new.filmes[i].dtPagamento.ano);
 
 
                 new.filmes[i].entradaFilmesCadastro = (filme *) calloc((new.filmes[i].tamFilm + 1) , sizeof (filme));

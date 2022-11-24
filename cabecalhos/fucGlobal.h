@@ -36,9 +36,6 @@ int replaceInt(int newValue, int *camp);
 
 int replacefloat(float newValue, float *camp);
 
-void addTab(char *str);
-
-
 void line(int max, char *t);
 
 void abortOp(void);
@@ -52,9 +49,11 @@ char *retorna_password_file (const char password_e[16]);
 //-------------------------------- Tratamento de Strings --------------------------------- //
 int replaceChar(char newValue[5], char *camp);
 
+void resetstring(char *string);
+
 void removeSpace(char *string);
 
-int lenChar(char *n);
+//int lenChar(char *n);
 
 char *string_to_pointer (const char entry[120]);
 

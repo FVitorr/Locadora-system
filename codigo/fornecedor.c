@@ -122,7 +122,9 @@ void listFornecedor(fornecedor **dtbase, int qtd) {
     else{
         printf("\n\t>> Nada para mostrar aqui");
     }
-    printf("\n");
+    printf("\n\n");
+
+    system("pause");
 }
 
 void editarFornecedor(fornecedor **dtbase, int qtdFornecedor, int *tamanhoFornecedor, int id, int tipo_config)

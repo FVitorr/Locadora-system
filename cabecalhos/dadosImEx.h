@@ -21,17 +21,43 @@ typedef struct {
     int compras_filme;
 } exportcamp;
 
-int menuImportacaoExportcao(cliente **dtbaseCliente, int qtdcliente,filme **dtbaseFilme, int qtdfilme,locadora **dtbaselocadora, int qtdlocadora);
+int menuImportacaoExportcao(cliente **dtbaseCliente, int qtdcliente,filme **dtbaseFilme, int qtdfilme,locadora **dtbaselocadora, int qtdlocadora,fCategoria **dtbasecategoria, int qtdcategoria,
+                            fornecedor **dtbasefornecedor, int qtdFornecedor,funcionarios **dtbasefuncionarios, int qtdfuncionarios,
+                            contaCliente **dtbaseCCliente, int qtdCCliente,eFilme **dtbase_eFilme, int qtdeFilme);
 
 int menuexport(exportcamp *exportcampos);
+
+int menuImport(exportcamp *importcampos);
 
 void refazexportCamp(exportcamp *exportcamp1, int value);
 
 void exportDadoslocadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora);
 
-void exportarDados(exportcamp camposExport, char *namepath, cliente **dtbaseCliente, int qtdCliente,filme **dtbaseFilme, int qtdfilme,
-                   locadora **dtbaselocadora, int qtdlocadora);
+void importa_locadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora);
+
+void exportDadosCliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente);
+
+void importa_Cliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente);
 
 void exportDadosFilme(FILE *arq, filme **dtbaseFilme, int qtdfilme);
 
-void exportDadosCliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente);
+void exportDadosCategoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcategoria);
+
+void exportDadosFornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdFornecedor);
+
+void exportDadosFuncionario(FILE *arq, funcionarios **dtbasefuncionarios, int qtdfuncionarios);
+
+void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente);
+
+void exportDadosEntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme);
+
+void exportarDados(exportcamp camposExport, char *namepath, cliente **dtbaseCliente, int qtdCliente,filme **dtbaseFilme, int qtdfilme,
+                   locadora **dtbaselocadora, int qtdlocadora,fCategoria **dtbasecategoria, int qtdcategoria,
+                   fornecedor **dtbasefornecedor, int qtdFornecedor,funcionarios **dtbasefuncionarios, int qtdfuncionarios,
+                   contaCliente **dtbaseCCliente, int qtdCCliente,eFilme **dtbase_eFilme, int qtdeFilme);
+
+void importarDados(exportcamp camposImporta, char *namepath, cliente **dtbaseCliente, int qtdCliente,filme **dtbaseFilme, int qtdfilme,
+                   locadora **dtbaselocadora, int qtdlocadora,fCategoria **dtbasecategoria, int qtdcategoria,
+                   fornecedor **dtbasefornecedor, int qtdFornecedor,funcionarios **dtbasefuncionarios, int qtdfuncionarios,
+                   contaCliente **dtbaseCCliente, int qtdCCliente,eFilme **dtbase_eFilme, int qtdeFilme);
+

@@ -34,6 +34,12 @@ void abortOp(void){
     printf("\n\t[!] Operação Abortada:\n");
 }
 
+void resetstring(char *string){
+    for (int i = 0; i < strlen(string); i++){
+        string[i] = '\0';
+    }
+}
+
 void info_cancela(void){
     printf("\n\t>>Operação Cancelada\n");
     system("Pause");
@@ -49,11 +55,13 @@ void stringLower(char *string){
 
 void removeSpace(char *string){
     int i = 0;
+    int j;
     while (string[i] != '\0' || i == strlen(string)){
-        if (string[i] == ' '){
-            for (int j = i + 1;string[j] != '\0';j++){
+        if (string[i] == ' ' || string[i] == '\t'){
+            for ( j = i + 1;string[j] != '\0';j++){
                 string[i] = string[j];
             }
+            string[j] = '\0';
         }
         i++;
     }

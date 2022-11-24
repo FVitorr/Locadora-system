@@ -113,6 +113,100 @@ int menuexport(exportcamp *exportcampos){
     return 0;
 }
 
+
+int menuImport(exportcamp *importcampos){
+    system("cls");
+    setbuf(stdin,NULL);
+    lineBox(70,"IMPORTACAO DE DADOS\0",1);
+    printf("\tDeseja Importar ?\n\n");
+    printf("\t0 - Sair \n\t1 - Tabelas Especificas de Dados  \n\t2 - TODAS as tabelas de dados\n");
+    lineBox(70,"-\0",0);
+
+    int erro = 0, opc;
+    char temEscolha[4];
+
+    do
+    {
+        if (erro == 1)
+        {
+            printf(">> Parametro Invalido\n");
+        }
+        //Tratamento de entrada
+        printf(">>");
+        scanf("%s", temEscolha); //Permite a entrada de qualquer caracter
+        setbuf(stdin,NULL);
+
+        opc = strtol(temEscolha,NULL,10); //Procura na entrada um numero na base 10
+        erro = 1;
+    } while (opc < 0 || opc > 2);
+
+    if (opc == 0){ //Sair
+        system("cls");
+        return 0; // SAIR
+    }
+    else if (opc == 1)
+    {
+        lineBox(50,"Tabela DE DADOS\0",1);
+        printf("\tDeseja Importar quais tabelas ?\n\n");
+        printf("\t0 - Sair \n\t1 - Exportar Locadoras  \n\t2 - Exportar Clientes \n\t3 - Exportar Filmes"
+               "\n\t4 - Exportar Categorias\n\t5 - Exportar Fornecedores\n\t6 - Exportar Funcionarios"
+               "\n\t7 - Exportar Locacao Filme  \n\t8 - Exportar Compra de Filme\n;");
+        lineBox(50,"-\0",0);
+
+
+        char opcexport[5];
+        int opcEx;
+        while (1){
+            printf("\n>>");
+            scanf("%s",opcexport);
+
+            opcEx = strtol(opcexport,NULL,10);
+
+            if (opcEx == 0){
+                return 1;
+            }
+
+            switch (opcEx) {
+                case 1:
+                    importcampos->locadora = 1;
+                    break;
+                case 2:
+                    importcampos->cliente = 1;
+                    break;
+                case 3:
+                    importcampos->filme = 1;
+                    break;
+                case 4:
+                    importcampos->categoria = 1;
+                    break;
+                case 5:
+                    importcampos->fornecedor = 1;
+                    break;
+                case 6:
+                    importcampos->funcionario = 1;
+                    break;
+                case 7:
+                    importcampos->locacao_filme = 1;
+                    break;
+                case 8:
+                    importcampos->compras_filme = 1;
+                    break;
+                default:
+                    printf("Opcao Invalida");
+                    break;
+            }
+        }
+    }
+    else if (opc == 2)
+    {
+        //2 - TODAS as tabelas de dados
+        refazexportCamp(importcampos,1);
+        return 2; ////2 - TODAS as tabelas de dados
+    }
+    return 0;
+}
+
+
 void exportDadoslocadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora){
     if (arq == NULL){
         printf("\nErro na exportacao de dadps cliente\n\n");
@@ -124,15 +218,15 @@ void exportDadoslocadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora){
     {
         fprintf(arq,"\n\t\t<registro>"
                     "\n\t\t\t<id>%d</id>"
-                    "\n\t\t\t<nome_fantasia>%s</nome_fantasia>"
+                    "\n\t\t\t<nomeFantasia>%s</nomeFantasia>"
                     "\n\t\t\t<razaoSocial>%s</razaoSocial>"
                     "\n\t\t\t<inscricaoEstadual>%s</inscricaoEstadual>"
                     "\n\t\t\t<cnpj>%s</cnpj>"
                     "\n\t\t\t<endereco>%s, %d, %s, %s, %s </endereco>"
                     "\n\t\t\t<telefone>%s</telefone>"
                     "\n\t\t\t<email>%s</email>"
-                    "\n\t\t\t<nome_responsavel>%s</nome_responsavel>"
-                    "\n\t\t\t<telefone_responsavel>%s</telefone_responsavel>"
+                    "\n\t\t\t<nomeResponsavel>%s</nomeResponsavel>"
+                    "\n\t\t\t<telefoneResponsavel>%s</telefoneResponsavel>"
                     "\n\t\t\t<financeiro>%f,%f,%f</financeiro>"
                     "\n\t\t\t<user>%s</user>"
                     "\n\t\t\t<password>%s</password>"
@@ -158,6 +252,137 @@ void exportDadoslocadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora){
         );
     }
     fprintf(arq,"\n\t</locadora>\n");
+}
+
+void importa_locadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora){
+    int achou = 0;
+    //char *linha = calloc(200,sizeof (char));
+    char linha[200];
+    resetstring(linha);
+    if (arq == NULL) {
+        return;
+    }
+
+    int line = 0;
+    while ((achou == 0) && (!feof(arq))) {
+        fgets(linha, 200, arq);
+        if (strcmp(linha, "\t<locadora>\n") == 0) {
+            achou = 1;
+            break;
+        }
+        line++;
+    }
+
+    if (achou == 0) {
+        printf("Dados de locadora nao encontrado");
+        return;
+    }
+
+    char *tok;
+    locadora newLocadora;
+
+    int lineRead = 0;
+    while ((strcmp(linha, "\t</locadora>\n") != 0)  || (!feof(arq) || strstr(linha,"</locadora>") != NULL)){
+        if (lineRead >= line) {
+            fgets(linha, 200, arq); //pega <registro>
+            if (strcmp(linha, "\t</locadora>\n") == 0 || strstr(linha,"</locadora>") != NULL) {
+                break;
+            }
+
+            fgets(linha, 200, arq); //pega <id>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            newLocadora.id = strtol(tok,NULL,10);
+
+            fgets(linha, 200, arq); //pega <nomeFantasia>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(newLocadora.nomeFantasia,tok);
+
+            fgets(linha, 200, arq); //pega <razaoSocial>
+            //printf("%s",linha);
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(newLocadora.razaoSocial,tok);
+
+            fgets(linha, 200, arq); //pega <inscricaoEstadual>
+            //printf("%s",linha);
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(newLocadora.inscricaoEstadual,tok);
+
+            fgets(linha, 200, arq); //pega <cnpj>
+            //printf("%s",linha);
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(newLocadora.cnpj,tok);
+
+            fgets(linha, 200, arq); //pega <endereco>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, ",</>");
+            strcpy(newLocadora.endereco.rua,tok);
+            tok = strtok(NULL, ",</>");
+            newLocadora.endereco.numero = strtol(tok,NULL,10);
+            tok = strtok(NULL, ",</>");
+            strcpy(newLocadora.endereco.bairro,tok);
+            tok = strtok(NULL, ",</>");
+            strcpy(newLocadora.endereco.cidade,tok);
+            tok = strtok(NULL, ",</>");
+            strcpy(newLocadora.endereco.estado,tok);
+
+
+            fgets(linha, 200, arq); //pega <telefone>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(newLocadora.telefone,tok);
+
+            fgets(linha, 200, arq); //pega <email>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(newLocadora.email,tok);
+
+            fgets(linha, 200, arq); //pega <nomeResponsavel>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(newLocadora.nomeResponsavel,tok);
+
+            fgets(linha, 200, arq); //pega <telefoneResponsavel>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(newLocadora.telefoneResponsavel,tok);
+
+            fgets(linha, 200, arq); //pega <financeiro>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, ",</>");
+            newLocadora.monetario.caixa = strtof(tok,NULL);
+            tok = strtok(NULL, ",</>");
+            newLocadora.monetario.despesas = strtof(tok,NULL);
+            tok = strtok(NULL, ",</>");
+            newLocadora.monetario.contasReceber = strtof(tok,NULL);
+
+            fgets(linha, 200, arq); //pega <user>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(newLocadora.user,tok);
+
+            fgets(linha, 200, arq); //pega <password>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            //strcpy(newLocadora.password,tok);
+
+            newLocadora.password = retorna_password_file(tok);
+
+            fgets(linha, 200, arq); //pega </registro>
+
+//            printf(" %d %s %s %s %s %s %d %s %s %s %s %s %s %s %f %f %f %s %s",newLocadora.id,newLocadora.nomeFantasia,newLocadora.razaoSocial,
+//                   newLocadora.inscricaoEstadual,newLocadora.cnpj,newLocadora.endereco.rua,newLocadora.endereco.numero
+//                    ,newLocadora.endereco.bairro,newLocadora.endereco.cidade,newLocadora.endereco.estado,
+//                    newLocadora.telefone,newLocadora.email,newLocadora.nomeResponsavel,newLocadora.telefoneResponsavel,newLocadora.monetario.caixa,newLocadora.monetario.despesas
+//                    ,newLocadora.monetario.contasReceber,newLocadora.user,newLocadora.password);
+
+        }
+        lineRead++;
+    }
 }
 
 void exportDadosCliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente){
@@ -195,6 +420,100 @@ void exportDadosCliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente){
                 );
     }
     fprintf(arq,"</cliente>\n");
+}
+
+void importa_Cliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente) {
+    int achou = 0;
+    char linha[150];
+    if (arq == NULL) {
+        return;
+    }
+
+    int lineinit = 0;
+    while ((achou == 0) && (!feof(arq))) {
+        fgets(linha, 150, arq);
+        if (strcmp(linha, "\t<cliente>\n") == 0) {
+            achou = 1;
+            break;
+        }
+        lineinit++;
+    }
+
+    if (achou == 0) {
+        printf("Dados de Cliente nao encontrado");
+        return;
+    }
+
+    char *tok;
+    cliente novoCliente;
+
+    int line = 0 ;
+    while (strcmp(linha, "</cliente>\n") != 0) {
+        if (line >= lineinit) {
+            fgets(linha, 150, arq);//pega <registro>
+            if (strcmp(linha, "</cliente>\n") == 0) {
+                printf("opa");
+                break;
+            }
+            fgets(linha, 150, arq); //pega <id>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            novoCliente.id = strtol(tok,NULL,10);
+
+            fgets(linha, 150, arq); //pega <nome>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(novoCliente.nome, tok);
+
+            fgets(linha, 200, arq); //pega <endereco>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, ",</>");
+            strcpy(novoCliente.endereco.rua,tok);
+            tok = strtok(NULL, ",</>");
+            novoCliente.endereco.numero = strtol(tok,NULL,10);
+            tok = strtok(NULL, ",</>");
+            strcpy(novoCliente.endereco.bairro,tok);
+            tok = strtok(NULL, ",</>");
+            strcpy(novoCliente.endereco.cidade,tok);
+            tok = strtok(NULL, ",</>");
+            strcpy(novoCliente.endereco.estado,tok);
+
+            fgets(linha, 150, arq); //pega <cpf>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(novoCliente.cpf,tok);
+
+            fgets(linha, 150, arq); //pega <telefone>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(novoCliente.telefone,tok);
+
+            fgets(linha, 150, arq); //pega <email>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(novoCliente.email,tok);
+
+            fgets(linha, 150, arq); //pega <sexo>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(novoCliente.sexo,tok);
+
+            fgets(linha, 150, arq); //pega <est_civil>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(novoCliente.estadoCivil,tok);
+
+            fgets(linha, 150, arq); //pega <dtNascimento>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(novoCliente.dataNascimento,tok);
+
+
+            fgets(linha, 150, arq); //pega o tabela
+            break;
+        }
+        line++;
+    }
 }
 
 void exportDadosFilme(FILE *arq, filme **dtbaseFilme, int qtdfilme){
@@ -238,6 +557,7 @@ void exportDadosCategoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcatego
                     "\n\t\t\t<descricao>%s</descricao>"
                     "\n\t\t\t<vAlocacao>%f</vAlocacao>"
                     "\n\t\t\t<ativo>%d</ativo>"
+                    "\n\t\t</registro>"
                     ,(*dtbasecategoria)[i].codigo,
                 (*dtbasecategoria)[i].descricao,
                 (*dtbasecategoria)[i].vAlocacao,
@@ -247,16 +567,67 @@ void exportDadosCategoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcatego
     fprintf(arq,"\n\t</categoria>\n");
 }
 
+int importa_categoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcategoria) {
+    int achou = 0;
+    char linha[150];
+    if (arq == NULL) {
+        return 0;
+    }
+
+    while ((achou == 0) && (!feof(arq))) {
+        fgets(linha, 150, arq);
+        if (strcmp(linha, "<tabela=categoria>\n") == 0) {
+            achou = 1;
+        }
+    }
+    if (achou == 0) {
+        return 0;
+    }
+
+    char *tok;
+    fCategoria categoria;
+
+    while (strcmp(linha, "</tabela>\n") != 0) {
+        fgets(linha, 150, arq);
+        if (strcmp(linha, "</tabela>\n") == 0) {
+            printf("opa");
+            break;
+        }
+        fgets(linha, 150, arq); //pega o codigo
+        tok = strtok(linha, "<>");
+        tok = strtok(NULL, "</>");
+        categoria.codigo = atoi(tok);
+
+        fgets(linha, 150, arq); //pega o descricao
+        tok = strtok(linha, "<>");
+        tok = strtok(NULL, "</>");
+        strcpy(categoria.descricao, tok);
+
+        fgets(linha, 150, arq); //pega o valor_diaria
+        tok = strtok(linha, "<>");
+        tok = strtok(NULL, "</>");
+        //categoria.valor_diaria = atof(tok);
+
+        fgets(linha, 150, arq); //pega o lotacao_max
+        tok = strtok(linha, "<>");
+        tok = strtok(NULL, "</>");
+        //categoria.lotacao_max = atoi(tok);
+
+        fgets(linha, 150, arq); //pega o tabela
+    }
+    return 0;
+}
+
 void exportDadosFornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdFornecedor){
     if (arq == NULL){
         printf("\nErro na exportacao de dadps cliente\n\n");
         exit(1);
     }
 
-    fprintf(arq,"\t<cliente>\n");
+    fprintf(arq,"\t<fornecedor>");
     for (int i = 0; i < qtdFornecedor; i++)
     {
-        fprintf(arq,"\t\t<registro>"
+        fprintf(arq,"\n\t\t<registro>"
                     "\n\t\t\t<id>%d</id>"
                     "\n\t\t\t<nomeFantasia>%s</nomeFantasia>"
                     "\n\t\t\t<razaoSocial>%s</razaoSocial>"
@@ -265,7 +636,7 @@ void exportDadosFornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdForn
                     "\n\t\t\t<endereco>%s, %d, %s, %s, %s </endereco>"
                     "\n\t\t\t<telefone>%s</telefone>"
                     "\n\t\t\t<email>%s</email>"
-                    "\n\t\t</registro>\n\t",(*dtbasefornecedor)[i].id,
+                    "\n\t\t</registro>",(*dtbasefornecedor)[i].id,
                 (*dtbasefornecedor)[i].nomeFantasia,
                 (*dtbasefornecedor)[i].razaoSocial,
                 (*dtbasefornecedor)[i].inscricaoEstadual,
@@ -279,7 +650,7 @@ void exportDadosFornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdForn
                 (*dtbasefornecedor)[i].email
         );
     }
-    fprintf(arq,"</cliente>\n");
+    fprintf(arq,"\n\t</fornecedor>\n");
 }
 
 void exportDadosFuncionario(FILE *arq, funcionarios **dtbasefuncionarios, int qtdfuncionarios){
@@ -288,7 +659,7 @@ void exportDadosFuncionario(FILE *arq, funcionarios **dtbasefuncionarios, int qt
         exit(1);
     }
 
-    fprintf(arq,"\t<cliente>\n");
+    fprintf(arq,"\t<funcionario>\n");
     for (int i = 0; i < qtdfuncionarios; i++)
     {
         fprintf(arq,"\t\t<registro>"
@@ -315,7 +686,7 @@ void exportDadosFuncionario(FILE *arq, funcionarios **dtbasefuncionarios, int qt
 
         );
     }
-    fprintf(arq,"</cliente>\n");
+    fprintf(arq,"</funcionario>\n");
 }
 
 void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente){
@@ -324,10 +695,10 @@ void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCClient
         exit(1);
     }
 
-    fprintf(arq,"\t<locacao>\n");
+    fprintf(arq,"\t<locacao>");
     for (int i = 0; i < qtdCCliente; i++)
     {
-        fprintf(arq,"\t\t<registro>"
+        fprintf(arq,"\n\t\t<contaCliente>"
                     "\n\t\t\t<id>%d</id>"
                     "\n\t\t\t<idCliente>%d</idCliente>"
                     "\n\t\t\t<nome>%s</nome>"
@@ -357,8 +728,7 @@ void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCClient
                         "\n\t\t\t\t<parcelasPagas>%d</parcelasPagas>"
                         "\n\t\t\t\t<TDdevolvido>%d</TDdevolvido>"
                         "\n\t\t\t\t<ultimoIDOperacao>%d</ultimoIDOperacao>"
-
-                        "\n\t\t\t</locados>\n\t",(*dtbaseCCliente)[i].dEmprestimo[j].ID,
+                        "\n\t\t\t\t<operacoe>",(*dtbaseCCliente)[i].dEmprestimo[j].ID,
                     (*dtbaseCCliente)[i].dEmprestimo[j].IdFuncionario,
                     (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme,
                     (*dtbaseCCliente)[i].dEmprestimo[j].valorTotal,
@@ -373,14 +743,125 @@ void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCClient
                     (*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido,
                     (*dtbaseCCliente)[i].dEmprestimo[j].ultimoIDOperacao
                     );
+
+            for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme - 1; k++){
+                fprintf(arq,"\n\t\t\t\t\t<resgistro>"
+                            "\n\t\t\t\t\t\t<id>%d</id>"
+                            "\n\t\t\t\t\t\t<idFilme>%d</idFilme>"
+                            "\n\t\t\t\t\t\t<nomeFilme>%s</nomeFilme>"
+                            "\n\t\t\t\t\t\t<valorFilme>%.2f</valorFilme>"
+                            "\n\t\t\t\t\t\t<dtemprestimo>%d/%d/%d</dtemprestimo>"
+                            "\n\t\t\t\t\t\t<dtdevolucao>%d/%d/%d</dtdevolucao>"
+                            "\n\t\t\t\t\t\t<dtdevolucaoReal>%d/%d/%d</dtdevolucaoReal>"
+                            "\n\t\t\t\t\t\t<devolvido>%d</devolvido>"
+                            "\n\t\t\t\t\t</resgistro>",(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].ID,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].CodFilme,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].nomeFilme,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].valorFilme,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtemprestimo.dia,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtemprestimo.mes,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtemprestimo.ano,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal.dia,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal.mes,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal.ano,
+                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].devolvido);
+
+            }
+            fprintf(arq,"\n\t\t\t\t</operacoe>\n\t\t\t</locados>");
         }
+        fprintf(arq,"\n\t\t</contaCliente>");
     }
-    fprintf(arq,"</locacao>\n");
+    fprintf(arq,"\n\t</locacao>\n");
+}
+
+void exportDadosEntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme){
+    if (arq == NULL){
+        printf("\nErro na exportacao de dadps cliente\n\n");
+        exit(1);
+    }
+
+    fprintf(arq,"\t<Ent_Filme>");
+    for (int i = 0; i < qtdeFilme; i++)
+    {
+        fprintf(arq,"\n\t\t<contaLocadora>"
+                    "\n\t\t\t<id>%d</id>"
+                    "\n\t\t\t<idFornecedor>%d</idFornecedor>"
+                    "\n\t\t\t<nomeFornecedor>%s</nomeFornecedor>"
+                    "\n\t\t\t<cnpj>%s</cnpj>"
+                    "\n\t\t\t<tamOp>%d</tamOp>"
+                    "\n\t\t\t<ultIDOp>%d</ultIDOp>",(*dtbase_eFilme)[i].ID,
+                (*dtbase_eFilme)[i].IDFornecedor,
+                (*dtbase_eFilme)[i].nomefornecedor,
+                (*dtbase_eFilme)[i].cnpj,
+                (*dtbase_eFilme)[i].tamOp,
+                (*dtbase_eFilme)[i].ultIDOp);
+
+        for (int j = 0; j < (*dtbase_eFilme)[i].tamOp - 1; j++)
+        {
+            fprintf(arq,"\n\t\t\t<operacaoEFilme>"
+                        "\n\t\t\t\t<id>%d</id>"
+                        "\n\t\t\t\t<frete>%.2f</frete>"
+                        "\n\t\t\t\t<imposto>%.2f</imposto>"
+                        "\n\t\t\t\t<tamFilm>%d</tamFilm>"
+                        "\n\t\t\t\t<fretePproduto>%.2f</fretePproduto>"
+                        "\n\t\t\t\t<impostoPproduto>%.2f</impostoPproduto>"
+                        "\n\t\t\t\t<valorTotal>%.2f</valorTotal>"
+                        "\n\t\t\t\t<tipoPagamento>%d</tipoPagamento>"
+                        "\n\t\t\t\t<qtdParcelas>%d</qtdParcelas>"
+                        "\n\t\t\t\t<parcelasPagas>%d</parcelasPagas>"
+                        "\n\t\t\t\t<valorEntrada>%.2f</valorEntrada>"
+                        "\n\t\t\t\t<valorDeve>%.2f</valorDeve>"
+                        "\n\t\t\t\t<dtNota>%d/%d/%d</dtNota>"
+                        "\n\t\t\t\t<dtPagamento>%d/%d/%d</dtPagamento>"
+                        "\n\t\t\t\t<ultIDFilm>%d</ultIDFilm>"
+                        "\n\t\t\t\t<filmeEnt>",(*dtbase_eFilme)[i].filmes[j].ID,
+                    (*dtbase_eFilme)[i].filmes[j].frete,
+                    (*dtbase_eFilme)[i].filmes[j].Imposto,
+                    (*dtbase_eFilme)[i].filmes[j].tamFilm,
+                    (*dtbase_eFilme)[i].filmes[j].fretePproduto,
+                    (*dtbase_eFilme)[i].filmes[j].ImpostoPproduto,
+                    (*dtbase_eFilme)[i].filmes[j].valorTotal,
+                    (*dtbase_eFilme)[i].filmes[j].tipoPagamento,
+                    (*dtbase_eFilme)[i].filmes[j].qtdParcelas,
+                    (*dtbase_eFilme)[i].filmes[j].parcelasPagas,
+                    (*dtbase_eFilme)[i].filmes[j].valorEntrada,
+                    (*dtbase_eFilme)[i].filmes[j].valorDeve,
+                    (*dtbase_eFilme)[i].filmes[j].dtNota.dia,
+                    (*dtbase_eFilme)[i].filmes[j].dtNota.mes,
+                    (*dtbase_eFilme)[i].filmes[j].dtNota.ano,
+                    (*dtbase_eFilme)[i].filmes[j].dtPagamento.dia,
+                    (*dtbase_eFilme)[i].filmes[j].dtPagamento.mes,
+                    (*dtbase_eFilme)[i].filmes[j].dtPagamento.ano,
+                    (*dtbase_eFilme)[i].filmes[j].ultIDFilm
+            );
+
+            for (int k = 0; k < (*dtbase_eFilme)[i].filmes[j].tamFilm; k++){
+                fprintf(arq,"\n\t\t\t\t\t<resgistro>"
+                            "\n\t\t\t\t\t\t<id>%d</id>"
+                            "\n\t\t\t\t\t\t<nome>%s</nome>"
+                            "\n\t\t\t\t\t\t<valorCompra>%.2f</valorCompra>"
+                            "\n\t\t\t\t\t\t<qtd>%d</qtd>"
+                            "\n\t\t\t\t\t</resgistro>",(*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].codigo,
+                        (*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].nome,
+                        (*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].valorCompra,
+                        (*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].qtd
+                        );
+            }
+            fprintf(arq,"\n\t\t\t\t</filmeEnt>\n\t\t\t</operacaoEFilme>");
+        }
+        fprintf(arq,"\n\t\t</contaLocadora>");
+    }
+    fprintf(arq,"\n\t</Ent_Filme>\n");
 }
 
 
 void exportarDados(exportcamp camposExport, char *namepath, cliente **dtbaseCliente, int qtdCliente,filme **dtbaseFilme, int qtdfilme,
-                   locadora **dtbaselocadora, int qtdlocadora){
+                   locadora **dtbaselocadora, int qtdlocadora,fCategoria **dtbasecategoria, int qtdcategoria,
+                   fornecedor **dtbasefornecedor, int qtdFornecedor,funcionarios **dtbasefuncionarios, int qtdfuncionarios,
+                   contaCliente **dtbaseCCliente, int qtdCCliente,eFilme **dtbase_eFilme, int qtdeFilme){
     FILE *arq;
 
     arq = fopen(namepath,"w");
@@ -390,6 +871,7 @@ void exportarDados(exportcamp camposExport, char *namepath, cliente **dtbaseClie
         exit(1);
     }
 
+    //fprintf(arq, "<?xml version='1.0' encoding='UTF-16'?>\n");
     fprintf(arq,"<dados>\n");
 
     if (camposExport.locadora == 1){
@@ -404,18 +886,85 @@ void exportarDados(exportcamp camposExport, char *namepath, cliente **dtbaseClie
         exportDadosFilme(arq,dtbaseFilme,qtdfilme);
     }
 
+    if (camposExport.categoria == 1){
+        exportDadosCategoria(arq,dtbasecategoria,qtdcategoria);
+    }
+
+    if (camposExport.fornecedor == 1){
+        exportDadosFornecedor(arq,dtbasefornecedor,qtdFornecedor);
+    }
+
+    if (camposExport.funcionario == 1){
+        exportDadosFuncionario(arq,dtbasefuncionarios,qtdfuncionarios);
+    }
+
+    if (camposExport.locacao_filme == 1){
+        exportDadosLocacao(arq,dtbaseCCliente,qtdCCliente);
+    }
+
+    if (camposExport.compras_filme == 1){
+        exportDadosEntFilme(arq,dtbase_eFilme,qtdeFilme);
+    }
+
     fprintf(arq,"</dados>");
 
     fclose(arq);
     arq = NULL;
 }
 
+void importarDados(exportcamp camposImporta, char *namepath, cliente **dtbaseCliente, int qtdCliente,filme **dtbaseFilme, int qtdfilme,
+                   locadora **dtbaselocadora, int qtdlocadora,fCategoria **dtbasecategoria, int qtdcategoria,
+                   fornecedor **dtbasefornecedor, int qtdFornecedor,funcionarios **dtbasefuncionarios, int qtdfuncionarios,
+                   contaCliente **dtbaseCCliente, int qtdCCliente,eFilme **dtbase_eFilme, int qtdeFilme){
+    FILE *arq;
+
+    arq = fopen(namepath,"r");
+
+    if (arq == NULL){
+        printf("[!] Erro na Importacao de Dados");
+        exit(1);
+    }
+
+    if (camposImporta.locadora == 1){
+        importa_locadora(arq,dtbaselocadora,qtdlocadora);
+    }
+
+    if (camposImporta.cliente == 1){
+        importa_Cliente(arq,dtbaseCliente,qtdCliente);
+    }
+//
+//    if (camposImporta.filme == 1){
+//        exportDadosFilme(arq,dtbaseFilme,qtdfilme);
+//    }
+//
+//    if (camposImporta.categoria == 1){
+//        exportDadosCategoria(arq,dtbasecategoria,qtdcategoria);
+//    }
+//
+//    if (camposImporta.fornecedor == 1){
+//        exportDadosFornecedor(arq,dtbasefornecedor,qtdFornecedor);
+//    }
+//
+//    if (camposImporta.funcionario == 1){
+//        exportDadosFuncionario(arq,dtbasefuncionarios,qtdfuncionarios);
+//    }
+//
+//    if (camposImporta.locacao_filme == 1){
+//        exportDadosLocacao(arq,dtbaseCCliente,qtdCCliente);
+//    }
+//
+//    if (camposImporta.compras_filme == 1){
+//        exportDadosEntFilme(arq,dtbase_eFilme,qtdeFilme);
+//    }
+
+    fclose(arq);
+    arq = NULL;
+}
 
 
-
-
-int menuImportacaoExportcao(cliente **dtbaseCliente, int qtdcliente,filme **dtbaseFilme, int qtdfilme,
-                            locadora **dtbaselocadora, int qtdlocadora){
+int menuImportacaoExportcao(cliente **dtbaseCliente, int qtdcliente,filme **dtbaseFilme, int qtdfilme,locadora **dtbaselocadora, int qtdlocadora,fCategoria **dtbasecategoria, int qtdcategoria,
+                            fornecedor **dtbasefornecedor, int qtdFornecedor,funcionarios **dtbasefuncionarios, int qtdfuncionarios,
+                            contaCliente **dtbaseCCliente, int qtdCCliente,eFilme **dtbase_eFilme, int qtdeFilme){
     int erro = 0, opc;
     char temEscolha[4];
 
@@ -441,25 +990,37 @@ int menuImportacaoExportcao(cliente **dtbaseCliente, int qtdcliente,filme **dtba
         erro = 1;
     } while (opc < 0 || opc > 2);
 
+    exportcamp camposExportarImportar;
+    refazexportCamp(&camposExportarImportar,0);
+
+
     if (opc == 0){ //Sair
         system("cls");
         return 1; // Sair
     }
     else if (opc == 1)
     {
-        //IMPORTAR
+        while (1){
+            int t = menuImport(&camposExportarImportar);
+            if (t == 0){
+                break;
+            }
+            importarDados(camposExportarImportar,"test.xml",dtbaseCliente,qtdcliente,dtbaseFilme,qtdfilme,dtbaselocadora,qtdlocadora,
+                          dtbasecategoria,qtdcategoria,dtbasefornecedor,qtdFornecedor,dtbasefuncionarios,qtdfuncionarios,dtbaseCCliente,qtdCCliente,dtbase_eFilme,qtdeFilme);
+            system("cls");
+            return 1; // Sair
+        }
     }
     else if (opc == 2)
     {
         //EXPORTAR DADOS
-        exportcamp exportcamp1;
-        refazexportCamp(&exportcamp1,0);
         while (1){
-            int t = menuexport(&exportcamp1);
+            int t = menuexport(&camposExportarImportar);
             if (t == 0){
                 break;
             }
-            exportarDados(exportcamp1,"test.xml",dtbaseCliente,qtdcliente,dtbaseFilme,qtdfilme,dtbaselocadora,qtdlocadora);
+            exportarDados(camposExportarImportar,"test.xml",dtbaseCliente,qtdcliente,dtbaseFilme,qtdfilme,dtbaselocadora,qtdlocadora,
+                          dtbasecategoria,qtdcategoria,dtbasefornecedor,qtdFornecedor,dtbasefuncionarios,qtdfuncionarios,dtbaseCCliente,qtdCCliente,dtbase_eFilme,qtdeFilme);
             system("cls");
             return 1; // Sair
         }

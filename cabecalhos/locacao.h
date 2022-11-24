@@ -75,8 +75,8 @@ typedef struct
     int ID;
     int IDFornecedor;
     char *nomefornecedor;
-    char cnpj[17];
-    int key_fornecedorArray; // Id de referencia no array dtbaseFornecedor
+    char cnpj[18];
+    //int key_fornecedorArray; // Id de referencia no array dtbaseFornecedor
     operacaoEFilme *filmes; //
     int tamOp;
     int ultIDOp; //Ultimo Id da Operacao;
@@ -104,11 +104,7 @@ int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *tamanhoOpe
 
 int  listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDlocado,int codigoDevolvido,int tipoPagamento, int mostraFilme, int mostrarNotas);
 
-int carregarDados_locacao(locados **dtbaseLocados, int *qtdLocados, int *tamanhoLocados, int *id,int tipo_config);
-
 int verificaConta(contaCliente **dtbaseCcliente, int qtdCcliente, int idCliente);
-
-int carregarDados_Operacoes(operacoe **dtbaseoperacoe, int *qtdOperacao, int *tamanhoOperaca, int *key_operator ,int tipo_config);
 
 int posicaoContaArray(contaCliente **dtbaseCCliente, int qtdCCliente, int idCliente);
 
