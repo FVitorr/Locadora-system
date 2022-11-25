@@ -49,11 +49,19 @@ void importa_Categoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcategoria
 
 void exportDadosFornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdFornecedor);
 
+void importa_Fornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdFornecedor);
+
 void exportDadosFuncionario(FILE *arq, funcionarios **dtbasefuncionarios, int qtdfuncionarios);
+
+void importa_Funcionario(FILE *arq, funcionarios **dtbasefuncionarios, int qtdfuncionarios);
 
 void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente);
 
+void importa_Locacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente);
+
 void exportDadosEntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme);
+
+void importa_EntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme);
 
 void exportarDados(exportcamp camposExport, char *namepath, cliente **dtbaseCliente, int qtdCliente,filme **dtbaseFilme, int qtdfilme,
                    locadora **dtbaselocadora, int qtdlocadora,fCategoria **dtbasecategoria, int qtdcategoria,
