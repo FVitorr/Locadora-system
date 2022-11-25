@@ -19,8 +19,6 @@ void refazexportCamp(exportcamp *exportcamp1, int value){ //0 e 1
     exportcamp1->compras_filme = value;
 }
 
-
-
 int menuexport(exportcamp *exportcampos){
     system("cls");
     setbuf(stdin,NULL);
@@ -113,7 +111,6 @@ int menuexport(exportcamp *exportcampos){
     return 0;
 }
 
-
 int menuImport(exportcamp *importcampos){
     system("cls");
     setbuf(stdin,NULL);
@@ -205,7 +202,6 @@ int menuImport(exportcamp *importcampos){
     }
     return 0;
 }
-
 
 void exportDadoslocadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora){
     if (arq == NULL){
@@ -374,11 +370,11 @@ void importa_locadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora){
 
             fgets(linha, 200, arq); //pega </registro>
 
-//            printf(" %d %s %s %s %s %s %d %s %s %s %s %s %s %s %f %f %f %s %s",newLocadora.id,newLocadora.nomeFantasia,newLocadora.razaoSocial,
-//                   newLocadora.inscricaoEstadual,newLocadora.cnpj,newLocadora.endereco.rua,newLocadora.endereco.numero
-//                    ,newLocadora.endereco.bairro,newLocadora.endereco.cidade,newLocadora.endereco.estado,
-//                    newLocadora.telefone,newLocadora.email,newLocadora.nomeResponsavel,newLocadora.telefoneResponsavel,newLocadora.monetario.caixa,newLocadora.monetario.despesas
-//                    ,newLocadora.monetario.contasReceber,newLocadora.user,newLocadora.password);
+            printf(" %d %s %s %s %s %s %d %s %s %s %s %s %s %s %f %f %f %s %s",newLocadora.id,newLocadora.nomeFantasia,newLocadora.razaoSocial,
+                   newLocadora.inscricaoEstadual,newLocadora.cnpj,newLocadora.endereco.rua,newLocadora.endereco.numero
+                    ,newLocadora.endereco.bairro,newLocadora.endereco.cidade,newLocadora.endereco.estado,
+                    newLocadora.telefone,newLocadora.email,newLocadora.nomeResponsavel,newLocadora.telefoneResponsavel,newLocadora.monetario.caixa,newLocadora.monetario.despesas
+                    ,newLocadora.monetario.contasReceber,newLocadora.user,newLocadora.password);
 
         }
         lineRead++;
@@ -448,20 +444,19 @@ void importa_Cliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente) {
     cliente novoCliente;
 
     int line = 0 ;
-    while (strcmp(linha, "</cliente>\n") != 0) {
+    while (strcmp(linha, "</cliente>\n") != 0 || (!feof(arq) || strstr(linha,"</cliente>") != NULL)){
         if (line >= lineinit) {
             fgets(linha, 150, arq);//pega <registro>
-            if (strcmp(linha, "</cliente>\n") == 0) {
-                printf("opa");
+            if (strcmp(linha, "</cliente>\n") == 0 || strstr(linha,"</cliente>") != NULL) { //Verifica se a struct acabou
                 break;
             }
             fgets(linha, 150, arq); //pega <id>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             novoCliente.id = strtol(tok,NULL,10);
 
             fgets(linha, 150, arq); //pega <nome>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             strcpy(novoCliente.nome, tok);
 
@@ -479,37 +474,37 @@ void importa_Cliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente) {
             strcpy(novoCliente.endereco.estado,tok);
 
             fgets(linha, 150, arq); //pega <cpf>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             strcpy(novoCliente.cpf,tok);
 
             fgets(linha, 150, arq); //pega <telefone>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             strcpy(novoCliente.telefone,tok);
 
             fgets(linha, 150, arq); //pega <email>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             strcpy(novoCliente.email,tok);
 
             fgets(linha, 150, arq); //pega <sexo>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             strcpy(novoCliente.sexo,tok);
 
             fgets(linha, 150, arq); //pega <est_civil>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             strcpy(novoCliente.estadoCivil,tok);
 
             fgets(linha, 150, arq); //pega <dtNascimento>
-            tok = strtok(linha, "<>");
-            tok = strtok(NULL, "</>");
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "<>");
             strcpy(novoCliente.dataNascimento,tok);
 
 
-            fgets(linha, 150, arq); //pega o tabela
+            fgets(linha, 150, arq); //pega </registro>
             break;
         }
         line++;
@@ -543,6 +538,74 @@ void exportDadosFilme(FILE *arq, filme **dtbaseFilme, int qtdfilme){
     fprintf(arq,"\n\t</filmes>\n");
 }
 
+void importa_Filme(FILE *arq, filme **dtbaseFilme, int qtdfilme) {
+    int achou = 0;
+    char linha[150];
+    if (arq == NULL) {
+        return;
+    }
+
+    int lineinit = 0;
+    while ((achou == 0) && (!feof(arq))) {
+        fgets(linha, 150, arq);
+        if (strcmp(linha, "\t<filmes>\n") == 0) {
+            achou = 1;
+            break;
+        }
+        lineinit++;
+    }
+
+    if (achou == 0) {
+        printf("Dados de Filmes nao encontrado");
+        return;
+    }
+
+    char *tok;
+    filme novoFilme;
+
+    int line = 0 ;
+    while (strcmp(linha, "</filmes>\n") != 0 || (!feof(arq) || strstr(linha,"</filmes>") != NULL)){
+        if (line >= lineinit) {
+            fgets(linha, 150, arq);//pega <registro>
+            if (strcmp(linha, "</filmes>\n") == 0 || strstr(linha,"</filmes>") != NULL) { //Verifica se os dados acabou
+                break;
+            }
+            fgets(linha, 150, arq); //pega <id>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            novoFilme.codigo = strtol(tok,NULL,10);
+
+            fgets(linha, 150, arq); //pega <descricao>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(novoFilme.nome, tok);
+
+            fgets(linha, 150, arq); //pega <quantidade>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            novoFilme.qtd = strtol(tok,NULL,10);
+
+            fgets(linha, 150, arq); //pega <c_categoria>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            novoFilme.c_categoria = strtol(tok,NULL,10);
+
+            fgets(linha, 150, arq); //pega <lingua>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(novoFilme.lingua,tok);
+
+            fgets(linha, 150, arq); //pega <qtdEmprestado>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            novoFilme.qtdEmprestado = strtol(tok,NULL,10);
+
+            fgets(linha, 150, arq); //pega </registro>
+        }
+        line++;
+    }
+}
+
 void exportDadosCategoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcategoria){
     if (arq == NULL){
         printf("\nErro na exportacao de dadps cliente\n\n");
@@ -567,55 +630,66 @@ void exportDadosCategoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcatego
     fprintf(arq,"\n\t</categoria>\n");
 }
 
-int importa_categoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcategoria) {
+void importa_Categoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcategoria) {
     int achou = 0;
     char linha[150];
     if (arq == NULL) {
-        return 0;
+        return ;
     }
 
+    int lineinit = 0;
     while ((achou == 0) && (!feof(arq))) {
         fgets(linha, 150, arq);
-        if (strcmp(linha, "<tabela=categoria>\n") == 0) {
+        if (strcmp(linha, "\t<categoria>\n") == 0) {
             achou = 1;
+            break;
         }
+        lineinit++;
     }
+
     if (achou == 0) {
-        return 0;
+        printf("Dados de Categoria nao encontrado");
+        return;
     }
 
     char *tok;
     fCategoria categoria;
 
-    while (strcmp(linha, "</tabela>\n") != 0) {
-        fgets(linha, 150, arq);
-        if (strcmp(linha, "</tabela>\n") == 0) {
-            printf("opa");
-            break;
+    int line = 0;
+    while (strcmp(linha, "</categoria>\n") != 0 || (!feof(arq) || strstr(linha,"</categoria>") != NULL)){
+        if (line >= lineinit) {
+            fgets(linha, 150, arq);
+            if (strcmp(linha, "</categoria>\n") == 0 ||
+                strstr(linha, "</categoria>") != NULL) { //Verifica se a struct acabou
+                printf("opa");
+                break;
+            }
+            fgets(linha, 150, arq); //pega o codigo
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            categoria.codigo = strtol(tok, NULL, 10);
+
+            fgets(linha, 150, arq); //pega o descricao
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(categoria.descricao, tok);
+
+            fgets(linha, 150, arq); //pega o valor
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            categoria.vAlocacao = strtof(tok, NULL);
+            //categoria.valor_diaria = atof(tok);
+
+            fgets(linha, 150, arq); //pega o Ativo
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            categoria.ativo = strtol(tok, NULL, 10);
+            //categoria.lotacao_max = atoi(tok);
+
+            fgets(linha, 150, arq); //pega o tabela
         }
-        fgets(linha, 150, arq); //pega o codigo
-        tok = strtok(linha, "<>");
-        tok = strtok(NULL, "</>");
-        categoria.codigo = atoi(tok);
-
-        fgets(linha, 150, arq); //pega o descricao
-        tok = strtok(linha, "<>");
-        tok = strtok(NULL, "</>");
-        strcpy(categoria.descricao, tok);
-
-        fgets(linha, 150, arq); //pega o valor_diaria
-        tok = strtok(linha, "<>");
-        tok = strtok(NULL, "</>");
-        //categoria.valor_diaria = atof(tok);
-
-        fgets(linha, 150, arq); //pega o lotacao_max
-        tok = strtok(linha, "<>");
-        tok = strtok(NULL, "</>");
-        //categoria.lotacao_max = atoi(tok);
-
-        fgets(linha, 150, arq); //pega o tabela
+        line++;
     }
-    return 0;
 }
 
 void exportDadosFornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdFornecedor){
@@ -631,7 +705,7 @@ void exportDadosFornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdForn
                     "\n\t\t\t<id>%d</id>"
                     "\n\t\t\t<nomeFantasia>%s</nomeFantasia>"
                     "\n\t\t\t<razaoSocial>%s</razaoSocial>"
-                    "\n\t\t\t<inscricaoEstadual>%s</inscricaoEstadual>"
+                    "\n\t\t\tinscricaoEstadual%s</inscricaoEstadual>"
                     "\n\t\t\t<cnpj>%s</cnpj>"
                     "\n\t\t\t<endereco>%s, %d, %s, %s, %s </endereco>"
                     "\n\t\t\t<telefone>%s</telefone>"
@@ -651,6 +725,96 @@ void exportDadosFornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdForn
         );
     }
     fprintf(arq,"\n\t</fornecedor>\n");
+}
+
+void importa_Fornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdFornecedor) {
+    int achou = 0;
+    char linha[150];
+    if (arq == NULL) {
+        return ;
+    }
+
+    int lineinit = 0;
+    while ((achou == 0) && (!feof(arq))) {
+        fgets(linha, 150, arq);
+        if (strcmp(linha, "\t<fornecedor>\n") == 0) {
+            achou = 1;
+            break;
+        }
+        lineinit++;
+    }
+
+    if (achou == 0) {
+        printf("Dados de Fornecedor nao encontrado");
+        return;
+    }
+
+    char *tok;
+    fornecedor nfornecedor;
+
+    int line = 0;
+    while (strcmp(linha, "</fornecedor>\n") != 0 || (!feof(arq) || strstr(linha,"</fornecedor>") != NULL)){
+
+        if (line >= lineinit) {
+            fgets(linha, 150, arq);
+            if (strcmp(linha, "</fornecedor>\n") == 0 ||
+                strstr(linha, "</fornecedor>") != NULL) { //Verifica se a struct acabou
+                printf("opa");
+                break;
+            }
+            fgets(linha, 150, arq); //pega o codigo
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            nfornecedor.id = strtol(tok, NULL, 10);
+
+            fgets(linha, 150, arq); //pega o <nomeFantasia>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.nomeFantasia, tok);
+
+            fgets(linha, 150, arq); //pega o <razaoSocial>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.razaoSocial, tok);
+
+            fgets(linha, 150, arq); //pega o <inscricaoEstadual>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.inscricaoEstadual, tok);
+            //categoria.lotacao_max = atoi(tok);
+
+            fgets(linha, 150, arq); //pega o <cnpj>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.cnpj, tok);
+
+            fgets(linha, 200, arq); //pega <endereco>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, ",</>");
+            strcpy(nfornecedor.endereco.rua,tok);
+            tok = strtok(NULL, ",</>");
+            nfornecedor.endereco.numero = strtol(tok,NULL,10);
+            tok = strtok(NULL, ",</>");
+            strcpy(nfornecedor.endereco.bairro,tok);
+            tok = strtok(NULL, ",</>");
+            strcpy(nfornecedor.endereco.cidade,tok);
+            tok = strtok(NULL, ",</>");
+            strcpy(nfornecedor.endereco.estado,tok);
+
+            fgets(linha, 150, arq); //pega <telefone>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.telefone,tok);
+
+            fgets(linha, 150, arq); //pega <email>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.email,tok);
+
+            fgets(linha, 150, arq); //pega o tabela
+        }
+        line++;
+    }
 }
 
 void exportDadosFuncionario(FILE *arq, funcionarios **dtbasefuncionarios, int qtdfuncionarios){
@@ -689,9 +853,96 @@ void exportDadosFuncionario(FILE *arq, funcionarios **dtbasefuncionarios, int qt
     fprintf(arq,"</funcionario>\n");
 }
 
+void importa_Funcionarior(FILE *arq, funcionarios **dtbasefuncionarios, int qtdfuncionarios) {
+    int achou = 0;
+    char linha[150];
+    if (arq == NULL) {
+        return ;
+    }
+
+    int lineinit = 0;
+    while ((achou == 0) && (!feof(arq))) {
+        fgets(linha, 150, arq);
+        if (strcmp(linha, "\t<funcionario>\n") == 0) {
+            achou = 1;
+            break;
+        }
+        lineinit++;
+    }
+
+    if (achou == 0) {
+        printf("Dados de Funcionario nao encontrado");
+        return;
+    }
+
+    char *tok;
+    funcionarios nfuncionarios;
+
+    int line = 0;
+    while (strcmp(linha, "</funcionario>\n") != 0 || (!feof(arq) || strstr(linha,"</fornecedor>") != NULL)){
+
+        if (line >= lineinit) {
+            fgets(linha, 150, arq);
+            if (strcmp(linha, "</funcionario>\n") == 0 ||
+                strstr(linha, "</funcionario>") != NULL) { //Verifica se a struct acabou
+                printf("opa");
+                break;
+            }
+            fgets(linha, 150, arq); //pega o codigo
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            nfuncionarios.codigo = strtol(tok, NULL, 10);
+
+            fgets(linha, 150, arq); //pega o <nome>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfuncionarios.nome, tok);
+
+            fgets(linha, 200, arq); //pega <endereco>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, ",</>");
+            strcpy(nfuncionarios.endereco.rua,tok);
+            tok = strtok(NULL, ",</>");
+            nfuncionarios.endereco.numero = strtol(tok,NULL,10);
+            tok = strtok(NULL, ",</>");
+            strcpy(nfuncionarios.endereco.bairro,tok);
+            tok = strtok(NULL, ",</>");
+            strcpy(nfuncionarios.endereco.cidade,tok);
+            tok = strtok(NULL, ",</>");
+            strcpy(nfuncionarios.endereco.estado,tok);
+
+            fgets(linha, 150, arq); //pega <telefone>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfuncionarios.telefone,tok);
+
+            fgets(linha, 150, arq); //pega <email>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfuncionarios.email,tok);
+
+            fgets(linha, 200, arq); //pega <user>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfuncionarios.login.user,tok);
+
+            fgets(linha, 200, arq); //pega <password>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            //strcpy(newLocadora.password,tok);
+            strcpy(nfuncionarios.login.password,tok);
+
+            //nfuncionarios.login.password = retorna_password_file(tok);
+
+            fgets(linha, 150, arq); //pega o tabela
+        }
+        line++;
+    }
+}
+//Alterar Imports Inferior ...
 void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente){
     if (arq == NULL){
-        printf("\nErro na exportacao de dadps cliente\n\n");
+        printf("\nErro na exportacao de dados Locacao\n\n");
         exit(1);
     }
 
@@ -777,6 +1028,105 @@ void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCClient
     fprintf(arq,"\n\t</locacao>\n");
 }
 
+void importa_Locacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente) {
+    int achou = 0;
+    char linha[150];
+    if (arq == NULL) {
+        return ;
+    }
+
+    int lineinit = 0;
+    while ((achou == 0) && (!feof(arq))) {
+        fgets(linha, 150, arq);
+        if (strcmp(linha, "\t<contaCliente>\n") == 0) {
+            achou = 1;
+            break;
+        }
+        lineinit++;
+    }
+
+    if (achou == 0) {
+        printf("Dados de Locacao nao encontrado");
+        return;
+    }
+
+    char *tok;
+    contaCliente ncontaCliente;
+
+    int line = 0;
+    while (strcmp(linha, "</contaCliente>\n") != 0 || (!feof(arq) || strstr(linha,"</fornecedor>") != NULL)){
+
+        if (line >= lineinit) {
+            fgets(linha, 150, arq);
+            if (strcmp(linha, "</contaCliente>\n") == 0 ||
+                strstr(linha, "</contaCliente>") != NULL) { //Verifica se a struct acabou
+                printf("opa");
+                break;
+            }
+            fgets(linha, 150, arq); //pega o codigo
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            ncontaCliente.ID = strtol(tok, NULL, 10);
+
+            fgets(linha, 150, arq); //pega o <idCliente>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            ncontaCliente.idCliente = strtol(tok,NULL,10);
+
+            fgets(linha, 150, arq); //pega o <nome>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(ncontaCliente.Nome, tok);
+
+            fgets(linha, 150, arq); //pega o <valorDeve>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            ncontaCliente.valorDeve = strtof(tok,NULL);
+            //strcpy(ncontaCliente.valorDeve, tok);
+            //categoria.lotacao_max = atoi(tok);
+
+            fgets(linha, 150, arq); //pega o <valorPago>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            ncontaCliente.valorPago = strtof(tok,NULL);
+
+
+            fgets(linha, 150, arq); //pega <tamLocados>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            ncontaCliente.tamLocados = strtol(tok,NULL,10);
+
+            fgets(linha, 150, arq); //pega <IDlocado>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            ncontaCliente.IDlocado = strtol(tok,NULL,10);
+
+            //Prencher dadados de locados
+            ncontaCliente.dEmprestimo = calloc(ncontaCliente.tamLocados,sizeof(operacoe));
+            if (ncontaCliente.dEmprestimo == NULL){
+                printf("Erro na Alocacao de Memoria");
+                break;
+            }
+
+            for (int i = 0; i < ncontaCliente.tamLocados; i++){
+                
+            }
+            fgets(linha, 150, arq); //pega locados
+
+
+
+
+
+
+
+
+
+            fgets(linha, 150, arq); //pega o tabela
+        }
+        line++;
+    }
+}
+
 void exportDadosEntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme){
     if (arq == NULL){
         printf("\nErro na exportacao de dadps cliente\n\n");
@@ -855,6 +1205,96 @@ void exportDadosEntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme){
         fprintf(arq,"\n\t\t</contaLocadora>");
     }
     fprintf(arq,"\n\t</Ent_Filme>\n");
+}
+
+void importa_EntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme) {
+    int achou = 0;
+    char linha[150];
+    if (arq == NULL) {
+        return ;
+    }
+
+    int lineinit = 0;
+    while ((achou == 0) && (!feof(arq))) {
+        fgets(linha, 150, arq);
+        if (strcmp(linha, "\t<fornecedor>\n") == 0) {
+            achou = 1;
+            break;
+        }
+        lineinit++;
+    }
+
+    if (achou == 0) {
+        printf("Dados de Fornecedor nao encontrado");
+        return;
+    }
+
+    char *tok;
+    fornecedor nfornecedor;
+
+    int line = 0;
+    while (strcmp(linha, "</fornecedor>\n") != 0 || (!feof(arq) || strstr(linha,"</fornecedor>") != NULL)){
+
+        if (line >= lineinit) {
+            fgets(linha, 150, arq);
+            if (strcmp(linha, "</fornecedor>\n") == 0 ||
+                strstr(linha, "</fornecedor>") != NULL) { //Verifica se a struct acabou
+                printf("opa");
+                break;
+            }
+            fgets(linha, 150, arq); //pega o codigo
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            nfornecedor.id = strtol(tok, NULL, 10);
+
+            fgets(linha, 150, arq); //pega o <nomeFantasia>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.nomeFantasia, tok);
+
+            fgets(linha, 150, arq); //pega o <razaoSocial>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.razaoSocial, tok);
+
+            fgets(linha, 150, arq); //pega o <inscricaoEstadual>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.inscricaoEstadual, tok);
+            //categoria.lotacao_max = atoi(tok);
+
+            fgets(linha, 150, arq); //pega o <cnpj>
+            tok = strtok(linha, "<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.cnpj, tok);
+
+            fgets(linha, 200, arq); //pega <endereco>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, ",</>");
+            strcpy(nfornecedor.endereco.rua,tok);
+            tok = strtok(NULL, ",</>");
+            nfornecedor.endereco.numero = strtol(tok,NULL,10);
+            tok = strtok(NULL, ",</>");
+            strcpy(nfornecedor.endereco.bairro,tok);
+            tok = strtok(NULL, ",</>");
+            strcpy(nfornecedor.endereco.cidade,tok);
+            tok = strtok(NULL, ",</>");
+            strcpy(nfornecedor.endereco.estado,tok);
+
+            fgets(linha, 150, arq); //pega <telefone>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.telefone,tok);
+
+            fgets(linha, 150, arq); //pega <email>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            strcpy(nfornecedor.email,tok);
+
+            fgets(linha, 150, arq); //pega o tabela
+        }
+        line++;
+    }
 }
 
 

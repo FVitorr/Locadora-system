@@ -41,7 +41,11 @@ void importa_Cliente(FILE *arq, cliente **dtbaseCliente, int qtdcliente);
 
 void exportDadosFilme(FILE *arq, filme **dtbaseFilme, int qtdfilme);
 
+void importa_Filme(FILE *arq, filme **dtbaseFilme, int qtdfilme);
+
 void exportDadosCategoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcategoria);
+
+void importa_Categoria(FILE *arq, fCategoria **dtbasecategoria, int qtdcategoria);
 
 void exportDadosFornecedor(FILE *arq, fornecedor **dtbasefornecedor, int qtdFornecedor);
 
