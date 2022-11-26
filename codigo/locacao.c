@@ -549,7 +549,6 @@ int inserirLocados(locados **dtbaseLocados,locados newEntry,int *tamanhoLocados)
 }
 
 int inserirOperacao(operacoe **dtbaseOperacao,operacoe newEntry, int *tamanhoOperacao){
-
     *dtbaseOperacao = (operacoe *) realloc(*dtbaseOperacao, *tamanhoOperacao * sizeof(operacoe));
 
     if (*dtbaseOperacao == NULL){

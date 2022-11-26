@@ -1001,7 +1001,7 @@ void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCClient
                     );
 
             for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme - 1; k++){
-                fprintf(arq,"\n\t\t\t\t\t<resgistro>"
+                fprintf(arq,"\n\t\t\t\t\t<registro>"
                             "\n\t\t\t\t\t\t<id>%d</id>"
                             "\n\t\t\t\t\t\t<idFilme>%d</idFilme>"
                             "\n\t\t\t\t\t\t<nomeFilme>%s</nomeFilme>"
@@ -1010,7 +1010,7 @@ void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCClient
                             "\n\t\t\t\t\t\t<dtdevolucao>%d/%d/%d</dtdevolucao>"
                             "\n\t\t\t\t\t\t<dtdevolucaoReal>%d/%d/%d</dtdevolucaoReal>"
                             "\n\t\t\t\t\t\t<devolvido>%d</devolvido>"
-                            "\n\t\t\t\t\t</resgistro>",(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].ID,
+                            "\n\t\t\t\t\t</registro>",(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].ID,
                             (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].CodFilme,
                             (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].nomeFilme,
                             (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].valorFilme,
@@ -1033,6 +1033,79 @@ void exportDadosLocacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCClient
     fprintf(arq,"\n\t</locacao>\n");
 }
 
+
+void importa_operacao(FILE *arq, operacoe **dtbaseoperacoe, int qtdOperacao){
+    operacoe newOpe;
+    int qtdOp = 0;
+    char linha[150];
+    char *tok;
+    for (int j = 0; j < qtdOperacao - 1; j++) {
+        fgets(linha, 150, arq); //pega resgistro
+        if (strcmp(linha, "\t\t\t\t</operacoe>\n") == 0 ||
+            strstr(linha, "</operacoe>") != NULL) { //Verifica se a struct acabou
+            break;
+        }
+
+        fgets(linha, 150, arq); //pega o <id>
+        tok = strtok(linha, "\t<>");
+        tok = strtok(NULL, "</>");
+        newOpe.ID = strtol(tok, NULL, 10);
+
+        fgets(linha, 150, arq); //pega o <idFilme>
+        tok = strtok(linha, "\t<>");
+        tok = strtok(NULL, "</>");
+        newOpe.CodFilme = strtol(tok,NULL,10);
+
+        fgets(linha, 150, arq); //pega o <nomeFilme>
+        tok = strtok(linha, "\t<>");
+        tok = strtok(NULL, "</>");
+        strcpy( newOpe.nomeFilme,tok);
+
+        fgets(linha, 150, arq); //pega o <valorFilme>
+        tok = strtok(linha, "\t<>");
+        tok = strtok(NULL, "</>");
+        newOpe.valorFilme = strtof(tok,NULL);
+
+        fgets(linha, 150, arq); //pega o <dtemprestimo>
+        tok = strtok(linha, "\t<>");
+        tok = strtok(NULL, "/</>"); // Pegar dia
+        newOpe.dtemprestimo.dia = strtol(tok,NULL,10);
+        tok = strtok(NULL, "/</>"); // Pegar Mes
+        newOpe.dtemprestimo.mes = strtol(tok,NULL,10);
+        tok = strtok(NULL, "/</>"); // Pegar Ano
+        newOpe.dtemprestimo.ano = strtol(tok,NULL,10);
+
+        fgets(linha, 150, arq); //pega o <dtdevolucao>
+        tok = strtok(linha, "\t<>");
+        tok = strtok(NULL, "/</>"); // Pegar dia
+        newOpe.dtdevolucao.dia = strtol(tok,NULL,10);
+        tok = strtok(NULL, "/</>"); // Pegar Mes
+        newOpe.dtdevolucao.mes = strtol(tok,NULL,10);
+        tok = strtok(NULL, "/</>"); // Pegar Ano
+        newOpe.dtdevolucao.ano = strtol(tok,NULL,10);
+
+        fgets(linha, 150, arq); //pega o <dtdevolucaoReal>
+        tok = strtok(linha, "\t<>");
+        tok = strtok(NULL, "/</>"); // Pegar dia
+        newOpe.dtdevolucaoReal.dia = strtol(tok,NULL,10);
+        tok = strtok(NULL, "/</>"); // Pegar Mes
+        newOpe.dtdevolucaoReal.mes = strtol(tok,NULL,10);
+        tok = strtok(NULL, "/</>"); // Pegar Ano
+        newOpe.dtdevolucaoReal.ano = strtol(tok,NULL,10);
+
+        fgets(linha, 150, arq); //pega o <devolvido>
+        tok = strtok(linha, "\t<>");
+        tok = strtok(NULL, "</>");
+        newOpe.devolvido = strtol(tok, NULL, 10);
+
+        fgets(linha, 150, arq); //pega <\resgistro>
+    }
+    if (qtdOp <= qtdOperacao){
+        inserirOperacao(dtbaseoperacoe,newOpe,&qtdOp);
+    }
+
+}
+
 void importa_Locacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente) {
     int achou = 0;
     char linha[150];
@@ -1043,7 +1116,7 @@ void importa_Locacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente) 
     int lineinit = 0;
     while ((achou == 0) && (!feof(arq))) {
         fgets(linha, 150, arq);
-        if (strcmp(linha, "\t<contaCliente>\n") == 0) {
+        if (strcmp(linha, "\t<locacao>\n") == 0) {
             achou = 1;
             break;
         }
@@ -1058,40 +1131,39 @@ void importa_Locacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente) 
     char *tok;
     contaCliente ncontaCliente;
 
-    int line = 0;
-    while (strcmp(linha, "</contaCliente>\n") != 0 || (!feof(arq) || strstr(linha,"</fornecedor>") != NULL)){
-
+    int line = 0, execute = 0;
+    while ((strcmp(linha, "\t</locacao>\n") != 0 || (!feof(arq)) && strstr(linha,"</locacao>") == NULL)){
         if (line >= lineinit) {
-            fgets(linha, 150, arq);
-            if (strcmp(linha, "</contaCliente>\n") == 0 ||
-                strstr(linha, "</contaCliente>") != NULL) { //Verifica se a struct acabou
-                printf("opa");
+            fgets(linha, 150, arq); // pegar <contaCliente>
+            if (strcmp(linha, "\t</locacao>\n") == 0 || strstr(linha, "</locacao>") != NULL) { //Verifica se a struct acabou
+                //system("pause");
                 break;
             }
             fgets(linha, 150, arq); //pega o codigo
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             ncontaCliente.ID = strtol(tok, NULL, 10);
 
             fgets(linha, 150, arq); //pega o <idCliente>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             ncontaCliente.idCliente = strtol(tok,NULL,10);
 
             fgets(linha, 150, arq); //pega o <nome>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
-            strcpy(ncontaCliente.Nome, tok);
+            ncontaCliente.Nome = string_to_pointer(tok);
+            //strcpy(ncontaCliente.Nome, tok);
 
             fgets(linha, 150, arq); //pega o <valorDeve>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             ncontaCliente.valorDeve = strtof(tok,NULL);
             //strcpy(ncontaCliente.valorDeve, tok);
             //categoria.lotacao_max = atoi(tok);
 
             fgets(linha, 150, arq); //pega o <valorPago>
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
             ncontaCliente.valorPago = strtof(tok,NULL);
 
@@ -1113,46 +1185,54 @@ void importa_Locacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente) 
                 break;
             }
 
-            for (int i = 0; i < ncontaCliente.tamLocados - 1; i++){
-                fgets(linha, 150, arq); //pega locados
 
+            int i = 0 ;
+
+            //printf("Antes do While %s",linha); //Idlocado deve aparecer aqui sempre
+            while (strcmp(linha, "\t\t</contaCliente>\n") != 0 && strstr(linha, "</contaCliente>") == NULL){
+                fgets(linha, 150, arq); //pega locados
+                //printf("\n%s",linha);
+                if (strcmp(linha, "\t\t</contaCliente>\n") == 0 || strstr(linha, "</contaCliente>") != NULL) { //Verifica se a struct acabou
+                    printf("break contaCliente");
+                    break;
+                }
                 fgets(linha, 150, arq); //pega o <id>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].ID = strtol(tok, NULL, 10);
 
                 fgets(linha, 150, arq); //pega o <idFuncionario>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].IdFuncionario = strtol(tok,NULL,10);
 
                 fgets(linha, 150, arq); //pega o <qtdFilme>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].qtdFilme = strtol(tok,NULL,10);
 
                 fgets(linha, 150, arq); //pega o <valorTotal>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].valorTotal = strtof(tok,NULL);
 
                 fgets(linha, 150, arq); //pega o <valorDeve>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].valordeve = strtof(tok,NULL);
 
                 fgets(linha, 150, arq); //pega o <valorEntrada>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].valorEntrada = strtof(tok,NULL);
 
                 fgets(linha, 150, arq); //pega o <tipo_pagamento>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].tipoPagamento = strtol(tok,NULL,10);
 
                 fgets(linha, 150, arq); //pega o <dtPagamento>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "/</>"); // Pegar dia
                 ncontaCliente.dEmprestimo[i].Dtpagamento.dia = strtol(tok,NULL,10);
                 tok = strtok(NULL, "/</>"); // Pegar Mes
@@ -1161,57 +1241,65 @@ void importa_Locacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente) 
                 ncontaCliente.dEmprestimo[i].Dtpagamento.ano = strtol(tok,NULL,10);
 
                 fgets(linha, 150, arq); //pega o <qtdParcelas>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].qtdParcelas = strtol(tok,NULL,10);
 
                 fgets(linha, 150, arq); //pega o <parcelasPagas>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].parcelasPagas = strtol(tok,NULL,10);
 
                 fgets(linha, 150, arq); //pega o <TDdevolvido>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].TDdevolvido = strtol(tok,NULL,10);
 
                 fgets(linha, 150, arq); //pega o <ultimoIDOperacao>
-                tok = strtok(linha, "<>");
+                tok = strtok(linha, "\t<>");
                 tok = strtok(NULL, "</>");
                 ncontaCliente.dEmprestimo[i].ultimoIDOperacao = strtol(tok,NULL,10);
 
-                fgets(linha, 150, arq); //pega operacoe
-                //Preencher Operacoes
                 ncontaCliente.dEmprestimo[i].dFilme = calloc(ncontaCliente.dEmprestimo[i].qtdFilme,sizeof (operacoe));
                 if (ncontaCliente.dEmprestimo[i].dFilme == NULL){
                     printf("Erro na alocacao de Memoria");
                     exit(1);
                     break;
                 }
-                for (int j = 0; j < ncontaCliente.dEmprestimo[i].qtdFilme - 1; j++){
+
+                fgets(linha, 150, arq); //pega operacoe
+                //printf("Antes do Segundo While: %s",linha);
+                int j = 0;
+                while (j < ncontaCliente.dEmprestimo[i].qtdFilme - 1 && strstr(linha, "</operacoe>") == NULL){
                     fgets(linha, 150, arq); //pega resgistro
+                    //printf("OPERACAO %s",linha);
+                    if (strcmp(linha, "\t\t\t\t</operacoe>\n") == 0 ||
+                        strstr(linha, "</operacoe>") != NULL) { //Verifica se a struct acabou
+                        //break;
+                    }
+
                     fgets(linha, 150, arq); //pega o <id>
-                    tok = strtok(linha, "<>");
+                    tok = strtok(linha, "\t<>");
                     tok = strtok(NULL, "</>");
                     ncontaCliente.dEmprestimo[i].dFilme[j].ID = strtol(tok, NULL, 10);
 
                     fgets(linha, 150, arq); //pega o <idFilme>
-                    tok = strtok(linha, "<>");
+                    tok = strtok(linha, "\t<>");
                     tok = strtok(NULL, "</>");
                     ncontaCliente.dEmprestimo[i].dFilme[j].CodFilme = strtol(tok,NULL,10);
 
                     fgets(linha, 150, arq); //pega o <nomeFilme>
-                    tok = strtok(linha, "<>");
+                    tok = strtok(linha, "\t<>");
                     tok = strtok(NULL, "</>");
                     strcpy( ncontaCliente.dEmprestimo[i].dFilme[j].nomeFilme,tok);
 
                     fgets(linha, 150, arq); //pega o <valorFilme>
-                    tok = strtok(linha, "<>");
+                    tok = strtok(linha, "\t<>");
                     tok = strtok(NULL, "</>");
                     ncontaCliente.dEmprestimo[i].dFilme[j].valorFilme = strtof(tok,NULL);
 
                     fgets(linha, 150, arq); //pega o <dtemprestimo>
-                    tok = strtok(linha, "<>");
+                    tok = strtok(linha, "\t<>");
                     tok = strtok(NULL, "/</>"); // Pegar dia
                     ncontaCliente.dEmprestimo[i].dFilme[j].dtemprestimo.dia = strtol(tok,NULL,10);
                     tok = strtok(NULL, "/</>"); // Pegar Mes
@@ -1220,7 +1308,7 @@ void importa_Locacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente) 
                     ncontaCliente.dEmprestimo[i].dFilme[j].dtemprestimo.ano = strtol(tok,NULL,10);
 
                     fgets(linha, 150, arq); //pega o <dtdevolucao>
-                    tok = strtok(linha, "<>");
+                    tok = strtok(linha, "\t<>");
                     tok = strtok(NULL, "/</>"); // Pegar dia
                     ncontaCliente.dEmprestimo[i].dFilme[j].dtdevolucao.dia = strtol(tok,NULL,10);
                     tok = strtok(NULL, "/</>"); // Pegar Mes
@@ -1229,7 +1317,7 @@ void importa_Locacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente) 
                     ncontaCliente.dEmprestimo[i].dFilme[j].dtdevolucao.ano = strtol(tok,NULL,10);
 
                     fgets(linha, 150, arq); //pega o <dtdevolucaoReal>
-                    tok = strtok(linha, "<>");
+                    tok = strtok(linha, "\t<>");
                     tok = strtok(NULL, "/</>"); // Pegar dia
                     ncontaCliente.dEmprestimo[i].dFilme[j].dtdevolucaoReal.dia = strtol(tok,NULL,10);
                     tok = strtok(NULL, "/</>"); // Pegar Mes
@@ -1238,17 +1326,25 @@ void importa_Locacao(FILE *arq, contaCliente **dtbaseCCliente, int qtdCCliente) 
                     ncontaCliente.dEmprestimo[i].dFilme[j].dtdevolucaoReal.ano = strtol(tok,NULL,10);
 
                     fgets(linha, 150, arq); //pega o <devolvido>
-                    tok = strtok(linha, "<>");
+                    tok = strtok(linha, "\t<>");
                     tok = strtok(NULL, "</>");
                     ncontaCliente.dEmprestimo[i].dFilme[j].devolvido = strtol(tok, NULL, 10);
 
                     fgets(linha, 150, arq); //pega <\resgistro>
+                    printf("\n%s %d %s %d",ncontaCliente.Nome,ncontaCliente.dEmprestimo[i].dFilme[j].ID,ncontaCliente.dEmprestimo[i].dFilme[j].nomeFilme,ncontaCliente.dEmprestimo[i].dFilme[j].devolvido);
+                    //system("pause");
+                    j++;
                 }
-                fgets(linha, 150, arq); //pega /operacoe
+                fgets(linha, 150, arq); //pega </operacoe> ou <locados>
+                if (strstr(linha,"</operacoe>") != NULL){
+                    fgets(linha, 150, arq); //pega locado
+                }
+                //printf("\nFIM: %s",linha);
+                i++;
             }
-            fgets(linha, 150, arq); //pega locados
-
-            //fgets(linha, 150, arq); //pega o tabela
+            //fgets(linha, 150, arq); //pega locados
+            //fgets(linha, 150, arq); //pega o </locacao>
+            //printf("%s",linha);system("pause");
         }
         line++;
     }
@@ -1260,10 +1356,10 @@ void exportDadosEntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme){
         exit(1);
     }
 
-    fprintf(arq,"\t<Ent_Filme>");
+    fprintf(arq,"\t<ent_Filme>");
     for (int i = 0; i < qtdeFilme; i++)
     {
-        fprintf(arq,"\n\t\t<contaLocadora>"
+        fprintf(arq,"\n\t\t<contaFornecedor>"
                     "\n\t\t\t<id>%d</id>"
                     "\n\t\t\t<idFornecedor>%d</idFornecedor>"
                     "\n\t\t\t<nomeFornecedor>%s</nomeFornecedor>"
@@ -1316,22 +1412,24 @@ void exportDadosEntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme){
             );
 
             for (int k = 0; k < (*dtbase_eFilme)[i].filmes[j].tamFilm; k++){
-                fprintf(arq,"\n\t\t\t\t\t<resgistro>"
+                fprintf(arq,"\n\t\t\t\t\t<registro>"
                             "\n\t\t\t\t\t\t<id>%d</id>"
                             "\n\t\t\t\t\t\t<nome>%s</nome>"
                             "\n\t\t\t\t\t\t<valorCompra>%.2f</valorCompra>"
                             "\n\t\t\t\t\t\t<qtd>%d</qtd>"
-                            "\n\t\t\t\t\t</resgistro>",(*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].codigo,
+                            "\n\t\t\t\t\t\t<IDdbaseFIlme>%d</IDdbaseFIlme>"
+                            "\n\t\t\t\t\t</registro>",(*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].codigo,
                         (*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].nome,
                         (*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].valorCompra,
-                        (*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].qtd
+                        (*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].qtd,
+                        (*dtbase_eFilme)[i].filmes[j].entradaFilmesCadastro[k].IDDTbaseFIlme
                         );
             }
             fprintf(arq,"\n\t\t\t\t</filmeEnt>\n\t\t\t</operacaoEFilme>");
         }
-        fprintf(arq,"\n\t\t</contaLocadora>");
+        fprintf(arq,"\n\t\t</contaFornecedor>");
     }
-    fprintf(arq,"\n\t</Ent_Filme>\n");
+    fprintf(arq,"\n\t</ent_Filme>\n");
 }
 
 void importa_EntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme) {
@@ -1344,7 +1442,7 @@ void importa_EntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme) {
     int lineinit = 0;
     while ((achou == 0) && (!feof(arq))) {
         fgets(linha, 150, arq);
-        if (strcmp(linha, "\t<fornecedor>\n") == 0) {
+        if (strcmp(linha, "\t<ent_Filme>\n") == 0) {
             achou = 1;
             break;
         }
@@ -1352,73 +1450,209 @@ void importa_EntFilme(FILE *arq, eFilme **dtbase_eFilme, int qtdeFilme) {
     }
 
     if (achou == 0) {
-        printf("Dados de Fornecedor nao encontrado");
+        printf("Dados de Entrada de Filme nao encontrado");
         return;
     }
 
     char *tok;
-    fornecedor nfornecedor;
+    eFilme n_efilme;
 
     int line = 0;
-    while (strcmp(linha, "</fornecedor>\n") != 0 || (!feof(arq) || strstr(linha,"</fornecedor>") != NULL)){
+    while ((strcmp(linha, "\t</ent_Filme>\n") != 0 || (!feof(arq)) && strstr(linha,"</ent_Filme>") == NULL)){
 
         if (line >= lineinit) {
             fgets(linha, 150, arq);
-            if (strcmp(linha, "</fornecedor>\n") == 0 ||
-                strstr(linha, "</fornecedor>") != NULL) { //Verifica se a struct acabou
-                printf("opa");
+            if (strcmp(linha, "\t</ent_Filme>\n") == 0 ||
+                strstr(linha, "</ent_Filme>") != NULL) { //Verifica se a struct acabou
                 break;
             }
             fgets(linha, 150, arq); //pega o codigo
-            tok = strtok(linha, "<>");
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
-            nfornecedor.id = strtol(tok, NULL, 10);
+            n_efilme.ID = strtol(tok, NULL, 10);
 
-            fgets(linha, 150, arq); //pega o <nomeFantasia>
-            tok = strtok(linha, "<>");
+            fgets(linha, 150, arq); //pega o idFornecedor
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
-            strcpy(nfornecedor.nomeFantasia, tok);
+            n_efilme.IDFornecedor = strtol(tok, NULL, 10);
 
-            fgets(linha, 150, arq); //pega o <razaoSocial>
-            tok = strtok(linha, "<>");
+            fgets(linha, 150, arq); //pega o <nomeFornecedor>
+            tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
-            strcpy(nfornecedor.razaoSocial, tok);
-
-            fgets(linha, 150, arq); //pega o <inscricaoEstadual>
-            tok = strtok(linha, "<>");
-            tok = strtok(NULL, "</>");
-            strcpy(nfornecedor.inscricaoEstadual, tok);
-            //categoria.lotacao_max = atoi(tok);
+            //strcpy(n_efilme.nomefornecedor, tok);
+            n_efilme.nomefornecedor = string_to_pointer(tok);
 
             fgets(linha, 150, arq); //pega o <cnpj>
-            tok = strtok(linha, "<>");
-            tok = strtok(NULL, "</>");
-            strcpy(nfornecedor.cnpj, tok);
-
-            fgets(linha, 200, arq); //pega <endereco>
-            tok = strtok(linha, "\t<>");
-            tok = strtok(NULL, ",</>");
-            strcpy(nfornecedor.endereco.rua,tok);
-            tok = strtok(NULL, ",</>");
-            nfornecedor.endereco.numero = strtol(tok,NULL,10);
-            tok = strtok(NULL, ",</>");
-            strcpy(nfornecedor.endereco.bairro,tok);
-            tok = strtok(NULL, ",</>");
-            strcpy(nfornecedor.endereco.cidade,tok);
-            tok = strtok(NULL, ",</>");
-            strcpy(nfornecedor.endereco.estado,tok);
-
-            fgets(linha, 150, arq); //pega <telefone>
             tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
-            strcpy(nfornecedor.telefone,tok);
+            strcpy(n_efilme.cnpj, tok);
+            //categoria.lotacao_max = atoi(tok);
 
-            fgets(linha, 150, arq); //pega <email>
+            fgets(linha, 150, arq); //pega o <tamOp>
             tok = strtok(linha, "\t<>");
             tok = strtok(NULL, "</>");
-            strcpy(nfornecedor.email,tok);
+            n_efilme.tamOp = strtol(tok, NULL, 10);
 
-            fgets(linha, 150, arq); //pega o tabela
+            fgets(linha, 150, arq); //pega o <ultIDOp>
+            tok = strtok(linha, "\t<>");
+            tok = strtok(NULL, "</>");
+            n_efilme.ultIDOp = strtol(tok, NULL, 10);
+
+            n_efilme.filmes = calloc(n_efilme.tamOp,sizeof (operacaoEFilme));
+            // -------------------------- Preencher dados de Operacao Locados ----------------------------
+            if (n_efilme.filmes == NULL){
+                printf("Erro na Alocacao de Memoria");
+                break;
+            }
+
+            int i = 0 ;
+            printf("\nAntes do While %s",linha); //ultimoID deve aparecer aqui sempre
+            while (strcmp(linha, "\t\t</contaFornecedor>\n") != 0 && strstr(linha, "</contaFornecedor>") == NULL) {
+                fgets(linha, 150, arq); //pega locados
+                //printf("\n%s",linha);
+                if (strcmp(linha, "\t\t</contaFornecedor>\n") == 0 ||
+                    strstr(linha, "</contaFornecedor>") != NULL) { //Verifica se a struct acabou
+                    break;
+                }
+                fgets(linha, 150, arq); //pega o <id>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].ID = strtol(tok, NULL, 10);
+
+                fgets(linha, 150, arq); //pega o <frete>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].frete = strtof(tok,NULL);
+
+                fgets(linha, 150, arq); //pega o <imposto>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].Imposto = strtof(tok,NULL);
+
+                fgets(linha, 150, arq); //pega o <tamFilm>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].tamFilm = strtol(tok, NULL, 10);
+
+                fgets(linha, 150, arq); //pega o <fretePproduto>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].fretePproduto = strtof(tok,NULL);
+
+                fgets(linha, 150, arq); //pega o <impostoPproduto>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].ImpostoPproduto = strtof(tok,NULL);
+
+                fgets(linha, 150, arq); //pega o <valorTotal>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].valorTotal = strtof(tok,NULL);
+
+                fgets(linha, 150, arq); //pega o <tipopagamento>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].tipoPagamento = strtol(tok, NULL, 10);
+
+                fgets(linha, 150, arq); //pega o <qtdParcelas>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].qtdParcelas = strtol(tok, NULL, 10);
+
+                fgets(linha, 150, arq); //pega o <parcelasPagas>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].parcelasPagas = strtol(tok, NULL, 10);
+
+                fgets(linha, 150, arq); //pega o <valorentrada>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].valorEntrada = strtof(tok,NULL);
+
+                fgets(linha, 150, arq); //pega o <valorDeve>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].valorDeve = strtof(tok,NULL);
+
+                fgets(linha, 150, arq); //pega o <dtnota
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "/</>"); // Pegar dia
+                n_efilme.filmes[i].dtNota.dia = strtol(tok,NULL,10);
+                tok = strtok(NULL, "/</>"); // Pegar Mes
+                n_efilme.filmes[i].dtNota.mes = strtol(tok,NULL,10);
+                tok = strtok(NULL, "/</>"); // Pegar Ano
+                n_efilme.filmes[i].dtNota.ano = strtol(tok,NULL,10);
+
+                fgets(linha, 150, arq); //pega o <dtpagamenro
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "/</>"); // Pegar dia
+                n_efilme.filmes[i].dtPagamento.dia = strtol(tok,NULL,10);
+                tok = strtok(NULL, "/</>"); // Pegar Mes
+                n_efilme.filmes[i].dtPagamento.mes = strtol(tok,NULL,10);
+                tok = strtok(NULL, "/</>"); // Pegar Ano
+                n_efilme.filmes[i].dtPagamento.ano = strtol(tok,NULL,10);
+
+                fgets(linha, 150, arq); //pega o <ultIDFilm>
+                tok = strtok(linha, "\t<>");
+                tok = strtok(NULL, "</>");
+                n_efilme.filmes[i].parcelasPagas = strtol(tok, NULL, 10);
+
+                // --------------------- Preencher Filmes ------------------------------------
+                n_efilme.filmes[i].entradaFilmesCadastro = calloc(n_efilme.filmes[i].tamFilm,sizeof (filme));
+                if (n_efilme.filmes[i].entradaFilmesCadastro == NULL){
+                    printf("Erro na alocacao de Memoria");
+                    exit(1);
+                    break;
+                }
+                fgets(linha, 150, arq); //pega operacoe
+                printf("\nAntes do Segundo While: %s",linha);
+                int j = 0;
+                // ----------------- Preencher entradaFilmesCadastro ---------------------------
+                while (j <= n_efilme.filmes[i].tamFilm && strstr(linha, "</filmeEnt>") == NULL) {
+                    fgets(linha, 150, arq); //pega resgistro
+                    printf("\nfilmeEnt %s", linha);
+                    if (strcmp(linha, "\t\t\t\t</filmeEnt>\n") == 0 ||
+                        strstr(linha, "</filmeEnt>") != NULL) { //Verifica se a struct acabou
+                        break;
+                    }
+                    fgets(linha, 150, arq); //pega o <id>
+                    tok = strtok(linha, "\t<>");
+                    tok = strtok(NULL, "</>");
+                    n_efilme.filmes[i].entradaFilmesCadastro[j].codigo = strtol(tok, NULL, 10);
+
+                    fgets(linha, 150, arq); //pega o <nome>
+                    tok = strtok(linha, "\t<>");
+                    tok = strtok(NULL, "</>");
+                    strcpy(n_efilme.filmes[i].entradaFilmesCadastro[j].nome,tok);
+
+                    fgets(linha, 150, arq); //pega o <valorCompra>
+                    tok = strtok(linha, "\t<>");
+                    tok = strtok(NULL, "</>");
+                    n_efilme.filmes[i].entradaFilmesCadastro[j].valorCompra = strtof(tok,NULL);
+
+                    fgets(linha, 150, arq); //pega o <qtd>
+                    tok = strtok(linha, "\t<>");
+                    tok = strtok(NULL, "</>");
+                    n_efilme.filmes[i].entradaFilmesCadastro[j].qtd = strtol(tok, NULL, 10);
+
+                    fgets(linha, 150, arq); //pega o <IDDTbaseFIlme>
+                    tok = strtok(linha, "\t<>");
+                    tok = strtok(NULL, "</>");
+                    n_efilme.filmes[i].entradaFilmesCadastro[j].IDDTbaseFIlme = strtol(tok, NULL, 10);
+
+
+                    printf("%s %s %d",n_efilme.nomefornecedor,n_efilme.filmes[i].entradaFilmesCadastro[j].nome, j);
+                    fgets(linha, 150, arq); //pega <\resgistro>
+                    j++;
+                }
+                fgets(linha, 150, arq); //pega </filmeEnt> ou </operacaoEFilme>
+                if (strstr(linha,"</filmeEnt>") != NULL){
+                    fgets(linha, 150, arq); //pega operacaoEFilme
+                }
+                printf("\nFIM: %s",linha);
+                i++;
+            }
+            //fgets(linha, 150, arq); //pega o tabela
         }
         line++;
     }
