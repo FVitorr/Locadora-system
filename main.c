@@ -42,7 +42,7 @@ financeiro monetario;
 
 int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
                   fCategoria **dtbaseCategoria, int *qtd_Categoria,int *tamanho_Categoria,int *idCategoria,
-                  filme **dtbaseFilme, int *qtd_Filmes,int *tamanhoFilmes, int *idFilme,
+                  filme **dtbaseFilme, int *qtd_Filmes,int *tamanho_Filmes, int *idFilme,
                   funcionarios **dtbasefuncionarios, int *qtd_Funcionarios,int *tamanho_Funcionarios,int *idFuncionarios,int idFuncionarioLogado,
                   locadora **dtbaseLocadora, int *qtd_Locadora,int *tamanho_Locadora,int *idLocadora,
                   cliente **dtbaseCliente, int *qtd_Cliente,int *tamanho_Cliente,int *idCliente,
@@ -82,7 +82,7 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
             system("cls");
 
             while (1){
-                int t = menuLocacao(dtbaseFilme,qtd_Filmes,tamanhoFilmes,idFilme,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
+                int t = menuLocacao(dtbaseFilme,qtd_Filmes,tamanho_Filmes,idFilme,dtbaseCliente,*qtd_Cliente,dtbasefuncionarios,*qtd_Funcionarios,idFuncionarioLogado,
                                     dtbaseCCliente,qtd_CCliente,tamanho_CCliente,idCCliente,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,
                                     dtbaseFornecedor,qtd_Fornecedor,tamanho_Fornecedor,idEntradaFilme,dtBaseeFilme,tam_eFilme,qtd_eFilme,monetario_,*tipo_config);
                 (*dtbaseLocadora)[0].monetario = *monetario_;
@@ -110,7 +110,7 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
             break;
         case 4:
             while (1){
-                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanhoFilmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,idFilme, *tipo_config);
+                int t = menuFilme(dtbaseFilme,qtd_Filmes,tamanho_Filmes,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,idCategoria,idFilme, *tipo_config);
                 refazDados_Categoria(dtbaseCategoria,*qtd_Categoria,*tipo_config);
                 if (t == 1){
                     break;
@@ -145,7 +145,7 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
         case 8:
             while (1){
                 while (1){
-                    int t = menuImportacaoExportcao(dtbaseCliente,*qtd_Cliente,dtbaseFilme,*qtd_Filmes,dtbaseLocadora,*qtd_Locadora,dtbaseCategoria,*qtd_Categoria,dtbaseFornecedor,*qtd_Fornecedor,dtbasefuncionarios,*qtd_Funcionarios,dtbaseCCliente,*qtd_CCliente,dtBaseeFilme,*qtd_eFilme);
+                    int t = menuImportacaoExportcao(dtbaseCliente,qtd_Cliente,tamanho_Cliente,dtbaseFilme,qtd_Filmes,tamanho_Filmes,dtbaseLocadora,qtd_Locadora,tamanho_Locadora,dtbaseCategoria,qtd_Categoria,tamanho_Categoria,dtbaseFornecedor,qtd_Fornecedor,tamanho_Fornecedor,dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,dtbaseCCliente,qtd_CCliente,tamanho_CCliente,dtBaseeFilme,qtd_eFilme,tam_eFilme);
                     if (t == 1){
                         break;
                     }

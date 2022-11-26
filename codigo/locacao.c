@@ -356,7 +356,7 @@ contaCliente objetoCCliente(int *IdContaCliente,int key_cliente,cliente **dtbase
 
     novoCliente.idCliente = idCliente;
 
-    novoCliente.Nome = nomeCliente(dtbaseCliente,qtdcliente,idCliente);
+    strcpy(novoCliente.Nome,nomeCliente(dtbaseCliente,qtdcliente,idCliente));
 
     novoCliente.valorDeve = 0;
     novoCliente.valorPago = 0;
@@ -687,8 +687,9 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
             fscanf(fileLocados, "%d\n", &new.idCliente);
 
             char nome[120];
-            fgets(nome, 120, fileLocados);
-            new.Nome = string_to_pointer(nome);
+            fgets(new.Nome, 120, fileLocados);
+            limpa_final_string(new.Nome);
+            //new.Nome = string_to_pointer(nome);
 
             fscanf(fileLocados, "%f\n", &new.valorDeve);
             fscanf(fileLocados, "%f\n", &new.valorPago);
@@ -822,7 +823,7 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
 void refazNameCCliente(contaCliente *objeto,filme **dtbaseFIlme,int qtdfilme,cliente **dtbaseCliente,int qtdCLiente){
     for (int i = 0; i < qtdCLiente; i++){
         if ((*objeto).idCliente == (*dtbaseCliente)[i].id){
-            (*objeto).Nome = (*dtbaseCliente)[i].nome;
+            strcpy((*objeto).Nome,(*dtbaseCliente)[i].nome);
             break;
         }
     }

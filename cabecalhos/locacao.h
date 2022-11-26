@@ -34,7 +34,7 @@ typedef struct {
 typedef struct {
     int ID;
     int idCliente;
-    char *Nome;
+    char Nome[120];
     float valorDeve; // Valor que o Cliente deve
     float valorPago; // Valor que o Cliente paogu
     locados *dEmprestimo;
