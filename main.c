@@ -119,7 +119,7 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
             break;
         case 5:
             while (1){
-                int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios, *tipo_config);
+                int t = menuFuncionarios(dtbasefuncionarios,qtd_Funcionarios,tamanho_Funcionarios,idFuncionarios,idFuncionarioLogado, *tipo_config);
                 if (t == 1){
                     break;
                 }
@@ -236,9 +236,9 @@ int carregaTodosDados(int *tipoConfig, config *config_system,
         strcpy(set.password,config_system->password);
 
 
-        //*idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,*qtd_Funcionario);
+        *idFuncionarioLogado = autentificacaoSystem(&set,&bd_funcionarios,*qtd_Funcionario);
         printf("ID: %d",*idFuncionarioLogado);
-        *idFuncionarioLogado = 1;
+        //*idFuncionarioLogado = 1;
 
         system("cls");
     }

@@ -1747,7 +1747,12 @@ int menuImportacaoExportcao(cliente **dtbaseCliente, int *qtdcliente,int *tamCli
             if (t == 0){
                 break;
             }
-            importarDados(camposExportarImportar,"test.xml",
+            char namepaht[120];
+            printf("\nInforme o caminho (e o nome) do arquivo que deseja importar:\nEx: C:\\Users\\augus\\Downloads\\arqExport.xml \n\n>>");
+            scanf("%[^\n]s",namepaht);
+            limpa_final_string(namepaht);
+
+            importarDados(camposExportarImportar,namepaht,
                           dtbaseCliente,qtdcliente,tamCliente,
                           dtbaseFilme,qtdfilme,tamFilme,
                           dtbaselocadora,qtdlocadora,tamlocadora,
@@ -1756,6 +1761,9 @@ int menuImportacaoExportcao(cliente **dtbaseCliente, int *qtdcliente,int *tamCli
                           dtbasefuncionarios,qtdfuncionarios,tamfuncionarios,
                           dtbaseCCliente,qtdCCliente,tamCCliente,
                           dtbase_eFilme,qtdeFilme,tameFilme);
+
+            printf("\n\nDados Importados: C:\\Users\\augus\\Downloads\\arqExport.xml");
+            system("pause");
             system("cls");
             return 1; // Sair
         }
@@ -1768,8 +1776,21 @@ int menuImportacaoExportcao(cliente **dtbaseCliente, int *qtdcliente,int *tamCli
             if (t == 0){
                 break;
             }
-            exportarDados(camposExportarImportar,"test.xml",dtbaseCliente,*qtdcliente,dtbaseFilme,*qtdfilme,dtbaselocadora,*qtdlocadora,
+            char namepaht[120];
+            printf("\nInforme o caminho para o qual deseja exportar os dados:\n"
+                   "Ex: C:\\Users\\augus\\Downloads\\ \n\n>>");
+            scanf("%[^\n]s",namepaht);
+            limpa_final_string(namepaht);
+
+            if (namepaht[(int)strlen(namepaht) - 1] == '\\'){
+                strcat(namepaht,"arqExport.xml");
+            }else{
+                strcat(namepaht,"/arqExport.xml");
+            }
+            exportarDados(camposExportarImportar,namepaht,dtbaseCliente,*qtdcliente,dtbaseFilme,*qtdfilme,dtbaselocadora,*qtdlocadora,
                           dtbasecategoria,*qtdcategoria,dtbasefornecedor,*qtdFornecedor,dtbasefuncionarios,*qtdfuncionarios,dtbaseCCliente,*qtdCCliente,dtbase_eFilme,*qtdeFilme);
+            printf("\n\nArquivo exportado com Sucesso:\n\t>>: %s\n\n",namepaht);
+            system("pause");
             system("cls");
             return 1; // Sair
         }

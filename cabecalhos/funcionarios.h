@@ -28,7 +28,7 @@ int inserirFuncionario(funcionarios **dtbase, funcionarios novoFuncionario, int 
 /*
  * Função que permite a listar os funcionario
  */
-void listFuncionarios(funcionarios **dtbase, int qtd);
+void listFuncionarios(funcionarios **dtbase, int qtd,int idfuncionariologado);
 /*
  * Função que permite a Alterar os dados dos funcionario.
  */
@@ -40,7 +40,8 @@ int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id, int
 /*
  * Função que Gerencia as operaçoes de funcionario.
  */
-int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios,int *tamanhoFuncionarios,int *idControle, int tipo_config);
+int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFuncionarios, int *idControleCliente,
+                     int idFuncionarioLogado,int tipo_config);
 /*
  * Função que salva os funcionarios no arquivo
  */

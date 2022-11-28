@@ -93,13 +93,12 @@ inserirFuncionario(funcionarios **dtbase, funcionarios novoFuncionario, int *qtd
     return 1;
 }
 
-void listFuncionarios(funcionarios **dtbase, int qtd) {
+void listFuncionarios(funcionarios **dtbase, int qtd,int idfuncionariologado) {
     if (qtd > 0) {
         //printf("\n ID \t Nome \t\t Cargo \t Telefone \t Email \t\t\t User \t Password\n");
         for (int c = 0; c < qtd; c++) {
             printf("---------------------------------------------------------------------------------\n");
-            printf("(%d) Nome : %s\nCargo: %s \n\nRua: %s \nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s\nTelefone: %s\nEmail: %s"
-                   "\nUser: %s \nPassword: %s\n",
+            printf("(%d) Nome : %s\nCargo: %s \n\nRua: %s \nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s\nTelefone: %s\nEmail: %s",
                    (*dtbase)[c].codigo,
                    (*dtbase)[c].nome,
                    (*dtbase)[c].cargo,
@@ -109,9 +108,11 @@ void listFuncionarios(funcionarios **dtbase, int qtd) {
                    (*dtbase)[c].endereco.cidade,
                    (*dtbase)[c].endereco.estado,
                    (*dtbase)[c].telefone,
-                   (*dtbase)[c].email,
-                   (*dtbase)[c].login.user,
-                   (*dtbase)[c].login.password);
+                   (*dtbase)[c].email);
+            if (idfuncionariologado == 0){
+                printf ("\nUser: %s \nPassword: %s\n",(*dtbase)[c].login.user,
+                        (*dtbase)[c].login.password);
+            }
         }
     } else {
         printf("\n\t>> Nada para mostrar aqui");
@@ -146,7 +147,7 @@ int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id, int
 }
 
 int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFuncionarios, int *idControleCliente,
-                     int tipo_config) {
+                     int idFuncionarioLogado,int tipo_config) {
     int escolha = INT32_MAX;
     char temEscolha[4];
 
@@ -184,13 +185,13 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFu
                 break;
             }
             case 2: {
-                listFuncionarios(dtbase, *qtdFuncionarios);
+                listFuncionarios(dtbase, *qtdFuncionarios, idFuncionarioLogado);
                 system("pause");
                 break;
             }
             case 3: {
                 int id;
-                listFuncionarios(dtbase, *qtdFuncionarios);
+                listFuncionarios(dtbase, *qtdFuncionarios,idFuncionarioLogado);
                 printf("\n\tDigite o ID do Funcionario que deseja editar(0- Sair).\n\t>>");
                 scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
                 setbuf(stdin,NULL);
@@ -202,7 +203,7 @@ int menuFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int *tamanhoFu
             }
             case 4: {
                 int id;
-                listFuncionarios(dtbase, *qtdFuncionarios);
+                listFuncionarios(dtbase, *qtdFuncionarios,idFuncionarioLogado);
                 printf("\n\tDigite o ID do Funcionario que deseja excluir (0- Sair).\n\t>>");
                 scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
                 setbuf(stdin,NULL);

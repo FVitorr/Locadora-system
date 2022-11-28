@@ -123,8 +123,6 @@ void listFornecedor(fornecedor **dtbase, int qtd) {
         printf("\n\t>> Nada para mostrar aqui");
     }
     printf("\n\n");
-
-    system("pause");
 }
 
 void editarFornecedor(fornecedor **dtbase, int qtdFornecedor, int *tamanhoFornecedor, int id, int tipo_config)
@@ -168,21 +166,28 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
             }
             case 2: {
                 listFornecedor(bd_fornecedor, *qtdFornecedor);
+                system("pause");
                 break;
             }
             case 3: {
                 int id = 0;
                 listFornecedor(bd_fornecedor, *qtdFornecedor);
-                printf("Digite o ID do Fornecedor que deseja editar.\n");
+                printf("\n\tDigite o ID do Fornecedor que deseja editar (0- Sair)\n>>");
                 scanf("%d", &id);
+                if (id == 0){
+                    break;
+                }
                 editarFornecedor(bd_fornecedor, *qtdFornecedor, tamanhoFornecedor, id, tipo_config);
                 break;
             }
             case 4: {
                 int id = 0;
                 listFornecedor(bd_fornecedor, *qtdFornecedor);
-                printf("Digite o ID do Cliente que deseja excluir.\n");
+                printf("\n\tDigite o ID do Fornecedor que deseja excluir (0- Sair)\n>>");
                 scanf("%d", &id);
+                if (id == 0){
+                    break;
+                }
                 removerFornecedor(bd_fornecedor, id, qtdFornecedor, tipo_config);
                 break;
             }
@@ -256,7 +261,7 @@ char *nomeFornecedor(fornecedor **dtbase, int qtd, int id){
 
 int retornarUltimoID_Fornecedor(fornecedor **dtBase, int qtdFornecedor){
     int id,tId = 0;
-    id = (qtdFornecedor > 0) ? (*dtBase)[0].id : 0;
+    id = (qtdFornecedor > 0) ? (*dtBase)[0].id : 1;
     for (int i = 1; i < qtdFornecedor; i++){
         tId = (id <= (*dtBase)[i].id) ? id = (*dtBase)[i].id + 1: id;
     }

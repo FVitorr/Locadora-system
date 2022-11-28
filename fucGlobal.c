@@ -409,13 +409,22 @@ char *nameConfig(int tipoConfig){
     return ConfigTipo;
 }
 
+int exColor = 0;
 
 int menuConfiguracao(config *set,int *tipoConfig){
 
     int alterarID;
+    char cores[30];
+    if (exColor == 0){
+        strcpy(cores,"Branco/Preto\0");
+    }else if (exColor == 1){
+        strcpy(cores,"Verde/Preto\0");
+    }else if (exColor == 2){
+        strcpy(cores,"Azul/Preto\0");
+    }
     lineBox(65,"CONFIGURACOES / AJUDA\0",1);
     printf("\t1- Arquivos Salvos ...................... %s\n",nameConfig(*tipoConfig));
-    printf("\t2- Usuario Logado  ...................... (NULL)\n");
+    printf("\t2- Cores ...................... %s\n",cores);
     lineBox(65,"-\0",0);
     char num[4];
 
@@ -438,48 +447,79 @@ int menuConfiguracao(config *set,int *tipoConfig){
         if (numOpc == 0){
             return 0;
         }
-    } while (numOpc != 1);
+    } while (numOpc < 1 || numOpc > 2);
 
-    printf(" 0 - BIN \t 1 - TXT \t 2 - Memoria");
+
 
     int tipoConfig_ = 2;
-    do{
-        printf("\nInforme qual o tipo de armazenamento: ");
-        scanf("%s",num);
-        tipoConfig_ = strtol(num,NULL,10);
-    } while (tipoConfig_ < 0 || tipoConfig_ > 2);
+    if (numOpc == 1){
+        printf(" 0 - BIN \t 1 - TXT \t 2 - Memoria");
+        do{
+            printf("\nInforme qual o tipo de armazenamento: ");
+            scanf("%s",num);
+            tipoConfig_ = strtol(num,NULL,10);
+        } while (tipoConfig_ < 0 || tipoConfig_ > 2);
+        int exportar = 1; // Não Exportar
 
-    int exportar = 0; // Não Exportar
+        char opc[2];
+        //printf("\nDeseja Exportar os dados de %s para %s: [1 - Sim 0 - Não] ", nameConfig(*tipoConfig), nameConfig(tipoConfig_));
+        //scanf("%s",opc);
 
-    char opc[2];
-    printf("\nDeseja Exportar os dados de %s para %s: [1 - Sim 0 - Não] ", nameConfig(*tipoConfig), nameConfig(tipoConfig_));
-    scanf("%s",opc);
+        exportar = strtol(opc,NULL,10);
 
-    exportar = strtol(opc,NULL,10);
-
-    if (exportar == 1){
-        if (*tipoConfig == 0 && tipoConfig_ == 1){
-            set->tipo_configuracao = tipoConfig_;
-            refazLog(set);
-            return 1;
+        if (exportar == 0){
+            if (*tipoConfig == 0 && tipoConfig_ == 1){
+                set->tipo_configuracao = tipoConfig_;
+                refazLog(set);
+                return 1;
+            }else{
+                set->tipo_configuracao = tipoConfig_;
+                refazLog(set);
+                return 2;
+            }
         }else{
-            set->tipo_configuracao = tipoConfig_;
-            refazLog(set);
-            return 2;
-        }
-    }else{
-        printf("Salvar Informacoes (Precisa reiniciar o Sistema)?  [1 - Sim 0 - Não]");
-        scanf("%s",opc);
+            printf("Salvar Informacoes (Precisa reiniciar o Sistema)?  [1 - Sim 0 - Não]");
+            scanf("%s",opc);
 
-        int salve = strtol(opc,NULL,10);
-        if (salve == 1){
-            set->tipo_configuracao = tipoConfig_;
-            refazLog(set);
-            exit(1);
+            int salve = strtol(opc,NULL,10);
+            if (salve == 1){
+                set->tipo_configuracao = tipoConfig_;
+                refazLog(set);
+                exit(1);
+            }
         }
+    }else if (numOpc == 2){
+        printf(" 0 - Branco/Preto \t 1 - Verde/Preto \t 2 - Azul/Preto");
+        do{
+            printf("\nInforme qual o tipo de armazenamento: ");
+            scanf("%s",num);
+            tipoConfig_ = strtol(num,NULL,10);
+        } while (tipoConfig_ < 0 || tipoConfig_ > 2);
+
+        switch (tipoConfig_) {
+            case 0:
+                system("color 07");
+                exColor = 0;
+                break;
+            case 1:
+                system("color 0A");
+                exColor = 1;
+                break;
+            case 2:
+                system("color 09");
+                strcpy(cores,"Azul/Preto\0");
+                exColor = 2;
+                break;
+            default:
+                printf("\n\n[!] Erro ao selecionar cor");
+        }
+
     }
 
+
+
     *tipoConfig = tipoConfig_;
+    system("cls");
     return 0;
 }
 

@@ -476,8 +476,12 @@ int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtba
     data hoje;
     dataAtual(&hoje);
     char namefuncionario[120];
-    strcpy(namefuncionario,nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado));
-    printf("%c Funcionario: %s %s Data do Sistema: %.2d/%.2d/%.4d %c",186,nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado),formatstring(57 - (int)strlen(namefuncionario) ,1," \0"),hoje.dia,hoje.mes,hoje.ano,186);
+    if (idFuncionarioLogado != 0){
+        strcpy(namefuncionario,nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado));
+    }else{
+        strcpy(namefuncionario,"Adiministrador\0");
+    }
+    printf("%c Funcionario: %s %s Data do Sistema: %.2d/%.2d/%.4d %c",186,namefuncionario,formatstring(57 - (int)strlen(namefuncionario) ,1," \0"),hoje.dia,hoje.mes,hoje.ano,186);
     if(nomefuncionario(dtbaseFuncionarios, qtdFuncionarios,idFuncionarioLogado) == NULL && idFuncionarioLogado != 0){
         printf("\nPrecisa da autentificacao para acessar esse menu ...\n\n");
         system("pause");
@@ -765,7 +769,7 @@ int carregarDados_CClientes(contaCliente **dtBaseCCliente, int *qtd_CCliente, in
             }
         }
     }
-    else { //Arquivo BIN
+    else if (tipo_config == 0) { //Arquivo BIN
         fileLocados = fopen("cpyLocacao.bin", "rb");
         if (fileLocados == NULL){
             printf("\nErro na Leitura 'cpyLocacao.bin' \n");
@@ -2141,7 +2145,7 @@ int verifica_OpeFilme(eFilme **dtbase_eFilme, int qtd_eFilme, int IDConta,int ID
 int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro *monetario, int tipo_config){
     line(100,"Pagamento de Parcela Fornecedor");
     printf("ID disponiveis: \n");
-    printf("(-1) Sair  ");
+    printf("(0) Sair  ");
     int i;
     for (i = 0 ; i < qtd_eFilme; i++){
         printf("(%d) %s  ",(*dtbase_eFilme)[i].ID,(*dtbase_eFilme)[i].nomefornecedor);
@@ -2163,7 +2167,7 @@ int pagarParcelaEmprestaFilme(eFilme **dtbase_eFilme, int qtd_eFilme, financeiro
         scanf("%s", tempId);
 
         IDfornecedor = strtol(tempId,NULL,10);
-        if (IDfornecedor == -1){
+        if (IDfornecedor == 0){
             return -1;
         }
         er++;

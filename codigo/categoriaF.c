@@ -122,7 +122,7 @@ int menuCategoria(fCategoria **dtbase, int *qtdCategoria,int *tamanhoCategoria,i
     while (1) {
         system("cls");
         setbuf(stdin,NULL);
-        lineBox(70,"MENU CLIENTES\0",1);
+        lineBox(70,"MENU CATEGORIA\0",1);
         printf("\tDigite a opcao referente a operacao que deseja executar\n\n");
         printf("\t0 - Sair \n\t1 - Cadastrar \n\t2 - Visualizar \n\t3 - Editar \n\t4 - Remover\n");
         lineBox(70,"-\0",0);
