@@ -16,9 +16,17 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 
 
     line(100,"Filme\0");
+    for (int i = 0; i < qtdFilme; i++){
+        if (qtdFilme > 10 && i%7 == 0){
+            printf("\n");
+        }
+        printf("  (%d) %s",(*dtbaseFilme)[i].codigo,(*dtbaseFilme)[i].nome);
+    }
+    line(100,"-\0");
+    printf("\n\n");
 
     do {
-        printf("[0 - IDs Cadastrados ]Informe ID do Filme: ");
+        printf("Informe ID do Filme: ");
         scanf("%d", &idtpm);
 
         if (verificaIdFilme(dtbaseFilme, qtdFilme, idtpm) == 1) { //Verificar se o ID do filme Existe
@@ -893,7 +901,7 @@ int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente,financeiro *mone
             printf("\nID invalido por gentileza informe um valido\n");
         }
         char opc[4];
-        printf("\n\nInforme o ID do Cliente: ");
+        printf("\n\nInforme o ID da Nota do Cliente: ");
         scanf("%s",opc);
 
         IdCliente = strtol(opc,NULL,10);
@@ -1061,7 +1069,7 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
 
         //int key_operator = retornaChaveOperacao(dtbaselocados,qtdLocados,IDlocados,key_cliente);
 
-
+        system("cls");
         printf("\nVerifique os Filmes:\n ");
 
         int temoperacao = listLocacao(dtbaseCCliente,qtdCCliente,IdCliente,IDlocados,0,-1,1,1);
@@ -1297,6 +1305,7 @@ int entradaFilmes(fornecedor **dtbase, int *qtdFornecedor,int *tamFornecedor,int
         }
         if (*qtdFornecedor > 0) {
             line(100, "ID Fornecedores\0");
+            printf(" (0) Novo Fornecedor");
             for (int i = 0; i < *qtdFornecedor; i++) { //Listar Fornecedores disponiveis
                 printf(" (%d) %s ", (*dtbase)[i].id, (*dtbase)[i].nomeFantasia);
             }
@@ -1522,17 +1531,17 @@ operacaoEFilme objOpEfilme (int *id,financeiro *monetario,filme **dtbaseFilme,in
 
     char vfrete[9],vimposto[9],conf[2];
     do {
-        printf("\n\t>> Frete: R$");
+        printf("\n\n>> Frete: R$");
         scanf("%s", vfrete);
 
         vFrete = strtof(vfrete,NULL);
 
-        printf("\t>> Imposto: R$");
+        printf("\n>> Imposto: R$");
         scanf("%s", vimposto);
 
         vImposto = strtof(vimposto,NULL);
 
-        printf("\n\t>> Informacoes Corretas ? [1 - Sim 0 - Não]");
+        printf("\n\t>> Informacoes Corretas ? [1 - Sim 0 - Nao]");
         scanf("%s", conf);
 
         test = strtol(conf,NULL,10);
@@ -1716,7 +1725,7 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilm
         *id = *id + 1;
         while (1) {
             setbuf(stdin,NULL);
-            printf(">>Descrição Filme:");
+            printf("\n>>Descricaoo Filme:");
             scanf("%[^\n]s", novo.nome);
 
 
@@ -1727,7 +1736,7 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilm
             scanf("%d", &novo.qtd);
 
             int opc = 0;
-            printf("\n\t>> Informaçoes Correta ? [1 - Sim 0 - Não] :");
+            printf("\n\t>> Informacoes Correta ? [1 - Sim 0 - Nao] :");
             scanf("%d", &opc);
 
             novo.c_categoria = -1;
@@ -1744,7 +1753,7 @@ filme objetoEntradaFIlme (int *id,filme **dtbase,int *tamFilm,filme **dtbaseFilm
         (*dtbase)[*tamFilm - 1] = novo; //Adicionar Infos do Filme
 
         int opc =0;
-        printf("\n\t>> Adicionar mais Filmes ? [1 - Sim 0 - Não]: ");
+        printf("\n\t>> Adicionar mais Filmes ? [1 - Sim 0 - Nao]: ");
         scanf("%d", &opc);
 
         if(opc == 0){

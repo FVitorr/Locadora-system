@@ -465,7 +465,7 @@ int menuConfiguracao(config *set,int *tipoConfig){
         //printf("\nDeseja Exportar os dados de %s para %s: [1 - Sim 0 - Não] ", nameConfig(*tipoConfig), nameConfig(tipoConfig_));
         //scanf("%s",opc);
 
-        exportar = strtol(opc,NULL,10);
+        //exportar = strtol(opc,NULL,10);
 
         if (exportar == 0){
             if (*tipoConfig == 0 && tipoConfig_ == 1){

@@ -219,9 +219,12 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         listLocadora(dtbase, *qtdLocadora);
 
         int cod;
-        printf("Editar (ID):");
+        printf("Informe o ID que deseja Editar (0- Sair):");
         scanf("%d", &cod);
 
+        if (cod == 0){
+            return -1;
+        }
         editaLocadora(dtbase,qtdLocadora,tamanhoLocadora,cod,tipo_config);
     }
     else if (opc == 4)
@@ -231,8 +234,12 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         listLocadora(dtbase, *qtdLocadora);
 
         int cod;
-        printf("Remover (ID):");
+        printf("Informe o ID que deseja Excluir (0- Sair):");
         scanf("%d", &cod);
+
+        if (cod == 0){
+            return -1;
+        }
 
         if (confirm_remover(cod) == 1) {
             removerLocadora(dtbase,cod,qtdLocadora,tamanhoLocadora,tipo_config);
