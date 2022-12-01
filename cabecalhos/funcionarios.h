@@ -32,7 +32,7 @@ void listFuncionarios(funcionarios **dtbase, int qtd,int idfuncionariologado);
 /*
  * Função que permite a Alterar os dados dos funcionario.
  */
-void editaFuncionarios(funcionarios **dtbase,int qtdFuncionarios,int *tamanhoFuncionarios,int id, int tipo_config);
+void editaFuncionarios(funcionarios **dtbase,int qtdFuncionarios,int id, int tipo_config);
 /*
  * Função que permite a "Exclusão" de determinado funcionario.
  */
