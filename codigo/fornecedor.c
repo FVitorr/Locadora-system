@@ -125,7 +125,7 @@ void listFornecedor(fornecedor **dtbase, int qtd) {
     printf("\n\n");
 }
 
-void editarFornecedor(fornecedor **dtbase, int qtdFornecedor, int *tamanhoFornecedor, int id, int tipo_config)
+void editarFornecedor(fornecedor **dtbase, int qtdFornecedor, int id, int tipo_config)
 {
     for (int i = 0; i < qtdFornecedor; i++) {
         if ((*dtbase)[i].id == id) {
@@ -134,7 +134,7 @@ void editarFornecedor(fornecedor **dtbase, int qtdFornecedor, int *tamanhoFornec
             break;
         }
     }
-    refazDadosFornecedor(dtbase, tamanhoFornecedor, tipo_config);
+    refazDadosFornecedor(dtbase, qtdFornecedor, tipo_config);
 }
 
 int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFornecedor,int *idControleFornecedor, int tipo_config) {
