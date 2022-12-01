@@ -25,7 +25,7 @@ int removerFornecedor(fornecedor **dtbase, int id, int *qtdFornecedor, int tipo_
 
 void listFornecedor(fornecedor **dtbase, int qtd);
 
-void editarFornecedor(fornecedor **dtbase, int qtdFornecedor, int *tamanhoFornecedor, int id, int tipo_config);
+void editarFornecedor(fornecedor **dtbase, int qtdFornecedor, int id, int tipo_config);
 
 int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFornecedor,int *idControleFornecedor, int tipo_config);
 
