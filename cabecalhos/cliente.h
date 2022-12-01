@@ -34,7 +34,7 @@ void listCliente(cliente **dtbase, int qtd);
  */
 void editaCliente(cliente **dtbase, int qtdCliente, int id, int tipo_config);
 /*
- Cria menu Filme
+ Cria menu Clientes
  Parametros: 
     bd_client,qtdCliente, tamanhoCliente ,idControleCliente.
 */

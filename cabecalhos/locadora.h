@@ -44,11 +44,11 @@ locadora criarLocadora(int *id);
 
 int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, int *tamanhoLocadora);
 
-int removerLocadora(locadora **dtbase, int id, int *qtdLocadora, int *tamanhoLocadora, int tipo_config);
+int removerLocadora(locadora **dtbase, int id, int *qtdLocadora, int tipo_config);
 
 void listLocadora(locadora **dtbase, int qtd);
 
-void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int id, int tipo_config);
+void editaLocadora(locadora **dtbase, int qtdLocadora, int id, int tipo_config);
 
 int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id, int tipo_config);
 

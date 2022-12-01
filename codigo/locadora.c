@@ -102,7 +102,7 @@ int inserirLocadora(locadora **dtbase, locadora novaLocadora, int *qtdLocadora, 
     return 1;
 }
 
-int removerLocadora(locadora **dtbase, int id, int *qtdLocadora, int *tamanhoLocadora, int tipo_config){
+int removerLocadora(locadora **dtbase, int id, int *qtdLocadora, int tipo_config){
     for (int i = 0; i < *qtdLocadora; i ++){
         if((*dtbase)[i].id == id){
             while (i < *qtdLocadora - 1)
@@ -148,16 +148,16 @@ void listLocadora(locadora **dtbase, int qtd){
     printf("\n");
 }
 
-void editaLocadora(locadora **dtbase, int *qtdLocadora, int *tamanhoLocadora, int id, int tipo_config)
+void editaLocadora(locadora **dtbase, int qtdLocadora, int id, int tipo_config)
 {
-    for (int i = 0; i < *qtdLocadora; i++) {
+    for (int i = 0; i < qtdLocadora; i++) {
         if ((*dtbase)[i].id == id) {
             locadora newEntrada = criarLocadora(&id);
             (*dtbase)[i] = newEntrada;
             break;
         }
     }
-    refazDados_Locadora(dtbase,*qtdLocadora,tipo_config);
+    refazDados_Locadora(dtbase,qtdLocadora,tipo_config);
 }
 
 int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *id, int tipo_config){
@@ -225,7 +225,7 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         if (cod == 0){
             return -1;
         }
-        editaLocadora(dtbase,qtdLocadora,tamanhoLocadora,cod,tipo_config);
+        editaLocadora(dtbase,*qtdLocadora,cod,tipo_config);
     }
     else if (opc == 4)
     {
@@ -242,7 +242,7 @@ int menuLocadora(locadora **dtbase, int *qtdLocadora,int *tamanhoLocadora,int *i
         }
 
         if (confirm_remover(cod) == 1) {
-            removerLocadora(dtbase,cod,qtdLocadora,tamanhoLocadora,tipo_config);
+            removerLocadora(dtbase,cod,qtdLocadora,tipo_config);
             sucess();
         }else{
             info_cancela();
