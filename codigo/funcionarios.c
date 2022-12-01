@@ -120,7 +120,7 @@ void listFuncionarios(funcionarios **dtbase, int qtd,int idfuncionariologado) {
     printf("\n");
 }
 
-void editaFuncionarios(funcionarios **dtbase, int qtdFuncionarios, int *tamanhoFuncionarios, int id, int tipo_config) {
+void editaFuncionarios(funcionarios **dtbase, int qtdFuncionarios, int id, int tipo_config) {
     for (int i = 0; i < qtdFuncionarios; i++) {
         if ((*dtbase)[i].codigo == id) {
             funcionarios newEntrada = criarFuncionario(&id);
@@ -128,7 +128,7 @@ void editaFuncionarios(funcionarios **dtbase, int qtdFuncionarios, int *tamanhoF
             break;
         }
     }
-    refazDadosFuncionario(dtbase, tamanhoFuncionarios, tipo_config);
+    refazDadosFuncionario(dtbase, qtdFuncionarios, tipo_config);
 }
 
 int removerFuncionarios(funcionarios **dtbase, int *qtdFuncionarios, int id, int tipo_config) {
