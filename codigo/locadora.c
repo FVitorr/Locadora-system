@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include <io.h>
 #include "../cabecalhos/locadora.h"
 #include "../cabecalhos/fucGlobal.h"
@@ -446,12 +445,3 @@ int refazDados_Locadora(locadora **dtbase, int qtdLocadora, int tipo_configuraca
 }
 
 
-int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int *id){
-    locadora new = criarLocadora(id);
-    inserirLocadora(dtbase,new,qtdLocadora,tamanhoLocadora);
-
-    strcpy(user,new.user);
-    new.password = password;
-
-    //SALVAR NO ARQUIVO DE LOCADORAS
-}

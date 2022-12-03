@@ -25,8 +25,13 @@ int menuFeedback(cliente **dtbaseCliente, int qtd_Cliente,
         lineBox(95,"-\0",0);
 
         //Tratamento de entrada
+        char topc[10];
         printf(">>");
-        scanf("%d", &opc);
+        setbuf(stdin,NULL);
+        scanf("%s", topc);
+
+        opc = strtol(topc,NULL,10);
+
         line(30, "-\0");
 
         switch (opc) {

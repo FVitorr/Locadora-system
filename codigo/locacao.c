@@ -314,7 +314,7 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                     return 1;
                 } else {
 
-                    contaCliente novoCliente = objetoCCliente(IdContaCliente, idCliente, dtbaseCliente, qtdcliente,idCliente);
+                    contaCliente novoCliente = objetoCCliente(IdContaCliente, dtbaseCliente, qtdcliente,idCliente);
                     //Criar objeto Locado
                     locados novaLocacao = objetoLocados(&novoCliente.IDlocado,idCliente,dtbaseFilme,qtdFilme,idFuncionarioLogado,
                                                         dtbaseCategoria,qtdCategoria);
@@ -355,7 +355,7 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
 }
 
 
-contaCliente objetoCCliente(int *IdContaCliente,int key_cliente,cliente **dtbaseCliente,int qtdcliente,int idCliente){
+contaCliente objetoCCliente(int *IdContaCliente,cliente **dtbaseCliente,int qtdcliente,int idCliente){
     line(100,"Conta Cliente");
     contaCliente novoCliente;
 

@@ -89,7 +89,7 @@ operacoe objetoOperacoe(filme **dtbaseFilme, int qtdFilme,fCategoria **dtbaseCat
 locados objetoLocados (int *idControleLocados,int idCliente,filme **dtbaseFilme,int qtdFilme,int idFuncionario,
                        fCategoria **dtbaseCategoria, int qtdCategoria);
 
-contaCliente objetoCCliente(int *IdContaCliente,int key_cliente,cliente **dtbaseCliente,int qtdcliente,int idCliente);
+contaCliente objetoCCliente(int *IdContaCliente,cliente **dtbaseCliente,int qtdcliente,int idCliente);
 
 int menuLocacao(filme **dtbaseFilme,int *qtdFilme,int *tamanhoFilme ,int *iddtbasefilme,
                 cliente **dtbaseCliente,int qtdcliente,
@@ -108,13 +108,7 @@ int verificaConta(contaCliente **dtbaseCcliente, int qtdCcliente, int idCliente)
 
 int posicaoContaArray(contaCliente **dtbaseCCliente, int qtdCCliente, int idCliente);
 
-int posicaoLocadosArray(locados **dtbaseLocados, int qtdLocados, int key_cliente, int IDlocado);
-
 int inserirCCliente(contaCliente **dtbaseCCliente,contaCliente newEntry, int *qtdCCliente, int *tamanhoCCliente);
-
-int refazDadosLocados(locados **dtbase, int qtdLocados, int tipo_config);
-
-int refazDadosOperacao(operacoe **dtbase, int qtdOperacao, int tipo_config);
 
 int saveContaCliente(contaCliente objeto, int tipo_config);
 
@@ -126,10 +120,6 @@ int emprestaFilme(contaCliente **dtBaseCCliente,int *qtd_CCliente,int *tamanho_C
                   filme **dtbaseFilme,int qtdFilme,int *iddtbasefilme,fCategoria **dtbaseCategoria, int qtdCategoria,int idFuncionarioLogado,financeiro *monetario,int tipoConfig);
 
 int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbaseFilme,int qtdFilme,financeiro *monetario,int tipoConfig);
-
-int retornaChaveOperacao(locados **dtbaselocados, int qtdLocados, int id, int key_cliente);
-
-int retornaChaveCliente(contaCliente **dtbase, int qtd, int idCliente);
 
 int pagarParcelas(contaCliente **dtbaseCCliente,int qtdCCliente,financeiro *monetario,int tipoconfig);
 

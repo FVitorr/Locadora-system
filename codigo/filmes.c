@@ -23,11 +23,21 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
 //    printf("Descricao: ");
 //    scanf("%[^\n]s", p.descricao);
 
-    setbuf(stdin,NULL);
 
-    printf("Quantidade de Exemplares: ");
-    scanf("%d%*c", &p.qtd);
 
+    while(1){
+        printf("Quantidade de Exemplares: ");
+        char qtd[10];
+        setbuf(stdin,NULL);
+        scanf("%[^\n]s", qtd);
+
+        p.qtd = strtol(qtd,NULL,10);
+        if (p.qtd == 0){
+            printf("\n\n[!] Valor Invalido. Tente Novamente \n\n");
+        }else{
+            break;
+        }
+    }
     //https://homepages.dcc.ufmg.br/~rodolfo/aedsi-2-10/printf_scanf/printfscanf.html
 
     line(100,"Categorias\0");
@@ -41,6 +51,7 @@ filme objFilme(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCatego
 
     printf("Codigo Categoria: ");
     scanf("%d%*c", &p.c_categoria); //Possivelmente este campo precisa ser comparado ...
+    setbuf(stdin,NULL);
 
     p.c_categoria = categTry(dtbaseCategoria,qtdCategoria,tamanhoCategoria ,p.c_categoria,idControleCategoria);
 
@@ -74,7 +85,7 @@ int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes
 
     return 1;
 }
-int removerFilme(filme **dtbase, int id, int *qtdFilmes, int *tamanhoFilmes,int tipo_config){
+int removerFilme(filme **dtbase, int id, int *qtdFilmes,int tipo_config){
     for (int i = 0; i < *qtdFilmes; i ++){
         if((*dtbase)[i].codigo == id){
             while (i < *qtdFilmes - 1)
@@ -83,7 +94,6 @@ int removerFilme(filme **dtbase, int id, int *qtdFilmes, int *tamanhoFilmes,int 
                 i++;
             }
             *qtdFilmes = *qtdFilmes - 1;
-            *tamanhoFilmes = *tamanhoFilmes - 1;
             break;
         }
     }
@@ -159,9 +169,12 @@ int categTry(fCategoria **dtbaseCategoria,int *qtdCategoria,int *tamanhoCategori
     }
     //int tem = 0;cc
     if (id == 0 || tem == 0) {
+        char tmOpc[10];
         printf("\n\t>> Categoria nao encontrada\n ");
         printf("\t>> Cadastrar [1 - Sim] [ 0 - Nao]: ");
-        scanf("%d", &opc);
+        setbuf(stdin,NULL);
+        scanf("%s", tmOpc);
+        opc = strtol(tmOpc,NULL,10);
         if (opc == 0) {
             return 1;
         }
@@ -216,8 +229,6 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
     {
         // Cadastrar um Filme
         printf(">> Novo filme     \tID: %d \n", *id);
-
-        int correto;
 
         printf("\n\tCadastrar Filme: [1- Sim  0- Nao]\n\t>> ");
         scanf("%s", temEscolha);//Permite a entrada de qualquer caracter
@@ -298,7 +309,7 @@ int menuFilme(filme **dtbase,int *qtdFilmes,int *tamanhoFilmes, fCategoria **dtb
         cod = strtol(temEscolha,NULL,10);//Procura na entrada um numero na base 10
 
         if (cod == 0){ return 0;}
-        removerFilme(dtbase,cod,qtdFilmes,tamanhoFilmes,tipo_config);
+        removerFilme(dtbase,cod,qtdFilmes,tipo_config);
     }
     return exit;
 }

@@ -201,7 +201,6 @@ int menuFornecedor(fornecedor **bd_fornecedor, int *qtdFornecedor,int *tamanhoFo
             }
         }
     }
-    return escolha;
 }
 
 
@@ -262,8 +261,10 @@ char *nomeFornecedor(fornecedor **dtbase, int qtd, int id){
 int retornarUltimoID_Fornecedor(fornecedor **dtBase, int qtdFornecedor){
     int id,tId = 0;
     id = (qtdFornecedor > 0) ? (*dtBase)[0].id : 1;
-    for (int i = 1; i < qtdFornecedor; i++){
-        tId = (id <= (*dtBase)[i].id) ? id = (*dtBase)[i].id + 1: id;
+    for (int i = 0; i < qtdFornecedor; i++){
+        if ((*dtBase)[i].id <= id){
+            id = (*dtBase)[i].id + 1;
+        }
     }
     return id;
 }
