@@ -97,7 +97,7 @@ void listFuncionarios(funcionarios **dtbase, int qtd,int idfuncionariologado) {
     if (qtd > 0) {
         //printf("\n ID \t Nome \t\t Cargo \t Telefone \t Email \t\t\t User \t Password\n");
         for (int c = 0; c < qtd; c++) {
-            printf("---------------------------------------------------------------------------------\n");
+            printf("\n---------------------------------------------------------------------------------\n");
             printf("(%d) Nome : %s\nCargo: %s \n\nRua: %s \nNumero: %d\nBairro: %s\nCidade: %s\nEstado: %s\nTelefone: %s\nEmail: %s",
                    (*dtbase)[c].codigo,
                    (*dtbase)[c].nome,
