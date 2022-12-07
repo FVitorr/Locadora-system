@@ -24,7 +24,7 @@ typedef struct {
 int menuImportacaoExportcao(cliente **dtbaseCliente, int *qtdcliente,int *tamCliente,filme **dtbaseFilme, int *qtdfilme,
                             int *tamFilme,locadora **dtbaselocadora, int *qtdlocadora, int *tamlocadora,fCategoria **dtbasecategoria, int *qtdcategoria,int *tamcategoria,
                             fornecedor **dtbasefornecedor, int *qtdFornecedor, int *tamFornecedor,funcionarios **dtbasefuncionarios, int *qtdfuncionarios, int *tamfuncionarios,
-                            contaCliente **dtbaseCCliente, int *qtdCCliente, int *tamCCliente,eFilme **dtbase_eFilme, int *qtdeFilme, int *tameFilme);
+                            contaCliente **dtbaseCCliente, int *qtdCCliente, int *tamCCliente,eFilme **dtbase_eFilme, int *qtdeFilme, int *tameFilme,int tipo_config);
 
 int menuexport(exportcamp *exportcampos);
 
@@ -77,5 +77,5 @@ void importarDados(exportcamp camposImporta, char *namepath,
                    fornecedor **dtbasefornecedor, int *qtdFornecedor, int *tamFornecedor,
                    funcionarios **dtbasefuncionarios, int *qtdfuncionarios, int *tamfuncionarios,
                    contaCliente **dtbaseCCliente, int *qtdCCliente, int *tamCCliente,
-                   eFilme **dtbase_eFilme, int *qtdeFilme, int *tameFilme);
+                   eFilme **dtbase_eFilme, int *qtdeFilme, int *tameFilme, int tipo_config);
 
