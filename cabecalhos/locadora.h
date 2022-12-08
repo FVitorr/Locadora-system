@@ -19,6 +19,7 @@ typedef struct {
     float caixa;
     float despesas;
     float contasReceber;
+    float multaLocadora;
 }financeiro;
 
 typedef struct
@@ -59,9 +60,5 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
 int refazDados_Locadora(locadora **dtbase, int qtdLocadora, int tipo_configuracao);
 
 int verifica_IDLocadora(locadora **dtbase,int qtd_Locadora,int id);
-
-int posArrayLocadora(locadora **dtbase,int qtd_Locadora,int id);
-
-int set_configuracao_Locadora(locadora **dtbase,char *user,char *password,int *qtdLocadora,int *tamanhoLocadora, int *id);
 
 #endif //LOCADORA_H

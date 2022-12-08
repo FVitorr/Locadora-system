@@ -15,7 +15,7 @@ extern "C" {
 
     int inserirFilme(filme **dtbase,filme newEntry,int *qtdFilmes,int *tamanhoFilmes);
 
-    int removerFilme(filme **dtbase, int id, int *qtdFilmes, int *tamanhoFilmes,int tipo_config);
+    int removerFilme(filme **dtbase, int id, int *qtdFilmes,int tipo_config);
 
     void listFilme(filme **dtbase, int qtd);
 

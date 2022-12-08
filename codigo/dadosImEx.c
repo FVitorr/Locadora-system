@@ -223,7 +223,7 @@ void exportDadoslocadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora){
                     "\n\t\t\t<email>%s</email>"
                     "\n\t\t\t<nomeResponsavel>%s</nomeResponsavel>"
                     "\n\t\t\t<telefoneResponsavel>%s</telefoneResponsavel>"
-                    "\n\t\t\t<financeiro>%f,%f,%f</financeiro>"
+                    "\n\t\t\t<financeiro>%f,%f,%f,%f</financeiro>"
                     "\n\t\t\t<user>%s</user>"
                     "\n\t\t\t<password>%s</password>"
                     "\n\t\t</registro>",(*dtbaselocadora)[i].id,
@@ -243,6 +243,7 @@ void exportDadoslocadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora){
                 (*dtbaselocadora)[i].monetario.caixa,
                 (*dtbaselocadora)[i].monetario.despesas,
                 (*dtbaselocadora)[i].monetario.contasReceber,
+                (*dtbaselocadora)[i].monetario.multaLocadora,
                 (*dtbaselocadora)[i].user,
                 (*dtbaselocadora)[i].password
         );
@@ -355,6 +356,8 @@ void importa_locadora(FILE *arq, locadora **dtbaselocadora, int *qtdlocadora ,in
             newLocadora.monetario.despesas = strtof(tok,NULL);
             tok = strtok(NULL, ",</>");
             newLocadora.monetario.contasReceber = strtof(tok,NULL);
+            tok = strtok(NULL, ",</>");
+            newLocadora.monetario.multaLocadora = strtof(tok,NULL);
 
             fgets(linha, 200, arq); //pega <user>
             tok = strtok(linha, "\t<>");
@@ -1651,12 +1654,12 @@ void exportarDados(exportcamp camposExport, char *namepath, cliente **dtbaseClie
 void importarDados(exportcamp camposImporta, char *namepath,
                    cliente **dtbaseCliente, int *qtdCliente,int *tamCliente,
                    filme **dtbaseFilme, int *qtdfilme,int *tamFilme,
-                   locadora **dtbaselocadora, int *qtdlocadora, int *tamlocadora,
+                   locadora **dtbaselocadora, int *qtd_locadora, int *tamlocadora,
                    fCategoria **dtbasecategoria, int *qtdcategoria,int *tamcategoria,
                    fornecedor **dtbasefornecedor, int *qtdFornecedor, int *tamFornecedor,
                    funcionarios **dtbasefuncionarios, int *qtdfuncionarios, int *tamfuncionarios,
                    contaCliente **dtbaseCCliente, int *qtdCCliente, int *tamCCliente,
-                   eFilme **dtbase_eFilme, int *qtdeFilme, int *tameFilme){
+                   eFilme **dtbase_eFilme, int *qtdeFilme, int *tameFilme, int tipo_config){
     FILE *arq;
 
     arq = fopen(namepath,"r");
@@ -1667,35 +1670,47 @@ void importarDados(exportcamp camposImporta, char *namepath,
     }
 
     if (camposImporta.locadora == 1){
-        importa_locadora(arq,dtbaselocadora,qtdeFilme,tamlocadora);
+        //free(*dtbaselocadora);
+        //dtbaselocadora = calloc(1,sizeof (locadora));
+        *qtd_locadora = 0;
+        *tamlocadora = 1;
+        importa_locadora(arq,dtbaselocadora,qtd_locadora,tamlocadora);
+        refazDados_Locadora(dtbaselocadora,*qtd_locadora,tipo_config);
     }
 
     if (camposImporta.cliente == 1){
         importa_Cliente(arq,dtbaseCliente,qtdCliente,tamCliente);
+        refazDadosCliente(dtbaseCliente,*qtdCliente,tipo_config);
     }
 
     if (camposImporta.filme == 1){
         importa_Filme(arq,dtbaseFilme,qtdfilme,tamFilme);
+        refazDados_filme(dtbaseFilme,*qtdfilme,tipo_config);
     }
 
     if (camposImporta.categoria == 1){
         importa_Categoria(arq,dtbasecategoria,qtdcategoria,tamcategoria);
+        refazDados_Categoria(dtbasecategoria,*qtdcategoria,tipo_config);
     }
 
     if (camposImporta.fornecedor == 1){
         importa_Fornecedor(arq,dtbasefornecedor,qtdFornecedor,tamFornecedor);
+        refazDadosFornecedor(dtbasefornecedor,qtdFornecedor,tipo_config);
     }
 
     if (camposImporta.funcionario == 1){
         importa_Funcionario(arq,dtbasefuncionarios,qtdfuncionarios,tamfuncionarios);
+        refazDadosFuncionario(dtbasefuncionarios,qtdfuncionarios,tipo_config);
     }
 
     if (camposImporta.locacao_filme == 1){
         importa_Locacao(arq,dtbaseCCliente,qtdCCliente,tamCCliente);
+        refazDadosCCliente(dtbaseCCliente,*qtdCCliente,tipo_config);
     }
 
     if (camposImporta.compras_filme == 1){
         importa_EntFilme(arq,dtbase_eFilme,qtdeFilme,tameFilme);
+        refazDadosEfIlme(dtbase_eFilme,*qtdeFilme,tipo_config);
     }
 
     fclose(arq);
@@ -1706,7 +1721,7 @@ void importarDados(exportcamp camposImporta, char *namepath,
 int menuImportacaoExportcao(cliente **dtbaseCliente, int *qtdcliente,int *tamCliente,filme **dtbaseFilme, int *qtdfilme,
                             int *tamFilme,locadora **dtbaselocadora, int *qtdlocadora, int *tamlocadora,fCategoria **dtbasecategoria, int *qtdcategoria,int *tamcategoria,
                             fornecedor **dtbasefornecedor, int *qtdFornecedor, int *tamFornecedor,funcionarios **dtbasefuncionarios, int *qtdfuncionarios, int *tamfuncionarios,
-                            contaCliente **dtbaseCCliente, int *qtdCCliente, int *tamCCliente,eFilme **dtbase_eFilme, int *qtdeFilme, int *tameFilme){
+                            contaCliente **dtbaseCCliente, int *qtdCCliente, int *tamCCliente,eFilme **dtbase_eFilme, int *qtdeFilme, int *tameFilme,int tipo_config){
     int erro = 0, opc;
     char temEscolha[4];
 
@@ -1748,6 +1763,7 @@ int menuImportacaoExportcao(cliente **dtbaseCliente, int *qtdcliente,int *tamCli
                 break;
             }
             char namepaht[120];
+            setbuf(stdin,NULL);
             printf("\nInforme o caminho (e o nome) do arquivo que deseja importar:\nEx: C:\\Users\\augus\\Downloads\\arqExport.xml \n\n>>");
             scanf("%[^\n]s",namepaht);
             limpa_final_string(namepaht);
@@ -1760,12 +1776,12 @@ int menuImportacaoExportcao(cliente **dtbaseCliente, int *qtdcliente,int *tamCli
                           dtbasefornecedor,qtdFornecedor,tamFornecedor,
                           dtbasefuncionarios,qtdfuncionarios,tamfuncionarios,
                           dtbaseCCliente,qtdCCliente,tamCCliente,
-                          dtbase_eFilme,qtdeFilme,tameFilme);
+                          dtbase_eFilme,qtdeFilme,tameFilme,tipo_config);
 
-            printf("\n\nDados Importados: C:\\Users\\augus\\Downloads\\arqExport.xml");
+            printf("\n\n{000} Dados Importados de : {%s}\n\n",namepaht);
             system("pause");
             system("cls");
-            return 1; // Sair
+            return 0; // Sair
         }
     }
     else if (opc == 2)
@@ -1777,6 +1793,7 @@ int menuImportacaoExportcao(cliente **dtbaseCliente, int *qtdcliente,int *tamCli
                 break;
             }
             char namepaht[120];
+            setbuf(stdin,NULL);
             printf("\nInforme o caminho para o qual deseja exportar os dados:\n"
                    "Ex: C:\\Users\\augus\\Downloads\\ \n\n>>");
             scanf("%[^\n]s",namepaht);

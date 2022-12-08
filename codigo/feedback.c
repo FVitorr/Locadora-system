@@ -25,8 +25,13 @@ int menuFeedback(cliente **dtbaseCliente, int qtd_Cliente,
         lineBox(95,"-\0",0);
 
         //Tratamento de entrada
+        char topc[10];
         printf(">>");
-        scanf("%d", &opc);
+        setbuf(stdin,NULL);
+        scanf("%s", topc);
+
+        opc = strtol(topc,NULL,10);
+
         line(30, "-\0");
 
         switch (opc) {
@@ -106,6 +111,7 @@ int listarContasAPagar(eFilme **bdEFilme, int qtdEFilme) {
         scanf("%d", &tipo);
         line(30, "-\0");
         int execute = 0;
+        float total = 0;
         switch(tipo){
             case 1: {
                 filtroCodigo filtro = obterFaixaCodigo();
@@ -122,9 +128,12 @@ int listarContasAPagar(eFilme **bdEFilme, int qtdEFilme) {
                                    (*bdEFilme)[j].filmes[k].valorDeve, (*bdEFilme)[j].filmes[k].dtNota.dia,
                                    (*bdEFilme)[j].filmes[k].dtNota.mes,
                                    (*bdEFilme)[j].filmes[k].dtNota.ano);
+
+                            total = total + (*bdEFilme)[j].filmes[k].valorDeve;
                         }
                     }
                 }
+                printf("\nTotal de Contas a Pagar: R$%.2f\n\n",total);
                 system("pause");
                 return 0;
             }
@@ -173,41 +182,47 @@ int listarContasAReceber(contaCliente **bdContaCliente, int qtdContaCliente) {
         scanf("%d", &tipo);
         line(30, "-\0");
         int execute = 0;
+        float total = 0;
         switch(tipo){
             case 1: {
                 filtroCodigo filtro = obterFaixaCodigo();
-                for (int j = 0; j < qtdContaCliente; ++j) {
-                    for (int k = 0; k < (*bdContaCliente)[j].tamLocados - 1; ++k) {
+                for (int j = 0; j < qtdContaCliente; j++) {
+                    for (int k = 0; k < (*bdContaCliente)[j].tamLocados - 1; k++) {
                         for (int l = 0; l < (*bdContaCliente)[j].dEmprestimo[k].qtdFilme - 1; ++l) {
-                            if ((*bdContaCliente)[j].idCliente >= filtro.inicio &&
-                                (*bdContaCliente)[j].idCliente <= filtro.fim) {
+                            if ((*bdContaCliente)[j].dEmprestimo[k].dFilme[l].ID >= filtro.inicio &&
+                                    (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].ID <= filtro.fim) {
                                 if ((int) (*bdContaCliente)[j].valorDeve > 0) {
                                     if (execute == 0) {
                                         printf("\n ID \tID Cliente \tValor a Receber \t Data Emprestimo\n");
                                         execute = 1;
                                     }
-                                    printf("%.4d \t %d \t %f \t %.2d/%.2d/%.4d\n", (*bdContaCliente)[j].ID,
+                                    printf("%.4d \t %s\t %d \t %f \t %.2d/%.2d/%.4d\n", (*bdContaCliente)[j].ID,
+                                           (*bdContaCliente)[j].Nome,
                                            (*bdContaCliente)[j].idCliente,
                                            (*bdContaCliente)[j].valorDeve,
                                            (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.dia,
                                            (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.mes,
                                            (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.ano);
                                 }
+                                break;
                             }
                         }
                     }
+                    total = total + (*bdContaCliente)[j].valorDeve;
                 }
+                printf("\n\nValor Total a Receber : %.2f\n",total);
                 system("pause");
                 return 0;
             }
             case 2: {
                 filtroData *filtro = obterFaixaDatas();
                 printf("\n ID \tID Cliente \tValor a Receber \t Data Emprestimo\n");
+                total = 0;
                 for (int j = 0; j < qtdContaCliente; j++) {
                     for (int k = 0; k < (*bdContaCliente)[j].tamLocados -1 ;k++) {
-                        for (int l = 0; l < (*bdContaCliente)[j].tamLocados -1 ;l++) {
+                        for (int l = 0; l < (*bdContaCliente)[j].dEmprestimo[k].qtdFilme -1 ;l++) {
                             //printf("\n\n%d %d",diasEntreDatas((*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo,filtro->inicio),diasEntreDatas(filtro->fim,(*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo));
-
+                            int cont = 0;
                             if ((*bdContaCliente)[j].valorDeve > 0 &&
                                 diasEntreDatas(filtro->inicio,(*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo) >= 0 &&
                                 diasEntreDatas((*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo,filtro->fim) >= 0){
@@ -217,10 +232,13 @@ int listarContasAReceber(contaCliente **bdContaCliente, int qtdContaCliente) {
                                        (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.dia,
                                        (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.mes,
                                        (*bdContaCliente)[j].dEmprestimo[k].dFilme[l].dtemprestimo.ano);
+                                total = total + (*bdContaCliente)[j].valorDeve;
+                                cont++;
                             }
                         }
                     }
                 }
+                printf("\n\nValor Total a Receber : %.2f\n",total);
                 system("pause");
                 return INT32_MAX;
             }
@@ -360,39 +378,92 @@ int locacoesRestantes(filme **dtBaseFilme, int qtdFilme, eFilme **dtBaseEFilme, 
     printf("Relatorio de locacoes restantes para que o filme se pague\n\n");
     filtroCodigo filtro = obterFaixaCodigo();
     system("cls");
-    if (qtdFilme > 0) {
-        printf("\nNome \t Quantidade de Locacoes restante\n");
-        for (int i = 0; i < qtdFilme; i++) {
-            if ((*dtBaseFilme)[i].codigo >= filtro.inicio && (*dtBaseFilme)[i].codigo <= filtro.fim) {
 
-                for (int f = 0; f < qtdEFilme; f++) {
-                    if ((*dtBaseEFilme)[f].filmes->entradaFilmesCadastro->nome == (*dtBaseFilme)[i].nome) {
+    typedef struct {
+        int id;
+        char nome[120];
+        float valorCompra;
+        float valorVenda;
+        int  qtdParaPagar;
+        int  qtdEmprestada;
+    }relatorio;
 
-                        for (int c = 0; c < qtdCategoria; c++) {
-                            if ((*dtBaseEFilme)[f].filmes->entradaFilmesCadastro->c_categoria == (*dtbaseCategoria)[c].codigo) {
+    int qtdRelatorio = 0;
+    relatorio *relatorios = calloc(1,sizeof(relatorio));
 
-                                float qtdLocada = 0;
-                                for (int j = 0; j < qtdContaCliente; ++j) {
-                                    if ((*bdContaCliente)[f].dEmprestimo->dFilme->nomeFilme == (*dtBaseFilme)[i].nome) {
-                                        qtdLocada++;
+    if (qtdEFilme > 0) {
+        //printf("\nNome \t Quantidade de Locacoes restante\n");
+        for (int i = 0; i < qtdEFilme; i++) {
+            for (int j = 0; j < (*dtBaseEFilme)[i].tamOp - 1; j++) {
+                for (int k = 0; k < (*dtBaseEFilme)[i].filmes[j].tamFilm; k++) {
+                    //printf("%s",(*dtBaseEFilme)[i].filmes[j].entradaFilmesCadastro[k].nome);
+                    for (int l = 0; l < qtdFilme; l++){
+                        char nameFIlme[120],nameEntradaFilme[120];
+                        strcpy(nameFIlme,(*dtBaseFilme)[l].nome);
+                        strcpy(nameEntradaFilme,(*dtBaseEFilme)[i].filmes[j].entradaFilmesCadastro[k].nome);
+
+                        strlwr(nameFIlme);
+                        strlwr(nameEntradaFilme);
+                        //printf("\n%s : %s",nameFIlme,nameEntradaFilme);
+                        if (strcmp(nameFIlme,nameEntradaFilme) == 0){
+                            qtdRelatorio++;
+                            relatorios = realloc(relatorios,qtdRelatorio * sizeof (relatorio));
+                            relatorios[qtdRelatorio -1].id = (*dtBaseFilme)[l].codigo;
+
+                            strcpy(relatorios[qtdRelatorio -1].nome,nameFIlme);
+                            relatorios[qtdRelatorio -1].valorCompra = (*dtBaseEFilme)[i].filmes[j].entradaFilmesCadastro[k].valorCompra;
+                            relatorios[qtdRelatorio -1].valorVenda = valorCategoria(dtbaseCategoria,qtdCategoria,(*dtBaseFilme)[l].c_categoria);
+
+                            // Calcular quantas vezes o filme foi locado
+                            relatorios[qtdRelatorio -1].qtdEmprestada = 0;
+                            char newName[120];
+                            for (int m = 0; m < qtdContaCliente; m++){
+                                for (int n = 0; n < (*bdContaCliente)[m].tamLocados - 1;n++){
+                                    for (int p = 0; p < (*bdContaCliente)[m].dEmprestimo[n].qtdFilme - 1;p++){
+                                        strcpy(newName,(*bdContaCliente)[m].dEmprestimo[n].dFilme[p].nomeFilme);
+                                        strlwr(newName);
+
+                                        if (strcmp(newName,nameFIlme)==0){
+                                            relatorios[qtdRelatorio -1].qtdEmprestada++;
+                                        }
                                     }
                                 }
-                                float qtdNecessaria = (*dtBaseEFilme)[f].filmes->valorTotal / (*dtbaseCategoria)[c].vAlocacao;
-                                float qtdRestante = qtdNecessaria - qtdLocada;
-                                system("cls");
-                                printf("----------------------------------------------------------------------------------------------------------------------------------\n");
-                                system("cls");
-                                if (qtdRestante > 0) {
-                                    printf("%s\t %f\n", (*dtBaseFilme)[i].nome, qtdNecessaria);
-                                }
-                                system("cls");
-
                             }
+
+                            if ((float)relatorios[qtdRelatorio -1].qtdEmprestada * relatorios[qtdRelatorio -1].valorVenda >= relatorios[qtdRelatorio -1].valorCompra){
+                                relatorios[qtdRelatorio -1].qtdParaPagar = 0;
+                            }else{
+                                int qtdParaPagar = relatorios[qtdRelatorio -1].qtdEmprestada;
+                                while (1){
+                                    //printf("\n%f %f",(float)qtdParaPagar * relatorios[qtdRelatorio -1].valorVenda, relatorios[qtdRelatorio -1].valorCompra);
+                                    if ((float)qtdParaPagar * relatorios[qtdRelatorio -1].valorVenda >= relatorios[qtdRelatorio -1].valorCompra){
+                                        relatorios[qtdRelatorio -1].qtdParaPagar = qtdParaPagar;
+                                        break;
+                                    }
+                                    qtdParaPagar = qtdParaPagar + 1;
+                                }
+                            }
+                            break;
                         }
+                        //break;
                     }
                 }
             }
         }
+
+        int encontro = 0;
+        for (int i = 0; i < qtdRelatorio; i++){
+            //printf("\n(%d) Descricao: %s \nQtd. de locacoes para que o filme se pague: %d \n",relatorios[i].id,relatorios[i].nome,relatorios[i].qtdParaPagar);
+
+            if (relatorios[i].id >= filtro.inicio && relatorios[i].id <= filtro.fim){
+                printf("\n(%d) Descricao: %s \n Valor de Compra: R$%.2f\nValor de Venda: R$ %.2f\nQtd. de locacoes para que o filme se pague: %d \n",relatorios[i].id,relatorios[i].nome,relatorios[i].valorCompra,relatorios[i].valorVenda,relatorios[i].qtdParaPagar);
+                encontro++;
+            }
+        }
+        if (encontro == 0){
+            printf("\n\t>> Nenhum registro para o filtro informado");
+        }
+        system("Pause");
     } else {
         printf("\n\t>> Nenhum registro para o filtro informado");
     }
