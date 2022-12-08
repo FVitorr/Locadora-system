@@ -1026,7 +1026,7 @@ int verificaIDLocados(contaCliente **dtbaseCCliente, int qtdCCliente, int idClie
     for (int i = 0; i < qtdCCliente; i++){
         if ((*dtbaseCCliente)[i].idCliente == idCliente){
             for (int k = 0; k < (*dtbaseCCliente)[i].tamLocados; k++){
-                if ((*dtbaseCCliente)[i].dEmprestimo[k].ID == idLocado && ((*dtbaseCCliente)[i].dEmprestimo[k].tipoPagamento == tipoPagamento || tipoPagamento == -1)){
+                if ((*dtbaseCCliente)[i].dEmprestimo[k].ID == idLocado && ((*dtbaseCCliente)[i].dEmprestimo[k].tipoPagamento == tipoPagamento || tipoPagamento == -1) && (*dtbaseCCliente)[i].dEmprestimo[k].TDdevolvido != 1 ){
                     return 1;
                 }
             }
@@ -1165,9 +1165,9 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
 
             for (int i = 0; i < qtdCCliente; i++) {
                 if ((*dtbaseCCliente)[i].idCliente == IdCliente) {
-                    for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados; j++) {
+                    for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados - 1; j++) {
                         if ((*dtbaseCCliente)[i].dEmprestimo[j].ID == IDlocados) {
-                            for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme; k++){
+                            for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme - 1; k++){
                                 if ((*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].devolvido == 0){
                                     qtdTotal++;
                                 }
@@ -1261,7 +1261,7 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
                             }
                             (*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido = 1;
                             //Verificar valor de tudo devolvido
-                            for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme; k++){
+                            for (int k = 0; k < (*dtbaseCCliente)[i].dEmprestimo[j].qtdFilme - 1; k++){
                                 if ((*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].devolvido == 0){
                                     (*dtbaseCCliente)[i].dEmprestimo[j].TDdevolvido = 2;
                             }

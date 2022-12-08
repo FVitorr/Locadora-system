@@ -155,6 +155,8 @@ int menuprincipal(int *tipo_config,financeiro *monetario_,config *config_system,
             break;
         case 9:
             while (1){
+                printf("\nInformaçoes Monetarios: \nCaixa: R$ %.2f\nContas a Receber: R$ %.2f\nContas a Pagar: R$ %.2f\n",monetario_->caixa,monetario_->contasReceber,monetario_->despesas);
+                system("pause");
                 int t = menuFeedback(dtbaseCliente, *qtd_Cliente, dtbaseFilme, *qtd_Filmes, dtBaseeFilme, *qtd_eFilme,
                                      dtbaseCategoria, *qtd_Categoria,dtbasefuncionarios,*qtd_Funcionarios, dtbaseCCliente, *qtd_CCliente);
 

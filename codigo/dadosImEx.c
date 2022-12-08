@@ -1778,10 +1778,10 @@ int menuImportacaoExportcao(cliente **dtbaseCliente, int *qtdcliente,int *tamCli
                           dtbaseCCliente,qtdCCliente,tamCCliente,
                           dtbase_eFilme,qtdeFilme,tameFilme,tipo_config);
 
-            printf("\n\nDados Importados: C:\\Users\\augus\\Downloads\\arqExport.xml");
+            printf("\n\n{000} Dados Importados de : {%s}\n\n",namepaht);
             system("pause");
             system("cls");
-            return 1; // Sair
+            return 0; // Sair
         }
     }
     else if (opc == 2)
