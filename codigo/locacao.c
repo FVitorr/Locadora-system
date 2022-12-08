@@ -401,8 +401,9 @@ int  listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDloc
             for (int j = 0; j < (*dtbase)[i].tamLocados - 1 ; j++){
                 if ((((*dtbase)[i].dEmprestimo[j].ID == IDlocado || IDlocado == -1) && mostrarNotas == 1)&&
                         ((*dtbase)[i].dEmprestimo[j].tipoPagamento == tipoPagamento || tipoPagamento == -1)) {
-                    printf("\nID Nota (%d)\n", (*dtbase)[i].dEmprestimo[j].ID);
-
+                    //printf("\nID Nota (%d)\n", (*dtbase)[i].dEmprestimo[j].ID);
+                    int execut = 0;
+                    int tFilme = 0;
                     for (int k = 0; k < (*dtbase)[i].dEmprestimo[j].qtdFilme - 1; k++) {
                         char devolvido[4];
                         if ((*dtbase)[i].dEmprestimo[j].dFilme[k].devolvido == 1) {
@@ -411,7 +412,10 @@ int  listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDloc
                             strcpy(devolvido, "Nao\0");
                         }
                         if (((*dtbase)[i].dEmprestimo[j].dFilme[k].devolvido == codigoDevolvido || codigoDevolvido == -1) && mostraFilme == 1){
-
+                            if (execut == 0 ){
+                                printf("\nID Nota (%d)\n", (*dtbase)[i].dEmprestimo[j].ID);
+                                execut++;
+                            }
                             printf("\n  (%d) Codigo Filme: %d\n  Descricao Filme: %s\n  Valor Emprestimo: R$ %.2f\n"
                                    "  Data Emprestimo: %d/%d/%d\t"
                                    "  Data Devolucao Prevista: %d/%d/%d\t"
@@ -432,20 +436,23 @@ int  listLocacao(contaCliente **dtbase, int qtdCliente, int IDcliente, int IDloc
                                    (*dtbase)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal.ano,
                                    devolvido);
                             temFilme++;
+                            tFilme++;
                         }
                     }
-                    printf("\nQuantidade Filme: %d \t"
-                           "Valor Total: R$ %.2f\t", (*dtbase)[i].dEmprestimo[j].qtdFilme - 1,
-                           (*dtbase)[i].dEmprestimo[j].valorTotal);
-                    if ((*dtbase)[i].dEmprestimo[j].tipoPagamento == 2) {
-                        printf("Valor em Debito: %.2f \tValor entrada: R$ %.2f\n"
-                               "Qtd Parcelas: %d de %d\t", (*dtbase)[i].dEmprestimo[j].valordeve,
-                               (*dtbase)[i].dEmprestimo[j].valorEntrada,
-                               (*dtbase)[i].dEmprestimo[j].parcelasPagas, (*dtbase)[i].dEmprestimo[j].qtdParcelas);
+                    if (tFilme > 0){
+                        printf("\nQuantidade Filme: %d \t"
+                               "Valor Total: R$ %.2f\t", (*dtbase)[i].dEmprestimo[j].qtdFilme - 1,
+                               (*dtbase)[i].dEmprestimo[j].valorTotal);
+                        if ((*dtbase)[i].dEmprestimo[j].tipoPagamento == 2) {
+                            printf("Valor em Debito: %.2f \tValor entrada: R$ %.2f\n"
+                                   "Qtd Parcelas: %d de %d\t", (*dtbase)[i].dEmprestimo[j].valordeve,
+                                   (*dtbase)[i].dEmprestimo[j].valorEntrada,
+                                   (*dtbase)[i].dEmprestimo[j].parcelasPagas, (*dtbase)[i].dEmprestimo[j].qtdParcelas);
+                        }
+                        //Mais para frente talvez usar lista Dinamica para Data do pagamento
+                        printf("Data Pagamento: %d/%d/%d \n\n", (*dtbase)[i].dEmprestimo[j].Dtpagamento.dia,
+                               (*dtbase)[i].dEmprestimo[j].Dtpagamento.mes, (*dtbase)[i].dEmprestimo[j].Dtpagamento.ano);
                     }
-                    //Mais para frente talvez usar lista Dinamica para Data do pagamento
-                    printf("Data Pagamento: %d/%d/%d \n\n", (*dtbase)[i].dEmprestimo[j].Dtpagamento.dia,
-                           (*dtbase)[i].dEmprestimo[j].Dtpagamento.mes, (*dtbase)[i].dEmprestimo[j].Dtpagamento.ano);
                 }
             }
         }
@@ -1107,12 +1114,14 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
                                 dataAtual(&hoje);
 
                                 //Calcular Diferenca entre datas
-                                int t = diasEntreDatas((*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao,hoje);
+                                int t = (-1) * diasEntreDatas(hoje,
+                                                              (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao);
 
                                 if (t > 0){
-                                    float multapDia = (float)2.5;
+                                    //float multapDia = (float)2.5;
+                                    float multapDia = monetario->multaLocadora;
                                     //Adicionar Valor ao campo deve
-                                    printf("\n\n Data Prevista de Entrega: %d/%d/%d \t Data Real de Entrega: %d%d%d \t Diferença (em Dias): %d",
+                                    printf("\n\n Data Prevista de Entrega: %d/%d/%d \t Data Real de Entrega: %d/%d/%d \t Diferenca (em Dias): %d",
                                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,
                                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,
                                            (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
@@ -1136,8 +1145,8 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
                                     }
                                 }
 
-                                printf("%d/%d/%d menos %d/%d/%d = %d Dias\n" ,(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
-                                       hoje.dia,hoje.mes,hoje.ano,t );
+                                //printf("%d/%d/%d menos %d/%d/%d = %d Dias\n" ,(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
+                                       //hoje.dia,hoje.mes,hoje.ano,t );
                                 //printf("%d / %d / %d",dtDevolucao->dia,dtDevolucao->mes,dtDevolucao->ano);
                             }
                             break;
@@ -1175,13 +1184,13 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
                 printf("Quantos Filmes serao devolvidos: ");
                 scanf("%d", &qtdDevolver);
                 er++;
-            } while (qtdDevolver > qtdTotal || qtdDevolver < 0);
+            } while (qtdDevolver >= qtdTotal || qtdDevolver < 0);
 
 
             for (int i = 0; i < qtdCCliente; i++) {
                 if ((*dtbaseCCliente)[i].idCliente == IdCliente) {
 
-                    for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados; j++) {
+                    for (int j = 0; j < (*dtbaseCCliente)[i].tamLocados - 1; j++) {
 
                         if ((*dtbaseCCliente)[i].dEmprestimo[j].ID == IDlocados) {
 
@@ -1197,28 +1206,28 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
 
                                         (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].devolvido = 1;
 
-                                        data *dtDevolucao = &(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal;
-                                        dataAtual(dtDevolucao);
+                                        //data *dtDevolucao = &(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal;
+                                        dataAtual(&(*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucaoReal);
                                         //Verificar se passou do prazo de entrega e calcular multa;
 
                                         data hoje;
                                         dataAtual(&hoje);
 
                                         //Calcular Diferenca entre datas
-                                        int t = diasEntreDatas(hoje,
+                                        int t = (-1) * diasEntreDatas(hoje,
                                                 (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao);
 
-                                        if (t < 0) {
-                                            float multapDia = (float)2.5;
-                                            printf(">> MULTA APLICADA.");
+                                        if (t > 0) {
+                                            float multapDia = monetario->multaLocadora;
+                                            printf("\n\n>> MULTA APLICADA.");
                                             //Adicionar Valor ao campo deve
-                                            printf("\n\n Data Prevista de Entrega: %d/%d/%d \t Data Real de Entrega: %d%d%d \t Diferença (em Dias): %d",
+                                            printf("\n\n Data Prevista de Entrega: %d/%d/%d \t Data Real de Entrega: %d/%d/%d \n\t Diferenca (em Dias): %d",
                                                    (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.dia,
                                                    (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.mes,
                                                    (*dtbaseCCliente)[i].dEmprestimo[j].dFilme[k].dtdevolucao.ano,
                                                    hoje.dia, hoje.mes, hoje.ano,t);
 
-                                            printf("Multa por Dia:  R$ %f \nValor Multa:  R$ %f",multapDia,multapDia * (float)t);
+                                            printf("\nMulta por Dia:  R$ %f \nValor Multa:  R$ %f",multapDia,multapDia * (float)t);
                                             char pag[4];
                                             int pagInt;
                                             do{
@@ -1234,8 +1243,6 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
                                                 abortOp();
                                                 return -1;
                                             }
-
-
                                         }
 
 //                                        printf("%d/%d/%d menos %d/%d/%d = %d Dias\n",
@@ -1260,15 +1267,14 @@ int devolucaoFilmes(contaCliente **dtbaseCCliente,int qtdCCliente,filme **dtbase
                             }
 
                         }
-                        break;
+                        //break;
                     }
-                    break;
                 }
             }
             refazDadosCCliente(dtbaseCCliente,qtdCCliente,tipoConfig);
         }
     }}else{
-        printf("\n\n\t[!] O Cliente ja devolveu todos os filmes");
+        printf("\n\n\t[!] O Cliente ja devolveu todos os filmes\n\n");
         system("pause");
         return 0;
     }

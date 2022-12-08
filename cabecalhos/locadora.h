@@ -19,6 +19,7 @@ typedef struct {
     float caixa;
     float despesas;
     float contasReceber;
+    float multaLocadora;
 }financeiro;
 
 typedef struct

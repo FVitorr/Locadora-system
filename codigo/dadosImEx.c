@@ -223,7 +223,7 @@ void exportDadoslocadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora){
                     "\n\t\t\t<email>%s</email>"
                     "\n\t\t\t<nomeResponsavel>%s</nomeResponsavel>"
                     "\n\t\t\t<telefoneResponsavel>%s</telefoneResponsavel>"
-                    "\n\t\t\t<financeiro>%f,%f,%f</financeiro>"
+                    "\n\t\t\t<financeiro>%f,%f,%f,%f</financeiro>"
                     "\n\t\t\t<user>%s</user>"
                     "\n\t\t\t<password>%s</password>"
                     "\n\t\t</registro>",(*dtbaselocadora)[i].id,
@@ -243,6 +243,7 @@ void exportDadoslocadora(FILE *arq, locadora **dtbaselocadora, int qtdlocadora){
                 (*dtbaselocadora)[i].monetario.caixa,
                 (*dtbaselocadora)[i].monetario.despesas,
                 (*dtbaselocadora)[i].monetario.contasReceber,
+                (*dtbaselocadora)[i].monetario.multaLocadora,
                 (*dtbaselocadora)[i].user,
                 (*dtbaselocadora)[i].password
         );
@@ -355,6 +356,8 @@ void importa_locadora(FILE *arq, locadora **dtbaselocadora, int *qtdlocadora ,in
             newLocadora.monetario.despesas = strtof(tok,NULL);
             tok = strtok(NULL, ",</>");
             newLocadora.monetario.contasReceber = strtof(tok,NULL);
+            tok = strtok(NULL, ",</>");
+            newLocadora.monetario.multaLocadora = strtof(tok,NULL);
 
             fgets(linha, 200, arq); //pega <user>
             tok = strtok(linha, "\t<>");

@@ -76,6 +76,10 @@ locadora criarLocadora(int *id) {
     printf("Senha: ");
     obj.password = obterPassword(16);
 
+    setbuf(stdin,NULL);
+    printf("\nMulta por Atraso: ");
+    scanf("%f", &obj.monetario.multaLocadora);
+
     obj.monetario.caixa = 0;
     obj.monetario.despesas = 0;
     obj.monetario.contasReceber = 0;
@@ -265,7 +269,7 @@ int saveLocadora(locadora objeto,int tipo_config){
             return 1;
         }
 
-        fprintf(locadoraF,"%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%f\n%f\n%f\n%s\n%s\n",
+        fprintf(locadoraF,"%d\n%s\n%s\n%s\n%s\n%s\n%d\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%f\n%f\n%f\n%f\n%s\n%s\n",
                 objeto.id,
                 objeto.nomeFantasia,
                 objeto.razaoSocial,
@@ -284,6 +288,7 @@ int saveLocadora(locadora objeto,int tipo_config){
                 objeto.monetario.caixa,
                 objeto.monetario.despesas,
                 objeto.monetario.contasReceber,
+                objeto.monetario.multaLocadora,
 
                 objeto.user,
                 objeto.password
@@ -376,6 +381,7 @@ int carregarDados_Locadora(locadora **dtBase, int *qtdLocadora, int *tamanhoLoca
             fscanf(arquivo, "%f\n", &new.monetario.caixa);
             fscanf(arquivo, "%f\n", &new.monetario.despesas);
             fscanf(arquivo, "%f\n", &new.monetario.contasReceber);
+            fscanf(arquivo, "%f\n", &new.monetario.multaLocadora);
 
             fgets(new.user, 30, arquivo);
             limpa_final_string(new.user);
